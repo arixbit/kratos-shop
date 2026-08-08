@@ -1,0 +1,46 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "site/**"
+      - "shop/openapi.yaml"
+      - "admin/openapi.yaml"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync OpenAPI specs
+        run: |
+          mkdir -p site/openapi
+          cp shop/openapi.yaml site/openapi/shop.yaml
+          cp admin/openapi.yaml site/openapi/admin.yaml
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

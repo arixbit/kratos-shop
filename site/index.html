@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>kratos-shop · Go-Kratos 微服务商城</title>
+  <meta name="description" content="基于 Go-Kratos v2 的微服务商城示例项目：8 个服务、Consul 服务发现、RabbitMQ 异步消息与完整可观测性。">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html">kratos<span>-shop</span></a>
+    <div class="links">
+      <a href="https://github.com/arixbit/kratos-shop/blob/main/docs/README.md" target="_blank" rel="noopener">文档</a>
+      <a href="api.html">API</a>
+      <a href="https://github.com/arixbit/kratos-shop/releases" target="_blank" rel="noopener">Release</a>
+      <a href="https://github.com/arixbit/kratos-shop" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1>kratos-shop</h1>
+    <p>基于 Go-Kratos v2 的微服务商城示例：user / goods / cart / order / inventory / payment / shop / admin 共 8 个服务，配套 Consul、RabbitMQ、Elasticsearch 与完整的可观测性。</p>
+    <div class="badges">
+      <img src="https://github.com/arixbit/kratos-shop/actions/workflows/ci.yml/badge.svg" alt="CI">
+      <img src="https://img.shields.io/badge/Go-1.26.5-00ADD8" alt="Go 1.26.5">
+      <img src="https://img.shields.io/github/license/arixbit/kratos-shop" alt="MIT License">
+      <img src="https://img.shields.io/github/v/release/arixbit/kratos-shop" alt="Release">
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="#quickstart">快速开始</a>
+      <a class="btn ghost" href="api.html">查看 API</a>
+      <a class="btn ghost" href="https://github.com/arixbit/kratos-shop" target="_blank" rel="noopener">Star on GitHub</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h2 class="section-title">项目特点</h2>
+      <div class="features">
+        <div class="feat"><b>微服务拆分</b><span>按领域拆分为 6 个 gRPC 服务 + 商城 BFF + 后台管理</span></div>
+        <div class="feat"><b>服务发现</b><span>Consul 注册与发现，gRPC 跨服务调用</span></div>
+        <div class="feat"><b>异步消息</b><span>RabbitMQ 承载订单、支付、库存之间的消息事件</span></div>
+        <div class="feat"><b>可观测性</b><span>Prometheus、Grafana、Jaeger、Loki 开箱即用</span></div>
+        <div class="feat"><b>一键启动</b><span>make up 拉起整套环境与监控组件</span></div>
+        <div class="feat"><b>多形态部署</b><span>Docker Compose、多服务器手动部署、Kubernetes Kustomize</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">架构总览</h2>
+      <div class="arch">
+        <div class="arch-row">
+          <span class="node hot">用户 / 浏览器</span>
+          <span class="node hot">Traefik 网关 :80</span>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="arch-row">
+          <span class="node">shop 商城 BFF :8097</span>
+          <span class="node">admin 后台管理 :9099</span>
+        </div>
+        <div class="arrow">↓ gRPC discovery</div>
+        <div class="arch-row">
+          <span class="node">user :50051</span>
+          <span class="node">goods :50052</span>
+          <span class="node">cart :50053</span>
+          <span class="node">order :50054</span>
+          <span class="node">inventory :50055</span>
+          <span class="node">payment :50056</span>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="arch-row">
+          <span class="node">PostgreSQL</span>
+          <span class="node">Redis</span>
+          <span class="node">Elasticsearch</span>
+          <span class="node">RabbitMQ</span>
+          <span class="node">Consul</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="quickstart">
+      <h2 class="section-title">快速开始</h2>
+      <pre class="code">git clone git@github.com:arixbit/kratos-shop.git
+cd kratos-shop
+make up</pre>
+      <p style="color:var(--muted);font-size:14px;margin-top:12px;">
+        <code>make up</code> 会通过 <code>deploy/docker-compose.yml</code> 一次性启动全部 8 个服务与基础设施；手动启动、多服务器部署见
+        <a href="https://github.com/arixbit/kratos-shop/blob/main/README.md" target="_blank" rel="noopener">README</a>。
+      </p>
+    </section>
+
+    <section>
+      <h2 class="section-title">可观测性与辅助组件</h2>
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Prometheus / Grafana</h3>
+          <p>8 个服务指标（9101-9108）自动抓取，Grafana 预置 Prometheus 与 Loki 数据源。</p>
+        </div>
+        <div class="panel">
+          <h3>Jaeger</h3>
+          <p>分布式链路追踪，查看一次请求在多个微服务之间的调用链与耗时。</p>
+        </div>
+        <div class="panel">
+          <h3>RabbitMQ</h3>
+          <p>订单/支付/库存之间的异步消息队列，管理台可直接查看队列与积压。</p>
+        </div>
+        <div class="panel">
+          <h3>Loki + Promtail</h3>
+          <p>容器日志自动采集，在 Grafana Explore 中按 container / service 标签查询。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">演示账号</h2>
+      <table>
+        <thead>
+          <tr><th>角色</th><th>手机号</th><th>密码</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>普通用户</td><td>13800138000</td><td>12345678</td></tr>
+          <tr><td>管理员</td><td>13501167215</td><td>12345678</td></tr>
+        </tbody>
+      </table>
+      <p style="color:var(--muted);font-size:13px;">支付服务当前为本地模拟（channel: mock），不会发起真实扣款。</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© 2022-2026 arix · MIT License</span>
+    <span>Powered by Go · Kratos · GitHub Pages</span>
+  </footer>
+</body>
+</html>

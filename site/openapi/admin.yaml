@@ -1,0 +1,313 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/apps/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Admin API
+    description: The admin service definition.
+    version: 0.0.1
+paths:
+    /api/address/create:
+        post:
+            tags:
+                - Admin
+            operationId: Admin_CreateAddress
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateAddressReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AddressInfo'
+    /api/address/default:
+        put:
+            tags:
+                - Admin
+            operationId: Admin_DefaultAddress
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddressReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/address/delete:
+        delete:
+            tags:
+                - Admin
+            operationId: Admin_DeleteAddress
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: uid
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/address/list/uid:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_AddressListByUid
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAddressReply'
+    /api/address/update:
+        put:
+            tags:
+                - Admin
+            operationId: Admin_UpdateAddress
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateAddressReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/users/captcha:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_Captcha
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CaptchaReply'
+    /api/users/detail:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_Detail
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UserDetailResponse'
+    /api/users/login:
+        post:
+            tags:
+                - Admin
+            operationId: Admin_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/LoginReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RegisterReply'
+    /api/users/register:
+        post:
+            tags:
+                - Admin
+            operationId: Admin_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RegisterReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RegisterReply'
+components:
+    schemas:
+        AddressInfo:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                mobile:
+                    type: string
+                Province:
+                    type: string
+                City:
+                    type: string
+                Districts:
+                    type: string
+                address:
+                    type: string
+                postCode:
+                    type: string
+                isDefault:
+                    type: integer
+                    format: int32
+        AddressReq:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                uid:
+                    type: integer
+                    format: int64
+        CaptchaReply:
+            type: object
+            properties:
+                captchaId:
+                    type: string
+                picPath:
+                    type: string
+        CheckResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        CreateAddressReq:
+            type: object
+            properties:
+                uid:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                mobile:
+                    type: string
+                Province:
+                    type: string
+                City:
+                    type: string
+                Districts:
+                    type: string
+                address:
+                    type: string
+                postCode:
+                    type: string
+                isDefault:
+                    type: integer
+                    format: int32
+        ListAddressReply:
+            type: object
+            properties:
+                results:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AddressInfo'
+        LoginReq:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+        RegisterReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                mobile:
+                    type: string
+                username:
+                    type: string
+                token:
+                    type: string
+                expiredAt:
+                    type: integer
+                    format: int64
+            description: Data returned by registration and login
+        RegisterReq:
+            type: object
+            properties:
+                mobile:
+                    type: string
+                username:
+                    type: string
+                password:
+                    type: string
+        UpdateAddressReq:
+            type: object
+            properties:
+                uid:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                mobile:
+                    type: string
+                Province:
+                    type: string
+                City:
+                    type: string
+                Districts:
+                    type: string
+                address:
+                    type: string
+                postCode:
+                    type: string
+                isDefault:
+                    type: integer
+                    format: int32
+                id:
+                    type: integer
+                    format: int64
+        UserDetailResponse:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                mobile:
+                    type: string
+                nickName:
+                    type: string
+                birthday:
+                    type: integer
+                    format: int64
+                gender:
+                    type: string
+                role:
+                    type: integer
+                    format: int32
+            description: user Detail returned
+tags:
+    - name: Admin

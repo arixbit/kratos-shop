@@ -1,4 +1,4 @@
-.PHONY: help build test vet test-cover tidy db-init migrate-up migrate-down up down ps logs e2e infra-up infra-down build-image
+.PHONY: help build test vet test-cover tidy db-init migrate-up migrate-down up down ps logs e2e infra-up infra-down build-image site-openapi
 
 MODULES := admin service/user service/goods service/cart service/order service/inventory service/payment shop
 VERSION ?= $(shell git describe --tags --always 2>/dev/null || echo unknown)
@@ -23,6 +23,7 @@ help:
 	@echo "  make infra-up   只启动基础设施（Postgres/Redis/RabbitMQ/Consul/ES/Jaeger）"
 	@echo "  make infra-down 停止基础设施容器"
 	@echo "  make build-image 构建全部服务的 Docker 镜像（GHCR 命名）"
+	@echo "  make site-openapi 同步最新 OpenAPI 到 site/openapi（GitHub Pages 使用）"
 
 build:
 	@for d in $(MODULES); do \
@@ -63,6 +64,11 @@ build-image:
 			--build-arg GOPROXY=$(GOPROXY) \
 			$$d || exit 1; \
 	done
+
+site-openapi:
+	mkdir -p site/openapi
+	cp shop/openapi.yaml site/openapi/shop.yaml
+	cp admin/openapi.yaml site/openapi/admin.yaml
 
 db-init:
 	./scripts/init-db.sh

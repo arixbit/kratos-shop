@@ -223,6 +223,7 @@ GOOS=linux GOARCH=amd64 make build
 
 ## 更多文档
 
+- [项目首页](https://arixbit.github.io/kratos-shop/)：GitHub Pages 项目首页与 API 文档
 - [配置说明](docs/configuration.md)：Demo 配置与 `config.local.yaml` 本地覆盖机制
 - [架构与微服务关系](docs/architecture.md)：架构图、服务职责、部署形态
 - [数据库说明](docs/database.md)：连接信息、初始化与迁移

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>API 文档 · kratos-shop</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .api-tabs { display: flex; gap: 10px; padding: 20px 32px 0; max-width: 1080px; margin: 0 auto; }
+    .api-tab {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .api-tab.on { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    .api-note { max-width: 1080px; margin: 0 auto; padding: 12px 32px; color: var(--muted); font-size: 13px; }
+    redoc { display: block; height: calc(100vh - 150px); }
+    redoc[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html">kratos<span>-shop</span></a>
+    <div class="links">
+      <a href="index.html">首页</a>
+      <a href="https://github.com/arixbit/kratos-shop/blob/main/docs/README.md" target="_blank" rel="noopener">文档</a>
+      <a href="https://github.com/arixbit/kratos-shop" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </nav>
+
+  <div class="api-tabs">
+    <button type="button" class="api-tab on" data-target="redoc-shop">shop 商城 BFF</button>
+    <button type="button" class="api-tab" data-target="redoc-admin">admin 后台管理</button>
+  </div>
+  <p class="api-note">
+    目前 HTTP 接口定义在 shop 与 admin；其余 gRPC 服务生成的 OpenAPI 为空 paths，暂未在页面展示。
+  </p>
+
+  <redoc id="redoc-shop" spec-url="openapi/shop.yaml"></redoc>
+  <redoc id="redoc-admin" spec-url="openapi/admin.yaml" hidden></redoc>
+
+  <script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0/bundles/redoc.standalone.js"></script>
+  <script>
+    (function () {
+      var tabs = document.querySelectorAll(".api-tab");
+      tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          tabs.forEach(function (t) { t.classList.remove("on"); });
+          tab.classList.add("on");
+          document.querySelectorAll("redoc").forEach(function (r) {
+            r.hidden = r.id !== tab.dataset.target;
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
