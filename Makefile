@@ -1,4 +1,4 @@
-.PHONY: help build test tidy db-init up down ps logs e2e
+.PHONY: help build test tidy db-init up down ps logs e2e infra-up infra-down
 
 MODULES := admin service/user service/goods service/cart service/order service/inventory service/payment shop
 
@@ -13,6 +13,8 @@ help:
 	@echo "  make ps       查看整套环境容器状态"
 	@echo "  make logs     查看整套环境日志"
 	@echo "  make e2e      运行端到端测试（需服务已启动）"
+	@echo "  make infra-up   只启动基础设施（Postgres/Redis/RabbitMQ/Consul/ES/Jaeger）"
+	@echo "  make infra-down 停止基础设施容器"
 
 build:
 	@for d in $(MODULES); do \
@@ -46,6 +48,12 @@ ps:
 
 logs:
 	docker compose -f deploy/docker-compose.yml logs -f
+
+infra-up:
+	docker compose -f deploy/docker-compose.yml up -d postgres redis rabbitmq consul elasticsearch jaeger
+
+infra-down:
+	docker compose -f deploy/docker-compose.yml stop postgres redis rabbitmq consul elasticsearch jaeger
 
 e2e:
 	./scripts/e2e.sh

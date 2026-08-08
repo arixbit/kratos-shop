@@ -165,7 +165,7 @@ flowchart LR
 
 ### 5.1 为什么选 RabbitMQ
 
-你的 `/Users/arix/src/infra/docker-compose.yml` 已经包含：
+项目自带的 `deploy/docker-compose.yml` 已经包含：
 
 ```yaml
 rabbitmq:

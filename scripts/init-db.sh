@@ -6,7 +6,7 @@ PGHOST="${PGHOST:-127.0.0.1}"
 PGPORT="${PGPORT:-5432}"
 PGUSER="${PGUSER:-postgres}"
 PGPASSWORD="${PGPASSWORD:-root}"
-PG_CONTAINER="${PG_CONTAINER:-infra-postgres}"
+PG_CONTAINER="${PG_CONTAINER:-ks-postgres}"
 export PGPASSWORD
 
 if command -v psql >/dev/null 2>&1; then

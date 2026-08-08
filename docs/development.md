@@ -8,26 +8,28 @@
 - Redis 7（Docker）
 - Consul（服务发现）
 - Elasticsearch（goods 服务搜索）
-- Jaeger（可选，链路追踪）
+- Jaeger（链路追踪）
 
 ## 1. 启动基础设施
 
-项目核心依赖的 Postgres/Redis 定义在 `/Users/arix/src/infra/docker-compose.yml`：
+项目自带 `deploy/docker-compose.yml`，可以直接启动全部基础设施：
 
 ```bash
-cd /Users/arix/src/infra
-docker compose up -d postgres redis
+make infra-up
 ```
 
-还需要启动服务发现与商品搜索依赖：
+等价于：
 
 ```bash
-docker run -d --name consul -p 8500:8500 hashicorp/consul:latest agent -dev -client=0.0.0.0
-docker run -d --name elasticsearch -p 9200:9200 \
-  -e "discovery.type=single-node" \
-  -e "xpack.security.enabled=false" \
-  docker.elastic.co/elasticsearch/elasticsearch:7.17.22
-docker run -d --name jaeger -p 14268:14268 -p 16686:16686 jaegertracing/all-in-one:latest
+docker compose -f deploy/docker-compose.yml up -d postgres redis rabbitmq consul elasticsearch jaeger
+```
+
+包含 Postgres 18、Redis 7、RabbitMQ、Consul、Elasticsearch 7.17、Jaeger。
+
+停止基础设施：
+
+```bash
+make infra-down
 ```
 
 > Elasticsearch 镜像中如启用了 IK 分词插件，请替换为包含 `ik_max_word` 分词器的镜像。
@@ -53,6 +55,8 @@ cd service/user && go build -o bin/user ./cmd/user
 cd service/goods && go build -o bin/goods ./cmd/goods
 cd service/cart && go build -o bin/cart ./cmd/cart
 cd service/order && go build -o bin/order ./cmd/order
+cd service/inventory && go build -o bin/inventory ./cmd/inventory
+cd service/payment && go build -o bin/payment ./cmd/payment
 cd shop && go build -o bin/shop ./cmd/shop
 cd admin && go build -o bin/admin ./cmd/admin
 ```
@@ -73,6 +77,32 @@ cd admin && ./bin/admin -conf configs
 ```
 
 > 实际运行时建议分别开 8 个终端，先启动 6 个 gRPC 服务，再启动 `shop` 与 `admin`。
+
+### 多服务器部署
+
+微服务可以按服务拆分到不同服务器部署。每个服务都是独立二进制，服务之间通过同一个 Consul 服务发现互相调用，因此服务跑在哪台机器上不影响调用关系。
+
+1. 在构建机为对应平台构建服务（例如 Linux amd64）：
+
+```bash
+cd service/user
+GOOS=linux GOARCH=amd64 make build
+```
+
+2. 将 `bin/user` 与 `configs/` 目录一起拷贝到目标服务器。
+
+3. 修改目标服务器上的配置：
+
+- `configs/config.yaml`：数据库、Redis、RabbitMQ、Elasticsearch、Jaeger 地址改为实际可达的地址
+- `configs/registry.yaml`：`consul.address` 改为 Consul 所在服务器的地址，所有服务必须注册到同一个 Consul
+
+4. 启动服务：
+
+```bash
+./bin/user -conf configs
+```
+
+其他服务（goods、cart、order、inventory、payment、shop、admin）按同样方式部署。各服务默认端口见 README 中的端口表。
 
 ## 5. 验证
 
@@ -113,7 +143,7 @@ make up
 - 服务指标：各服务 `http://127.0.0.1:91XX/metrics`（user 9101 ~ admin 9108）
 - 日志：Promtail 自动采集全部容器日志写入 Loki，可在 Grafana Explore 中按 `container` / `service` 查询
 
-> 注意：`make up` 会占用 5432/6379/5672/8500/9200 等端口；如果本机已经用 `/Users/arix/src/infra/docker-compose.yml` 启动了相同服务，请先停掉避免端口冲突。
+> 注意：`make up` 会占用 5432/6379/5672/8500/9200 等端口；如果本机已经手动启动了相同端口上的服务，请先停掉避免端口冲突。
 
 通过网关访问：
 

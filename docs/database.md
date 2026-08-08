@@ -4,7 +4,7 @@
 
 ## 连接信息
 
-连接信息来自 `/Users/arix/src/infra/docker-compose.yml`：
+连接信息来自项目自带的 `deploy/docker-compose.yml`（通过 `make infra-up` 启动）：
 
 | 项目 | 值 |
 | --- | --- |
@@ -14,15 +14,14 @@
 | Redis | `127.0.0.1:6379` |
 | Redis 密码 | `root` |
 
-四个业务库：`shop_user`、`shop_goods`、`shop_cart`、`shop_order`。
+六个业务库：`shop_user`、`shop_goods`、`shop_cart`、`shop_order`、`shop_inventory`、`shop_payment`。
 
 ## 初始化数据库
 
-先确保 Postgres 已启动：
+先确保 Postgres 已启动（项目自带的 Compose 方案）：
 
 ```bash
-cd /Users/arix/src/infra
-docker compose up -d postgres redis
+make infra-up
 ```
 
 然后在项目根目录执行：
@@ -34,11 +33,15 @@ chmod +x scripts/init-db.sh
 
 脚本会按顺序执行：
 
-1. `sql/01_init_databases.sql`：创建 4 个数据库
+1. `sql/01_init_databases.sql`：创建 6 个数据库
 2. `sql/02_user.sql`：用户表 + Mock 数据
 3. `sql/03_goods.sql`：商品域全部表 + Mock 数据
 4. `sql/04_cart.sql`：购物车表 + Mock 数据
 5. `sql/05_order.sql`：订单域表 + Mock 数据
+6. `sql/06_inventory.sql`：库存域表 + Mock 数据
+7. `sql/07_payment.sql`：支付表 + Mock 数据
+
+> 如果使用 `make up` 一键启动整套环境，Postgres 首次启动时会自动执行 `sql/` 下的初始化脚本，无需手动执行本步骤；手动重复执行也是安全的（脚本幂等）。
 
 也可以手动执行：
 
