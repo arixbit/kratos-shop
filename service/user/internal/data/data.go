@@ -12,7 +12,7 @@ import (
 	"github.com/go-redis/redis/extra/redisotel"
 	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -66,8 +66,7 @@ func NewDB(c *conf.Data) *gorm.DB {
 			LogLevel: logger.Info, // Log lever
 		},
 	)
-	log.Info("failed opening connection to ")
-	db, err := gorm.Open(mysql.Open(c.Database.Source), &gorm.Config{
+	db, err := gorm.Open(postgres.Open(c.Database.Source), &gorm.Config{
 		Logger:                                   newLogger,
 		DisableForeignKeyConstraintWhenMigrating: true,
 		NamingStrategy:                           schema.NamingStrategy{
@@ -93,8 +92,5 @@ func NewRedis(c *conf.Data) *redis.Client {
 		ReadTimeout:  c.Redis.ReadTimeout.AsDuration(),
 	})
 	rdb.AddHook(redisotel.TracingHook{})
-	if err := rdb.Close(); err != nil {
-		log.Error(err)
-	}
 	return rdb
 }

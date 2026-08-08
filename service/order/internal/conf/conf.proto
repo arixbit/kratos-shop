@@ -11,6 +11,7 @@ message Bootstrap {
   Trace trace = 3;
   Auth auth = 4;
   Service service = 5;
+  Mq mq = 6;
 }
 
 message Server {
@@ -76,4 +77,8 @@ message Service {
   User user = 1;
   Cart cart = 2;
   Goods goods = 3;
+}
+
+message Mq {
+  string addr = 1;
 }

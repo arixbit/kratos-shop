@@ -15,6 +15,12 @@ service admin {
       body: "*",
     };
   }
+  rpc RefreshToken (RefreshTokenRequest) returns (RegisterReply) {
+    option (google.api.http) = {
+      post: "/api/users/refresh",
+      body: "*",
+    };
+  }
   rpc Login (LoginReq) returns (RegisterReply) {
     option (google.api.http) = {
       post: "/api/users/login",
@@ -57,6 +63,28 @@ service admin {
   rpc DeleteAddress (AddressReq) returns (CheckResponse) {
     option (google.api.http) = {
       delete: "/api/address/delete",
+    };
+  }
+  rpc GoodsList (GoodsListRequest) returns (GoodsListReply) {
+    option (google.api.http) = {
+      get: "/api/goods/list",
+    };
+  }
+  rpc UpdateGoods (UpdateGoodsRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      put: "/api/goods/update",
+      body: "*",
+    };
+  }
+  rpc DeleteGoods (DeleteGoodsRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      delete: "/api/goods/delete",
+    };
+  }
+  rpc UpdateGoodsStatus (UpdateGoodsStatusRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      put: "/api/goods/status",
+      body: "*",
     };
   }
 }
@@ -150,4 +178,52 @@ message UserDetailResponse{
 message CaptchaReply{
   string captchaId = 1;
   string picPath = 2;
+}
+
+message RefreshTokenRequest {
+  string token = 1;
+}
+
+message GoodsListRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+  string keywords = 3;
+  int64 categoryId = 4;
+  int64 brandId = 5;
+}
+
+message GoodsItem {
+  int64 id = 1;
+  string name = 2;
+  string goodsSn = 3;
+  int64 marketPrice = 4;
+  bool onSale = 5;
+  bool isNew = 6;
+  bool isHot = 7;
+}
+
+message GoodsListReply {
+  int32 total = 1;
+  repeated GoodsItem list = 2;
+}
+
+message UpdateGoodsRequest {
+  int64 id = 1 [(validate.rules).int64.gte = 1];
+  string name = 2;
+  string nameAlias = 3;
+  string goodsBrief = 4;
+  string goodsFrontImage = 5;
+  int64 marketPrice = 6;
+  bool shipFree = 7;
+  bool isNew = 8;
+  bool isHot = 9;
+}
+
+message DeleteGoodsRequest {
+  int64 id = 1 [(validate.rules).int64.gte = 1];
+}
+
+message UpdateGoodsStatusRequest {
+  int64 id = 1 [(validate.rules).int64.gte = 1];
+  bool onSale = 2;
 }

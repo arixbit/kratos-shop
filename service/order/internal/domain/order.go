@@ -5,21 +5,55 @@ import (
 )
 
 type Order struct {
-	ID           int64
-	User         int64
-	OrderSn      string
-	PayType      string
-	Status       string
-	TradeNo      string
-	OrderMount   int64
-	PayTime      time.Time
-	Address      string
-	SignerName   string
-	SingerMobile string
-	Post         string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    time.Time
+	ID            int64
+	User          int64
+	OrderSn       string
+	OrderAmount   int64
+	GoodsAmount   int64
+	OrderStatus   int
+	ExpressAmount int64
+	DeliveryAt    time.Time
+	RefundTime    time.Time
+	Post          string
+	Address       string
+	SignerName    string
+	SingerMobile  string
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+}
+
+type OrderAddress struct {
+	ID              int64
+	User            int64
+	OrderSn         string
+	RecipientName   string
+	RecipientMobile string
+	Province        string
+	City            string
+	Districts       string
+	Address         string
+	PostCode        string
+}
+
+type OrderGoods struct {
+	ID         int64
+	OrderSn    string
+	UserId     int64
+	SkuId      int64
+	SkuName    string
+	SkuPrice   int64
+	Num        int32
+	TotalPrice int64
+}
+
+type OutboxEvent struct {
+	ID         int64
+	EventID    string
+	EventType  string
+	OrderSn    string
+	Payload    []byte
+	Status     int
+	RetryCount int
 }
 
 type CreateOrder struct {

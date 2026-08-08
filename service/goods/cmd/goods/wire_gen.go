@@ -19,10 +19,12 @@ import (
 // Injectors from wire.go:
 
 // initApp init kratos application.
-func initApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
+func initApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Data, confService *conf.Service, mq *conf.Mq, logger log.Logger) (*kratos.App, func(), error) {
 	db := data.NewDB(confData)
 	client := data.NewRedis(confData)
 	elasticClient := data.NewElasticsearch(confData)
+	discovery := data.NewDiscovery(registry)
+	inventoryClient := data.NewInventoryServiceClient(confService, discovery)
 	dataData, cleanup, err := data.NewData(confData, logger, db, client, elasticClient)
 	if err != nil {
 		return nil, nil, err
@@ -44,7 +46,7 @@ func initApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Da
 	esGoodsRepo := data.NewEsGoodsRepo(dataData, logger)
 	goodsUsecase := biz.NewGoodsUsecase(goodsRepo, goodsSkuRepo, transaction, goodsTypeRepo, categoryRepo, brandRepo, specificationRepo, goodsAttrRepo, inventoryRepo, esGoodsRepo, logger)
 	esGoodsUsecase := biz.NewEsGoodsUsecase(goodsRepo, esGoodsRepo, categoryRepo, logger)
-	goodsService := service.NewGoodsService(brandUsecase, categoryUsecase, goodsTypeUsecase, specificationUsecase, goodsAttrUsecase, goodsUsecase, esGoodsUsecase, logger)
+	goodsService := service.NewGoodsService(brandUsecase, categoryUsecase, goodsTypeUsecase, specificationUsecase, goodsAttrUsecase, goodsUsecase, esGoodsUsecase, inventoryClient, mq, logger)
 	grpcServer := server.NewGRPCServer(confServer, goodsService, logger)
 	registrar := server.NewRegistrar(registry)
 	app := newApp(logger, grpcServer, registrar)

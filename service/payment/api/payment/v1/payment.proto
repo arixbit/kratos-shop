@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package payment.v1;
+
+option go_package = "payment/api/payment/v1;v1";
+
+service Payment {
+  rpc CreatePayment(CreatePaymentRequest) returns (PaymentInfoReply); // 创建支付单
+  rpc PaymentCallback(PaymentCallbackRequest) returns (CheckReply);   // 支付回调（本地模拟）
+}
+
+message CreatePaymentRequest {
+  int64 userId = 1;
+  string orderSn = 2;
+  int64 amount = 3;
+  string channel = 4;
+}
+
+message PaymentInfoReply {
+  int64 id = 1;
+  string paymentNo = 2;
+  string orderSn = 3;
+  int64 amount = 4;
+  string channel = 5;
+  int32 status = 6;
+}
+
+message PaymentCallbackRequest {
+  string paymentNo = 1;
+  string tradeNo = 2;
+  bool success = 3;
+}
+
+message CheckReply {
+  bool success = 1;
+  string message = 2;
+}

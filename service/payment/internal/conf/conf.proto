@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package payment.api;
+
+option go_package = "payment/internal/conf;conf";
+
+import "google/protobuf/duration.proto";
+
+message Bootstrap {
+  Server server = 1;
+  Data data = 2;
+  Trace trace = 3;
+  Mq mq = 4;
+  Service service = 5;
+}
+
+message Server {
+  message HTTP {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  message GRPC {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  HTTP http = 1;
+  GRPC grpc = 2;
+}
+
+message Data {
+  message Database {
+    string driver = 1;
+    string source = 2;
+  }
+  Database database = 1;
+}
+
+message Registry {
+  message Consul {
+    string address = 1;
+    string scheme = 2;
+  }
+  Consul consul = 1;
+}
+
+message Trace {
+  string endpoint = 1;
+}
+
+message Mq {
+  string addr = 1;
+}
+
+message Service {
+  message Order {
+    string endpoint = 1;
+  }
+  Order order = 1;
+}

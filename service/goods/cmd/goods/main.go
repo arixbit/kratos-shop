@@ -19,6 +19,7 @@ import (
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	"goods/internal/conf"
+	"goods/internal/pkg/metrics"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -102,13 +103,16 @@ func main() {
 	if err := setTracerProvider(bc.Trace.Endpoint); err != nil {
 		panic(err)
 	}
+	if err := metrics.Init("0.0.0.0:9102"); err != nil {
+		panic(err)
+	}
 
 	var rc conf.Registry
 	if err := c.Scan(&rc); err != nil {
 		panic(err)
 	}
 
-	app, cleanup, err := initApp(bc.Server, &rc, bc.Data, logger)
+	app, cleanup, err := initApp(bc.Server, &rc, bc.Data, bc.Service, bc.Mq, logger)
 	if err != nil {
 		panic(err)
 	}

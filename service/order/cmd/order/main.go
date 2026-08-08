@@ -18,6 +18,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"order/internal/conf"
+	"order/internal/pkg/metrics"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -80,13 +81,16 @@ func main() {
 	if err := setTracerProvider(bc.Trace.Endpoint); err != nil {
 		panic(err)
 	}
+	if err := metrics.Init("0.0.0.0:9104"); err != nil {
+		panic(err)
+	}
 
 	var rc conf.Registry
 	if err := c.Scan(&rc); err != nil {
 		panic(err)
 	}
 
-	app, cleanup, err := wireApp(bc.Server, &rc, bc.Data, bc.Auth, bc.Service, logger)
+	app, cleanup, err := wireApp(bc.Server, &rc, bc.Data, bc.Auth, bc.Service, bc.Mq, logger)
 	if err != nil {
 		panic(err)
 	}

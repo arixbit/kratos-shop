@@ -12,6 +12,7 @@ import (
 	"os"
 
 	"cart/internal/conf"
+	"cart/internal/pkg/metrics"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
@@ -101,6 +102,9 @@ func main() {
 	}
 
 	if err := setTracerProvider(bc.Trace.Endpoint); err != nil {
+		panic(err)
+	}
+	if err := metrics.Init("0.0.0.0:9103"); err != nil {
 		panic(err)
 	}
 

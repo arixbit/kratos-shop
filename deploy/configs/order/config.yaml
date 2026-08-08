@@ -1,0 +1,27 @@
+server:
+  grpc:
+    addr: 0.0.0.0:50054
+    timeout: 1s
+data:
+  database:
+    driver: postgres
+    source: postgres://postgres:root@postgres:5432/shop_order?sslmode=disable&TimeZone=Asia/Shanghai
+  redis:
+    addr: redis:6379
+    password: root
+    dial_timeout: 1s
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+trace:
+  endpoint: http://jaeger:14268/api/traces
+auth:
+  jwt_key: hqFr%3ddt32DGlSTOI5cO6@TH#fFwYnP$S
+service:
+  user:
+    endpoint: discovery:///shop.user.service
+  cart:
+    endpoint: discovery:///shop.cart.service
+  goods:
+    endpoint: discovery:///shop.goods.service
+mq:
+  addr: amqp://root:root@rabbitmq:5672/

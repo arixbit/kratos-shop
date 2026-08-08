@@ -5,6 +5,10 @@
 package mrepo
 
 import (
+	context "context"
+	reflect "reflect"
+	"order/internal/domain"
+
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -29,4 +33,165 @@ func NewMockOrderRepo(ctrl *gomock.Controller) *MockOrderRepo {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOrderRepo) EXPECT() *MockOrderRepoMockRecorder {
 	return m.recorder
+}
+
+// Create mocks base method.
+func (m *MockOrderRepo) Create(arg0 context.Context, arg1 *domain.Order, arg2 *domain.OrderAddress, arg3 []*domain.OrderGoods, arg4 *domain.OutboxEvent) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Create", arg0, arg1, arg2, arg3, arg4)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Create indicates an expected call of Create.
+func (mr *MockOrderRepoMockRecorder) Create(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockOrderRepo)(nil).Create), arg0, arg1, arg2, arg3, arg4)
+}
+
+// ListPendingOutbox mocks base method.
+func (m *MockOrderRepo) ListPendingOutbox(arg0 context.Context, arg1 int) ([]*domain.OutboxEvent, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListPendingOutbox", arg0, arg1)
+	ret0, _ := ret[0].([]*domain.OutboxEvent)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListPendingOutbox indicates an expected call of ListPendingOutbox.
+func (mr *MockOrderRepoMockRecorder) ListPendingOutbox(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPendingOutbox", reflect.TypeOf((*MockOrderRepo)(nil).ListPendingOutbox), arg0, arg1)
+}
+
+// MarkOutboxPublished mocks base method.
+func (m *MockOrderRepo) MarkOutboxPublished(arg0 context.Context, arg1 int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MarkOutboxPublished", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MarkOutboxPublished indicates an expected call of MarkOutboxPublished.
+func (mr *MockOrderRepoMockRecorder) MarkOutboxPublished(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkOutboxPublished", reflect.TypeOf((*MockOrderRepo)(nil).MarkOutboxPublished), arg0, arg1)
+}
+
+// CreateOutbox mocks base method.
+func (m *MockOrderRepo) CreateOutbox(arg0 context.Context, arg1 *domain.OutboxEvent) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateOutbox", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateOutbox indicates an expected call of CreateOutbox.
+func (mr *MockOrderRepoMockRecorder) CreateOutbox(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOutbox", reflect.TypeOf((*MockOrderRepo)(nil).CreateOutbox), arg0, arg1)
+}
+
+// UpdateStatusIf mocks base method.
+func (m *MockOrderRepo) UpdateStatusIf(arg0 context.Context, arg1 string, arg2, arg3 int) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateStatusIf", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateStatusIf indicates an expected call of UpdateStatusIf.
+func (mr *MockOrderRepoMockRecorder) UpdateStatusIf(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStatusIf", reflect.TypeOf((*MockOrderRepo)(nil).UpdateStatusIf), arg0, arg1, arg2, arg3)
+}
+
+// ListItemsByOrderSn mocks base method.
+func (m *MockOrderRepo) ListItemsByOrderSn(arg0 context.Context, arg1 string) ([]*domain.OrderGoods, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListItemsByOrderSn", arg0, arg1)
+	ret0, _ := ret[0].([]*domain.OrderGoods)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListItemsByOrderSn indicates an expected call of ListItemsByOrderSn.
+func (mr *MockOrderRepoMockRecorder) ListItemsByOrderSn(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListItemsByOrderSn", reflect.TypeOf((*MockOrderRepo)(nil).ListItemsByOrderSn), arg0, arg1)
+}
+
+// ListPendingTimeout mocks base method.
+func (m *MockOrderRepo) ListPendingTimeout(arg0 context.Context, arg1 int) ([]*domain.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListPendingTimeout", arg0, arg1)
+	ret0, _ := ret[0].([]*domain.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListPendingTimeout indicates an expected call of ListPendingTimeout.
+func (mr *MockOrderRepoMockRecorder) ListPendingTimeout(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPendingTimeout", reflect.TypeOf((*MockOrderRepo)(nil).ListPendingTimeout), arg0, arg1)
+}
+
+// GetDetail mocks base method.
+func (m *MockOrderRepo) GetDetail(arg0 context.Context, arg1 int64, arg2 string) (*domain.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDetail", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*domain.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDetail indicates an expected call of GetDetail.
+func (mr *MockOrderRepoMockRecorder) GetDetail(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDetail", reflect.TypeOf((*MockOrderRepo)(nil).GetDetail), arg0, arg1, arg2)
+}
+
+// ListByUser mocks base method.
+func (m *MockOrderRepo) ListByUser(arg0 context.Context, arg1 int64, arg2, arg3 int) ([]*domain.Order, int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListByUser", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].([]*domain.Order)
+	ret1, _ := ret[1].(int64)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// ListByUser indicates an expected call of ListByUser.
+func (mr *MockOrderRepoMockRecorder) ListByUser(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListByUser", reflect.TypeOf((*MockOrderRepo)(nil).ListByUser), arg0, arg1, arg2, arg3)
+}
+
+// IncrementOutboxRetry mocks base method.
+func (m *MockOrderRepo) IncrementOutboxRetry(arg0 context.Context, arg1 int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IncrementOutboxRetry", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// IncrementOutboxRetry indicates an expected call of IncrementOutboxRetry.
+func (mr *MockOrderRepoMockRecorder) IncrementOutboxRetry(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncrementOutboxRetry", reflect.TypeOf((*MockOrderRepo)(nil).IncrementOutboxRetry), arg0, arg1)
+}
+
+// MarkOutboxFailed mocks base method.
+func (m *MockOrderRepo) MarkOutboxFailed(arg0 context.Context, arg1 int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MarkOutboxFailed", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MarkOutboxFailed indicates an expected call of MarkOutboxFailed.
+func (mr *MockOrderRepoMockRecorder) MarkOutboxFailed(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkOutboxFailed", reflect.TypeOf((*MockOrderRepo)(nil).MarkOutboxFailed), arg0, arg1)
 }

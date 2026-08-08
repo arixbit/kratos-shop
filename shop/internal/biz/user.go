@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
-	jwt2 "github.com/golang-jwt/jwt/v4"
+	jwt2 "github.com/golang-jwt/jwt/v5"
 	v1 "shop/api/shop/v1"
 	"shop/internal/conf"
 	"shop/internal/pkg/captcha"
@@ -116,9 +116,9 @@ func (uc *UserUsecase) PassWordLogin(ctx context.Context, req *v1.LoginReq) (*v1
 					ID:          user.ID,
 					NickName:    user.NickName,
 					AuthorityId: user.Role,
-					StandardClaims: jwt2.StandardClaims{
-						NotBefore: time.Now().Unix(),               // 签名的生效时间
-						ExpiresAt: time.Now().Unix() + 60*60*24*30, // 30天过期
+					RegisteredClaims: jwt2.RegisteredClaims{
+						NotBefore: jwt2.NewNumericDate(time.Now()),                            // 签名的生效时间
+						ExpiresAt: jwt2.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)),   // 30天过期
 						Issuer:    "Gyl",
 					},
 				}
@@ -151,9 +151,9 @@ func (uc *UserUsecase) CreateUser(ctx context.Context, req *v1.RegisterReq) (*v1
 		ID:          createUser.ID,
 		NickName:    createUser.NickName,
 		AuthorityId: createUser.Role,
-		StandardClaims: jwt2.StandardClaims{
-			NotBefore: time.Now().Unix(),               // 签名的生效时间
-			ExpiresAt: time.Now().Unix() + 60*60*24*30, // 30天过期
+		RegisteredClaims: jwt2.RegisteredClaims{
+			NotBefore: jwt2.NewNumericDate(time.Now()),                          // 签名的生效时间
+			ExpiresAt: jwt2.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)), // 30天过期
 			Issuer:    "Gyl",
 		},
 	}
@@ -168,6 +168,32 @@ func (uc *UserUsecase) CreateUser(ctx context.Context, req *v1.RegisterReq) (*v1
 		Username:  createUser.NickName,
 		Token:     token,
 		ExpiredAt: time.Now().Unix() + 60*60*24*30,
+	}, nil
+}
+
+func (uc *UserUsecase) RefreshToken(ctx context.Context, token string) (*v1.RegisterReply, error) {
+	claims, err := auth.ParseToken(token, uc.signingKey)
+	if err != nil {
+		return nil, ErrAuthFailed
+	}
+	newToken, err := auth.CreateToken(auth.CustomClaims{
+		ID:          claims.ID,
+		NickName:    claims.NickName,
+		AuthorityId: claims.AuthorityId,
+		RegisteredClaims: jwt2.RegisteredClaims{
+			NotBefore: jwt2.NewNumericDate(time.Now()),
+			ExpiresAt: jwt2.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)),
+			Issuer:    "Gyl",
+		},
+	}, uc.signingKey)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.RegisterReply{
+		Id:        claims.ID,
+		Username:  claims.NickName,
+		Token:     newToken,
+		ExpiredAt: time.Now().Add(30 * 24 * time.Hour).Unix(),
 	}, nil
 }
 

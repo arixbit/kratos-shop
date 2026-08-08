@@ -1,0 +1,23 @@
+name: admin.api
+server:
+  http:
+    addr: 0.0.0.0:9099
+    timeout: 1s
+data:
+  database:
+    driver: postgres
+    source: postgres://postgres:root@postgres:5432/shop_user?sslmode=disable&TimeZone=Asia/Shanghai
+  redis:
+    addr: redis:6379
+    password: root
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+trace:
+  endpoint: http://jaeger:14268/api/traces
+auth:
+  jwt_key: hqFr%3ddt32DGlSTOI5cO6@TH#Admin
+service:
+  user:
+    endpoint: discovery:///shop.user.service
+  goods:
+    endpoint: discovery:///shop.goods.service

@@ -90,3 +90,7 @@ func (c *CategoryUsecase) SubCategoryList(ctx context.Context, cid int32) (*Cate
 		SubCategory: category,
 	}, nil
 }
+
+func (c *CategoryUsecase) GetCategoryByID(ctx context.Context, id int32) (*CategoryInfo, error) {
+	return c.repo.GetCategoryByID(ctx, id)
+}

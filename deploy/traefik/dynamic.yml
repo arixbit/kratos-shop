@@ -1,0 +1,22 @@
+http:
+  routers:
+    shop:
+      rule: "Host(`localhost`) || Host(`127.0.0.1`)"
+      entryPoints:
+        - web
+      service: shop
+    admin:
+      rule: "Host(`admin.localhost`)"
+      entryPoints:
+        - web
+      service: admin
+
+  services:
+    shop:
+      loadBalancer:
+        servers:
+          - url: "http://shop:8097"
+    admin:
+      loadBalancer:
+        servers:
+          - url: "http://admin:9099"

@@ -14,7 +14,7 @@ type GoodsImages struct {
 	Goods   Goods
 
 	Link     string `gorm:"type:varchar(200);comment:商品图片URL地址;not null"`
-	Position int32  `gorm:"type:smallint(5);comment:商品图片位置;not null"`
+	Position int32  `gorm:"type:smallint;comment:商品图片位置;not null"`
 	IsMaster bool   `gorm:"comment:是否主图: 1是,0否;default:false;not null"`
 }
 

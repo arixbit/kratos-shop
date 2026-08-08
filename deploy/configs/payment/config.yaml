@@ -1,0 +1,15 @@
+server:
+  grpc:
+    addr: 0.0.0.0:50056
+    timeout: 1s
+data:
+  database:
+    driver: postgres
+    source: postgres://postgres:root@postgres:5432/shop_payment?sslmode=disable&TimeZone=Asia/Shanghai
+mq:
+  addr: amqp://root:root@rabbitmq:5672/
+service:
+  order:
+    endpoint: discovery:///shop.order.service
+trace:
+  endpoint: http://jaeger:14268/api/traces

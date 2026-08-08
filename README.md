@@ -1,43 +1,50 @@
 # kratos-shop
-kratos 框架写商品微服务
 
-本项目是一个使用 Kratos 框架创建的很简单的微服务商城项目。
-> 注: 本项目中但凡 kratos 提供包,就不会自己封装第三方的包。
+基于 [go-kratos](https://github.com/go-kratos/kratos) v2 的微服务商城示例项目。
 
-主要是为了学习 kratos 如何使用,尤其各种中间件之间的调用,包括微服务的一些技术点。
+## 技术栈
 
-项目具体目录结构初步设计如下:
+- Go 1.26.5
+- Kratos v2.9.2
+- PostgreSQL 18
+- Redis 7
+- Consul 服务注册/发现
+- Elasticsearch 商品搜索
+- Jaeger 链路追踪
+- GORM + wire
 
+## 目录结构
+
+| 目录 | 说明 |
+| --- | --- |
+| `service/user` | 用户 gRPC 服务 |
+| `service/goods` | 商品 gRPC 服务 |
+| `service/cart` | 购物车 gRPC 服务 |
+| `service/order` | 订单 gRPC 服务 |
+| `service/inventory` | 库存 gRPC 服务 |
+| `service/payment` | 支付 gRPC 服务（本地模拟） |
+| `shop` | 商城 BFF HTTP 服务 |
+| `admin` | 后台管理 HTTP 服务 |
+| `sql` | PostgreSQL 建表与 Mock 数据 |
+| `scripts` | 数据库初始化脚本 |
+| `docs` | 架构与使用文档 |
+
+## 快速开始
+
+```bash
+# 1. 启动基础设施（Postgres/Redis 来自 /Users/arix/src/infra/docker-compose.yml）
+cd /Users/arix/src/infra
+docker compose up -d postgres redis
+
+# 2. 初始化数据库与 Mock 数据
+cd /Users/arix/src/Personal/kratos-shop
+./scripts/init-db.sh
+
+# 3. 构建并启动全部服务
+make build
+
+# 或者一键拉起整套环境（含基础设施、Prometheus、Grafana）
+make up
 ```
-|-- kratos-shop
-    |-- service
-        |-- user // 用户服务 grpc
-        |-- goods // 商品服务 grpc
-        |-- cart // 购物车服务 grpc
-        |-- order // 订单服务 grpc
-        |-- inventory // 库存服务服务 grpc
-    |-- shop // shop 商城服务 http (后期会考虑把订单单独拆出来)
-        ├── api  // 商城 api
-        │   ├── service
-        │   │   └── user 
-        │   │       └── v1 // 用户服务的 proto
-        │   │   └── goods
-        │   │       └── v1 // 商品服务的 proto
-        │   │           
-        │   └── shop
-        │       └── v1
-        │           ├── error_reason.proto 
-        │           ├── shop.proto
-        │── cmd 
-        │── internal
-        │.....  
-    |-- admin // 后端管理系统 web 
-```
 
-
-* 有任何建议，请扫码添加我微信进行交流。
-
-![扫码提建议](https://cdn.jsdelivr.net/gh/aliliin/blog-image@main/uPic/扫码_搜索联合传播样式-白色版.png)
-
-
-
+详细说明见 [docs](docs/README.md)。

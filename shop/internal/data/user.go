@@ -46,6 +46,7 @@ func (u *userRepo) UserByMobile(c context.Context, mobile string) (*biz.User, er
 		ID:       byMobile.Id,
 		Password: byMobile.Password,
 		NickName: byMobile.NickName,
+		Role:     int(byMobile.Role),
 	}, nil
 }
 

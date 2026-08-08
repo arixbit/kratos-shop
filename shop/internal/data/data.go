@@ -11,24 +11,26 @@ import (
 	"github.com/google/wire"
 	consulAPI "github.com/hashicorp/consul/api"
 	grpcx "google.golang.org/grpc"
+	goodsV1 "shop/api/service/goods/v1"
 	userV1 "shop/api/service/user/v1"
 	"shop/internal/conf"
 	"time"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewUserRepo, NewAddressRepo, NewUserServiceClient, NewRegistrar, NewDiscovery)
+var ProviderSet = wire.NewSet(NewData, NewUserRepo, NewAddressRepo, NewUserServiceClient, NewGoodsServiceClient, NewRegistrar, NewDiscovery)
 
 // Data .
 type Data struct {
 	log *log.Helper
 	uc  userV1.UserClient
+	gc  goodsV1.GoodsClient
 }
 
 // NewData .
-func NewData(c *conf.Data, uc userV1.UserClient, logger log.Logger) (*Data, error) {
+func NewData(c *conf.Data, uc userV1.UserClient, gc goodsV1.GoodsClient, logger log.Logger) (*Data, error) {
 	l := log.NewHelper(log.With(logger, "module", "data"))
-	return &Data{log: l, uc: uc}, nil
+	return &Data{log: l, uc: uc, gc: gc}, nil
 }
 
 // NewUserServiceClient 链接用户服务 grpc
@@ -49,6 +51,25 @@ func NewUserServiceClient(ac *conf.Auth, sr *conf.Service, rr registry.Discovery
 	}
 	c := userV1.NewUserClient(conn)
 	return c
+}
+
+// NewGoodsServiceClient 链接商品服务 grpc
+func NewGoodsServiceClient(ac *conf.Auth, sr *conf.Service, rr registry.Discovery) goodsV1.GoodsClient {
+	conn, err := grpc.DialInsecure(
+		context.Background(),
+		grpc.WithEndpoint(sr.Goods.Endpoint),
+		grpc.WithDiscovery(rr),
+		grpc.WithMiddleware(
+			tracing.Client(),
+			recovery.Recovery(),
+		),
+		grpc.WithTimeout(2*time.Second),
+		grpc.WithOptions(grpcx.WithStatsHandler(&tracing.ClientHandler{})),
+	)
+	if err != nil {
+		panic(err)
+	}
+	return goodsV1.NewGoodsClient(conn)
 }
 
 // NewRegistrar add consul

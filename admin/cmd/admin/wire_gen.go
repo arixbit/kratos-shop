@@ -22,7 +22,8 @@ import (
 func initApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, confService *conf.Service, registry *conf.Registry, logger log.Logger) (*kratos.App, func(), error) {
 	discovery := data.NewDiscovery(registry)
 	userClient := data.NewUserServiceClient(auth, confService, discovery)
-	dataData, err := data.NewData(confData, userClient, logger)
+	goodsClient := data.NewGoodsServiceClient(auth, confService, discovery)
+	dataData, err := data.NewData(confData, userClient, goodsClient, logger)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -30,7 +31,8 @@ func initApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, conf
 	userUsecase := biz.NewUserUsecase(userRepo, logger, auth)
 	addressRepo := data.NewAddressRepo(dataData, logger)
 	addressUsecase := biz.NewAddressUsecase(userRepo, addressRepo, logger, auth)
-	adminService := service.NewAdminService(userUsecase, addressUsecase, logger)
+	goodsUsecase := biz.NewGoodsUsecase(goodsClient, logger)
+	adminService := service.NewAdminService(userUsecase, addressUsecase, goodsUsecase, logger)
 	httpServer := server.NewHTTPServer(confServer, auth, adminService, logger)
 	registrar := data.NewRegistrar(registry)
 	app := newApp(logger, httpServer, registrar)

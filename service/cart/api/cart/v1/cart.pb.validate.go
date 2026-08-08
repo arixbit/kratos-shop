@@ -89,7 +89,7 @@ type CartInfoReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CartInfoReplyMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -279,7 +279,7 @@ type CreateCartRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CreateCartRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -369,6 +369,8 @@ func (m *UpdateCartRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
+	// no validation rules for UserId
+
 	// no validation rules for GoodsNum
 
 	if len(errors) > 0 {
@@ -385,7 +387,7 @@ type UpdateCartRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UpdateCartRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -487,7 +489,7 @@ type UpdateCartReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UpdateCartReplyMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -589,7 +591,7 @@ type CheckResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CheckResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -675,6 +677,10 @@ func (m *DeleteCartRequest) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Id
+
+	// no validation rules for UserId
+
 	if len(errors) > 0 {
 		return DeleteCartRequestMultiError(errors)
 	}
@@ -689,7 +695,7 @@ type DeleteCartRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m DeleteCartRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -791,7 +797,7 @@ type DeleteCartReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m DeleteCartReplyMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -877,6 +883,10 @@ func (m *GetCartRequest) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Id
+
+	// no validation rules for UserId
+
 	if len(errors) > 0 {
 		return GetCartRequestMultiError(errors)
 	}
@@ -891,7 +901,7 @@ type GetCartRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m GetCartRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -977,6 +987,35 @@ func (m *GetCartReply) validate(all bool) error {
 
 	var errors []error
 
+	if all {
+		switch v := interface{}(m.GetInfo()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetCartReplyValidationError{
+					field:  "Info",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetCartReplyValidationError{
+					field:  "Info",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetInfo()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetCartReplyValidationError{
+				field:  "Info",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return GetCartReplyMultiError(errors)
 	}
@@ -990,7 +1029,7 @@ type GetCartReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m GetCartReplyMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1092,7 +1131,7 @@ type ListCartRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ListCartRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1226,7 +1265,7 @@ type CartListReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CartListReplyMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}

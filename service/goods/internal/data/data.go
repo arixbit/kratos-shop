@@ -2,21 +2,29 @@ package data
 
 import (
 	"context"
+	inventoryV1 "goods/api/service/inventory/v1"
 	"goods/internal/biz"
 	"goods/internal/conf"
 	slog "log"
 	"os"
 	"time"
 
+	consul "github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	"github.com/go-kratos/kratos/v2/registry"
+	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-redis/redis/extra/redisotel"
 	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"
+	consulAPI "github.com/hashicorp/consul/api"
 	"github.com/olivere/elastic/v7"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	grpcx "google.golang.org/grpc"
 )
 
 // ProviderSet is data providers.
@@ -32,6 +40,8 @@ var ProviderSet = wire.NewSet(
 	NewGoodsSkuRepoRepo,
 	NewInventoryRepo,
 	NewEsGoodsRepo,
+	NewInventoryServiceClient,
+	NewDiscovery,
 )
 
 type Data struct {
@@ -90,7 +100,7 @@ func NewDB(c *conf.Data) *gorm.DB {
 		},
 	)
 
-	db, err := gorm.Open(mysql.Open(c.Database.Source), &gorm.Config{
+	db, err := gorm.Open(postgres.Open(c.Database.Source), &gorm.Config{
 		Logger:                                   newLogger,
 		DisableForeignKeyConstraintWhenMigrating: true,
 		NamingStrategy:                           schema.NamingStrategy{
@@ -116,9 +126,6 @@ func NewRedis(c *conf.Data) *redis.Client {
 		ReadTimeout:  c.Redis.ReadTimeout.AsDuration(),
 	})
 	rdb.AddHook(redisotel.TracingHook{})
-	if err := rdb.Close(); err != nil {
-		log.Error(err)
-	}
 	return rdb
 }
 
@@ -130,4 +137,33 @@ func NewElasticsearch(c *conf.Data) *elastic.Client {
 	}
 
 	return es
+}
+
+func NewDiscovery(conf *conf.Registry) registry.Discovery {
+	c := consulAPI.DefaultConfig()
+	c.Address = conf.Consul.Address
+	c.Scheme = conf.Consul.Scheme
+	cli, err := consulAPI.NewClient(c)
+	if err != nil {
+		panic(err)
+	}
+	return consul.New(cli, consul.WithHealthCheck(false))
+}
+
+func NewInventoryServiceClient(sr *conf.Service, rr registry.Discovery) inventoryV1.InventoryClient {
+	conn, err := grpc.DialInsecure(
+		context.Background(),
+		grpc.WithEndpoint(sr.Inventory.Endpoint),
+		grpc.WithDiscovery(rr),
+		grpc.WithMiddleware(
+			tracing.Client(),
+			recovery.Recovery(),
+		),
+		grpc.WithTimeout(2*time.Second),
+		grpc.WithOptions(grpcx.WithStatsHandler(&tracing.ClientHandler{})),
+	)
+	if err != nil {
+		panic(err)
+	}
+	return inventoryV1.NewInventoryClient(conn)
 }

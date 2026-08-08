@@ -16,14 +16,16 @@ type ShopService struct {
 
 	uc  *biz.UserUsecase
 	ua  *biz.AddressUsecase
+	gu  *biz.GoodsUsecase
 	log *log.Helper
 }
 
 // NewShopService new a shop service.
-func NewShopService(uc *biz.UserUsecase, ua *biz.AddressUsecase, logger log.Logger) *ShopService {
+func NewShopService(uc *biz.UserUsecase, ua *biz.AddressUsecase, gu *biz.GoodsUsecase, logger log.Logger) *ShopService {
 	return &ShopService{
 		uc:  uc,
 		ua:  ua,
+		gu:  gu,
 		log: log.NewHelper(log.With(logger, "module", "service/shop")),
 	}
 }

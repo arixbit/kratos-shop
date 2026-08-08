@@ -93,6 +93,21 @@ func (mr *MockAddressRepoMockRecorder) DeleteAddress(arg0, arg1 interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAddress", reflect.TypeOf((*MockAddressRepo)(nil).DeleteAddress), arg0, arg1)
 }
 
+// GetAddress mocks base method.
+func (m *MockAddressRepo) GetAddress(arg0 context.Context, arg1 *domain.Address) (*domain.Address, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAddress", arg0, arg1)
+	ret0, _ := ret[0].(*domain.Address)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAddress indicates an expected call of GetAddress.
+func (mr *MockAddressRepoMockRecorder) GetAddress(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAddress", reflect.TypeOf((*MockAddressRepo)(nil).GetAddress), arg0, arg1)
+}
+
 // UpdateAddress mocks base method.
 func (m *MockAddressRepo) UpdateAddress(arg0 context.Context, arg1 *domain.Address) error {
 	m.ctrl.T.Helper()

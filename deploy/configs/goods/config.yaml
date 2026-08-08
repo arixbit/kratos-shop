@@ -1,0 +1,23 @@
+server:
+  grpc:
+    addr: 0.0.0.0:50052
+    timeout: 1s
+data:
+  database:
+    driver: postgres
+    source: postgres://postgres:root@postgres:5432/shop_goods?sslmode=disable&TimeZone=Asia/Shanghai
+  redis:
+    addr: redis:6379
+    password: root
+    dial_timeout: 1s
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+  elastic:
+    addr: http://elasticsearch:9200
+trace:
+  endpoint: http://jaeger:14268/api/traces
+mq:
+  addr: amqp://root:root@rabbitmq:5672/
+service:
+  inventory:
+    endpoint: discovery:///shop.inventory.service

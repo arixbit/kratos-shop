@@ -1,0 +1,46 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  - job_name: postgres
+    static_configs:
+      - targets: ["postgres-exporter:9187"]
+
+  - job_name: redis
+    static_configs:
+      - targets: ["redis-exporter:9121"]
+
+  - job_name: consul
+    metrics_path: /v1/agent/metrics
+    static_configs:
+      - targets: ["consul:8500"]
+
+  - job_name: user
+    static_configs:
+      - targets: ["user:9101"]
+  - job_name: goods
+    static_configs:
+      - targets: ["goods:9102"]
+  - job_name: cart
+    static_configs:
+      - targets: ["cart:9103"]
+  - job_name: order
+    static_configs:
+      - targets: ["order:9104"]
+  - job_name: inventory
+    static_configs:
+      - targets: ["inventory:9105"]
+  - job_name: payment
+    static_configs:
+      - targets: ["payment:9106"]
+  - job_name: shop
+    static_configs:
+      - targets: ["shop:9107"]
+  - job_name: admin
+    static_configs:
+      - targets: ["admin:9108"]
