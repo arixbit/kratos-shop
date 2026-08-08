@@ -1,4 +1,8 @@
 # kratos-shop
+[![CI](https://github.com/arixbit/kratos-shop/actions/workflows/ci.yml/badge.svg)](https://github.com/arixbit/kratos-shop/actions/workflows/ci.yml)
+[![Go](https://img.shields.io/badge/Go-1.26.5-00ADD8)](https://go.dev)
+[![License: MIT](https://img.shields.io/github/license/arixbit/kratos-shop)](LICENSE)
+
 kratos 框架写商品微服务
 
 本项目是一个使用 Kratos 框架创建的很简单的微服务商城项目。
@@ -206,6 +210,17 @@ GOOS=linux GOARCH=amd64 make build
 
 更详细的组件说明与验证方法见 [docs/development.md](docs/development.md)。
 
+## 演示账号
+
+- 普通用户：`13800138000` / `12345678`
+- 管理员：`13501167215` / `12345678`
+
+> 以上账号由 `sql/` 初始化脚本写入，仅用于本地演示。
+
+## 支付说明
+
+`service/payment` 目前为本地模拟支付（`channel: mock`），不会发起真实扣款，适合学习和联调。如需接入真实渠道（支付宝、微信支付、Stripe 等），需要自行扩展支付服务。
+
 ## 更多文档
 
 - [配置说明](docs/configuration.md)：Demo 配置与 `config.local.yaml` 本地覆盖机制
@@ -213,6 +228,7 @@ GOOS=linux GOARCH=amd64 make build
 - [数据库说明](docs/database.md)：连接信息、初始化与迁移
 - [本地开发指南](docs/development.md)：环境要求、启动、验证、可观测性
 - [Kubernetes 部署](deploy/k8s/README.md)：Kustomize 清单与部署步骤
+- [OpenAPI 接口文档](shop/openapi.yaml)：各服务 `openapi.yaml` 可用 Swagger UI / Redoc 查看，例如 `npx @redocly/cli preview-docs shop/openapi.yaml`
 
 ---
 

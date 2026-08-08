@@ -1,17 +1,16 @@
-# shop 商城 BFF
+# admin 后台管理服务
 
-面向 C 端的商城 HTTP 聚合服务（Backend For Frontend），通过 gRPC 服务发现调用 user、goods 等服务，并负责签发 JWT。
+后台管理 HTTP 服务，提供登录、注册、用户与地址管理接口，管理员权限通过 `AuthorityId=2` 控制。
 
-- HTTP 端口：`8097`
-- gRPC 端口：`9001`
+- HTTP 端口：`9099`
 - 数据库：`shop_user`（复用用户库）
-- 服务名（Consul）：`shop.api`
+- 服务名（Consul）：`admin.api`
 
 ## 本地运行
 
 ```bash
 make build
-./bin/shop -conf configs
+./bin/admin -conf configs
 ```
 
 依赖 PostgreSQL、Redis、Consul、Jaeger，可通过根目录 `make infra-up` 启动基础设施。
