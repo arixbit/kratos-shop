@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package inventory.v1;
+
+option go_package = "inventory/api/inventory/v1;v1";
+
+service Inventory {
+  rpc QueryStock(StockQueryRequest) returns (StockQueryReply);       // 查询库存
+  rpc TryLock(TryLockRequest) returns (TryLockReply);                // 预占库存
+  rpc ConfirmDeduct(ConfirmDeductRequest) returns (CheckReply);      // 确认扣减
+  rpc Release(ReleaseRequest) returns (CheckReply);                  // 释放库存
+}
+
+message StockItem {
+  int64 skuId = 1;
+  int64 inventory = 2;
+  int64 locked = 3;
+  int64 available = 4;
+}
+
+message StockQueryRequest {
+  repeated int64 skuIds = 1;
+}
+
+message StockQueryReply {
+  repeated StockItem items = 1;
+}
+
+message SkuItem {
+  int64 skuId = 1;
+  int32 num = 2;
+}
+
+message TryLockRequest {
+  string orderSn = 1;
+  repeated SkuItem items = 2;
+}
+
+message TryLockReply {
+  bool success = 1;
+  string reason = 2;
+}
+
+message ConfirmDeductRequest {
+  string orderSn = 1;
+  repeated SkuItem items = 2;
+}
+
+message ReleaseRequest {
+  string orderSn = 1;
+  repeated SkuItem items = 2;
+}
+
+message CheckReply {
+  bool success = 1;
+  string reason = 2;
+}

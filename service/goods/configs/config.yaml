@@ -7,10 +7,11 @@ server:
     timeout: 1s
 data:
   database:
-    driver: mysql
-    source: root:root@tcp(127.0.0.1:3306)/shop_goods?charset=utf8mb4&parseTime=True&loc=Local
+    driver: postgres
+    source: postgres://postgres:root@127.0.0.1:5432/shop_goods?sslmode=disable&TimeZone=Asia/Shanghai
   redis:
     addr: 127.0.0.1:6379
+    password: root
     dial_timeout: 1s
     read_timeout: 0.2s
     write_timeout: 0.2s
@@ -18,3 +19,8 @@ data:
     addr: http://127.0.0.1:9200
 trace:
   endpoint: http://127.0.0.1:14268/api/traces
+mq:
+  addr: amqp://root:root@127.0.0.1:5672/
+service:
+  inventory:
+    endpoint: discovery:///shop.inventory.service

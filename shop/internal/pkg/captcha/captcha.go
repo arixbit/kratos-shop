@@ -16,7 +16,7 @@ type CaptchaInfo struct {
 func GetCaptcha(ctx context.Context) (*CaptchaInfo, error) {
 	driver := base64Captcha.NewDriverDigit(80, 250, 5, 0.7, 80)
 	cp := base64Captcha.NewCaptcha(driver, Store)
-	id, b64s, err := cp.Generate()
+	id, b64s, _, err := cp.Generate()
 	if err != nil {
 		return nil, err
 	}

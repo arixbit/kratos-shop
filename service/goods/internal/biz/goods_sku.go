@@ -27,6 +27,8 @@ type Sku struct {
 type GoodsSkuRepo interface {
 	Create(context.Context, *domain.GoodsSku) (*domain.GoodsSku, error)
 	CreateSkuRelation(context.Context, []*domain.GoodsSpecificationSku) error
+	ListByIds(context.Context, []int64) ([]*domain.GoodsSku, error)
+	ListByGoodsID(context.Context, int64) ([]*domain.GoodsSku, error)
 }
 
 type GoodsSkuUsecase struct {

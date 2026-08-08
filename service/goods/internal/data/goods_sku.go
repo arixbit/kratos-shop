@@ -109,3 +109,30 @@ func (g *goodsSkuRepo) CreateSkuRelation(ctx context.Context, req []*domain.Good
 	}
 	return nil
 }
+
+func (g *goodsSkuRepo) ListByIds(ctx context.Context, ids []int64) ([]*domain.GoodsSku, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	var skus []GoodsSku
+	if err := g.data.DB(ctx).Where("id IN (?)", ids).Find(&skus).Error; err != nil {
+		return nil, err
+	}
+	res := make([]*domain.GoodsSku, 0, len(skus))
+	for i := range skus {
+		res = append(res, skus[i].ToDomain())
+	}
+	return res, nil
+}
+
+func (g *goodsSkuRepo) ListByGoodsID(ctx context.Context, goodsID int64) ([]*domain.GoodsSku, error) {
+	var skus []GoodsSku
+	if err := g.data.DB(ctx).Where("goods_id = ?", goodsID).Find(&skus).Error; err != nil {
+		return nil, err
+	}
+	res := make([]*domain.GoodsSku, 0, len(skus))
+	for i := range skus {
+		res = append(res, skus[i].ToDomain())
+	}
+	return res, nil
+}

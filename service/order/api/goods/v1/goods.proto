@@ -38,10 +38,18 @@ service Goods {
   // 商品接口
   rpc CreateGoods(CreateGoodsRequest) returns (CreateGoodsResponse);
   rpc UpdateGoods(CreateGoodsRequest) returns (google.protobuf.Empty);
+  rpc UpdateGoodsInfo(UpdateGoodsInfoRequest) returns (CheckResponse); // 更新商品基础信息
+  rpc DeleteGoods(DeleteGoodsRequest) returns (CheckResponse);         // 删除商品
+  rpc UpdateGoodsStatus(UpdateGoodsStatusRequest) returns (CheckResponse); // 上下架
   rpc GoodsList(GoodsFilterRequest) returns(GoodsListResponse);
+  rpc AdminGoodsList(GoodsFilterRequest) returns(GoodsListResponse); // 管理端直接查库
+  rpc GoodsDetail(GoodsDetailRequest) returns(GoodsDetailResponse); // 商品详情（含 SKU/图片）
   //  rpc GetGoodsDetail(GoodInfoRequest) returns(GoodsInfoResponse);
   //  rpc BatchGetGoods(BatchGoodsIdInfo) returns(GoodsListResponse); // 现在用户提交订单有多个商品，你得批量查询商品的信息吧
   //  rpc DeleteGoods(DeleteGoodsInfo) returns (google.protobuf.Empty);
+
+  // Sku
+  rpc SkuList(SkuListRequest) returns(SkuListResponse);
 }
 
 message AttrValueRequest {
@@ -217,6 +225,9 @@ message GoodsInfoResponse {
   bool isNew = 15;
   bool isHot = 16;
   bool onSale = 17;
+  string brandName = 18;
+  string categoryName = 19;
+  repeated SkuInfo skus = 20;
 }
 
 message GoodsListResponse {
@@ -306,4 +317,97 @@ message BrandInfoResponse {
 message BrandListResponse {
   int32 total = 1;
   repeated BrandInfoResponse data = 2;
+}
+
+
+message SkuListRequest{
+  repeated int64 id = 1;
+}
+
+message SkuInfo {
+  int64 id = 1;
+  int64 goodsId = 2;
+  string goodsSn = 3;
+  string goodsName = 4;
+  string skuName = 5;
+  string skuCode = 6;
+  string barCode = 7;
+  int64 price = 8;
+  int64 promotionPrice = 9;
+  int64 points = 10;
+  string pic = 11;
+  bool onSale = 12;
+  int64 inventory = 13;
+  string attrInfo = 14;
+}
+
+message SkuListResponse {
+  repeated SkuInfo list = 1;
+}
+
+message UpdateGoodsInfoRequest {
+  int64 id = 1;
+  string name = 2;
+  string nameAlias = 3;
+  string goodsBrief = 4;
+  string goodsFrontImage = 5;
+  int64 marketPrice = 6;
+  bool shipFree = 7;
+  bool isNew = 8;
+  bool isHot = 9;
+}
+
+message DeleteGoodsRequest {
+  int64 id = 1;
+}
+
+message UpdateGoodsStatusRequest {
+  int64 id = 1;
+  bool onSale = 2;
+}
+
+message CheckResponse {
+  bool success = 1;
+}
+
+message GoodsDetailRequest {
+  int64 id = 1;
+}
+
+message SkuDetail {
+  int64 id = 1;
+  int64 goodsId = 2;
+  string skuName = 3;
+  string skuCode = 4;
+  int64 price = 5;
+  int64 promotionPrice = 6;
+  string pic = 7;
+  int64 inventory = 8;
+  bool onSale = 9;
+}
+
+message ImageInfo {
+  string url = 1;
+  int32 position = 2;
+  bool isMaster = 3;
+}
+
+message GoodsDetailResponse {
+  int64 id = 1;
+  int64 categoryId = 2;
+  int64 brandId = 3;
+  int64 typeId = 4;
+  string name = 5;
+  string goodsSn = 6;
+  string goodsBrief = 7;
+  string goodsFrontImage = 8;
+  repeated string goodsImages = 9;
+  int64 marketPrice = 10;
+  bool onSale = 11;
+  bool shipFree = 12;
+  bool isNew = 13;
+  bool isHot = 14;
+  int64 soldNum = 15;
+  repeated SkuDetail skus = 16;
+  repeated ImageInfo images = 17;
 }

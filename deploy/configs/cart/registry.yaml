@@ -1,0 +1,3 @@
+consul:
+  address: consul:8500
+  scheme: http

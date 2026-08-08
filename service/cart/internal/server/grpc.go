@@ -5,17 +5,26 @@ import (
 	"cart/internal/conf"
 	"cart/internal/service"
 	"github.com/go-kratos/kratos/v2/log"
+	kmetrics "github.com/go-kratos/kratos/v2/middleware/metrics"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/validate"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"go.opentelemetry.io/otel"
 )
 
 // NewGRPCServer new a gRPC s.
 func NewGRPCServer(c *conf.Server, greeter *service.CartService, logger log.Logger) *grpc.Server {
+	meter := otel.Meter("kratos")
+	requests, _ := kmetrics.DefaultRequestsCounter(meter, "server_requests_code_total")
+	seconds, _ := kmetrics.DefaultSecondsHistogram(meter, "server_requests_seconds_bucket")
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
 			validate.Validator(),
+			kmetrics.Server(
+				kmetrics.WithRequests(requests),
+				kmetrics.WithSeconds(seconds),
+			),
 		),
 	}
 	if c.Grpc.Network != "" {

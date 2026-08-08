@@ -12,15 +12,15 @@ import (
 
 type Address struct {
 	ID        int64     `gorm:"primarykey"`
-	UserID    int64     `gorm:"index:idx_user_id;column:user_id;default:1;type:bigint comment '关联用户ID'"`
-	IsDefault int       `gorm:"column:is_default;default:0;type:tinyint comment '是否是默认'"`
-	Mobile    string    `gorm:"index:idx_mobile;type:varchar(11) comment '手机号码';not null"`
-	Name      string    `gorm:"type:varchar(25) comment '收货用户名称'"`
-	Province  string    `gorm:"type:varchar(25) comment '省'"`
-	City      string    `gorm:"type:varchar(25) comment '市'"`
-	Districts string    `gorm:"type:varchar(25) comment '区县'"`
-	Address   string    `gorm:"type:varchar(255) comment '收货详细地址'"`
-	PostCode  string    `gorm:"type:varchar(25) comment '邮编'"`
+	UserID    int64     `gorm:"index:idx_user_id;column:user_id;default:1;type:bigint;comment:关联用户ID"`
+	IsDefault int       `gorm:"column:is_default;default:0;type:smallint;comment:是否是默认"`
+	Mobile    string    `gorm:"index:idx_mobile;type:varchar(11);comment:手机号码;not null"`
+	Name      string    `gorm:"type:varchar(25);comment:收货用户名称"`
+	Province  string    `gorm:"type:varchar(25);comment:省"`
+	City      string    `gorm:"type:varchar(25);comment:市"`
+	Districts string    `gorm:"type:varchar(25);comment:区县"`
+	Address   string    `gorm:"type:varchar(255);comment:收货详细地址"`
+	PostCode  string    `gorm:"type:varchar(25);comment:邮编"`
 	CreatedAt time.Time `gorm:"column:add_time"`
 	UpdatedAt time.Time `gorm:"column:update_time"`
 	DeletedAt gorm.DeletedAt

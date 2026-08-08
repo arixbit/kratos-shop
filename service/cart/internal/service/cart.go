@@ -55,28 +55,48 @@ func (s *CartService) ListCart(ctx context.Context, req *v1.ListCartRequest) (*v
 	var rsp v1.CartListReply
 
 	for _, cart := range res {
-		rsp.Results = append(rsp.Results, &v1.CartInfoReply{
-			Id:         cart.ID,
-			UserId:     cart.UserId,
-			GoodsId:    cart.GoodsId,
-			GoodsSn:    cart.GoodsSn,
-			GoodsName:  cart.GoodsName,
-			SkuId:      cart.SkuId,
-			GoodsPrice: cart.GoodsPrice,
-			GoodsNum:   cart.GoodsNum,
-			IsSelect:   cart.IsSelect,
-		})
+		rsp.Results = append(rsp.Results, toCartReply(cart))
 	}
 
 	return &rsp, nil
 }
 
-//func (s *CartService) UpdateCart(ctx context.Context, req *pb.UpdateCartRequest) (*pb.UpdateCartReply, error) {
-//	return &pb.UpdateCartReply{}, nil
-//}
-//func (s *CartService) DeleteCart(ctx context.Context, req *pb.DeleteCartRequest) (*pb.DeleteCartReply, error) {
-//	return &pb.DeleteCartReply{}, nil
-//}
-//func (s *CartService) GetCart(ctx context.Context, req *pb.GetCartRequest) (*pb.GetCartReply, error) {
-//	return &pb.GetCartReply{}, nil
-//}
+func (s *CartService) UpdateCart(ctx context.Context, req *v1.UpdateCartRequest) (*v1.CheckResponse, error) {
+	if err := s.cart.UpdateCart(ctx, &domain.ShopCart{
+		ID:       req.Id,
+		UserId:   req.UserId,
+		GoodsNum: req.GoodsNum,
+	}); err != nil {
+		return nil, err
+	}
+	return &v1.CheckResponse{Success: true}, nil
+}
+
+func (s *CartService) DeleteCart(ctx context.Context, req *v1.DeleteCartRequest) (*v1.CheckResponse, error) {
+	if err := s.cart.DeleteCart(ctx, req.Id, req.UserId); err != nil {
+		return nil, err
+	}
+	return &v1.CheckResponse{Success: true}, nil
+}
+
+func (s *CartService) GetCart(ctx context.Context, req *v1.GetCartRequest) (*v1.GetCartReply, error) {
+	cart, err := s.cart.GetCart(ctx, req.Id, req.UserId)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.GetCartReply{Info: toCartReply(cart)}, nil
+}
+
+func toCartReply(cart *domain.ShopCart) *v1.CartInfoReply {
+	return &v1.CartInfoReply{
+		Id:         cart.ID,
+		UserId:     cart.UserId,
+		GoodsId:    cart.GoodsId,
+		GoodsSn:    cart.GoodsSn,
+		GoodsName:  cart.GoodsName,
+		SkuId:      cart.SkuId,
+		GoodsPrice: cart.GoodsPrice,
+		GoodsNum:   cart.GoodsNum,
+		IsSelect:   cart.IsSelect,
+	}
+}

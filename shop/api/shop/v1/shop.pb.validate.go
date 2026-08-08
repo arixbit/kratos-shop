@@ -144,7 +144,7 @@ type CreateAddressReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CreateAddressReqMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -319,7 +319,7 @@ type UpdateAddressReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UpdateAddressReqMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -455,7 +455,7 @@ type AddressInfoMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m AddressInfoMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -557,7 +557,7 @@ type ListAddressReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ListAddressReqMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -691,7 +691,7 @@ type ListAddressReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ListAddressReplyMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -803,7 +803,7 @@ type AddressReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m AddressReqMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -905,7 +905,7 @@ type CheckResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CheckResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1015,7 +1015,7 @@ type RegisterReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m RegisterReplyMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1148,7 +1148,7 @@ type RegisterReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m RegisterReqMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1293,7 +1293,7 @@ type LoginReqMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m LoginReqMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1405,7 +1405,7 @@ type UserDetailResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UserDetailResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1510,7 +1510,7 @@ type CaptchaReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CaptchaReplyMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1573,3 +1573,990 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CaptchaReplyValidationError{}
+
+// Validate checks the field values on RefreshTokenRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RefreshTokenRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RefreshTokenRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RefreshTokenRequestMultiError, or nil if none found.
+func (m *RefreshTokenRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RefreshTokenRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Token
+
+	if len(errors) > 0 {
+		return RefreshTokenRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// RefreshTokenRequestMultiError is an error wrapping multiple validation
+// errors returned by RefreshTokenRequest.ValidateAll() if the designated
+// constraints aren't met.
+type RefreshTokenRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RefreshTokenRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RefreshTokenRequestMultiError) AllErrors() []error { return m }
+
+// RefreshTokenRequestValidationError is the validation error returned by
+// RefreshTokenRequest.Validate if the designated constraints aren't met.
+type RefreshTokenRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RefreshTokenRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RefreshTokenRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RefreshTokenRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RefreshTokenRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RefreshTokenRequestValidationError) ErrorName() string {
+	return "RefreshTokenRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RefreshTokenRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRefreshTokenRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RefreshTokenRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RefreshTokenRequestValidationError{}
+
+// Validate checks the field values on GoodsListRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GoodsListRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GoodsListRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GoodsListRequestMultiError, or nil if none found.
+func (m *GoodsListRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GoodsListRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Page
+
+	// no validation rules for PageSize
+
+	// no validation rules for Keywords
+
+	// no validation rules for CategoryId
+
+	// no validation rules for BrandId
+
+	if len(errors) > 0 {
+		return GoodsListRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GoodsListRequestMultiError is an error wrapping multiple validation errors
+// returned by GoodsListRequest.ValidateAll() if the designated constraints
+// aren't met.
+type GoodsListRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GoodsListRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GoodsListRequestMultiError) AllErrors() []error { return m }
+
+// GoodsListRequestValidationError is the validation error returned by
+// GoodsListRequest.Validate if the designated constraints aren't met.
+type GoodsListRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GoodsListRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GoodsListRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GoodsListRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GoodsListRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GoodsListRequestValidationError) ErrorName() string { return "GoodsListRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GoodsListRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGoodsListRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GoodsListRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GoodsListRequestValidationError{}
+
+// Validate checks the field values on GoodsItem with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *GoodsItem) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GoodsItem with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in GoodsItemMultiError, or nil
+// if none found.
+func (m *GoodsItem) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GoodsItem) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	// no validation rules for GoodsSn
+
+	// no validation rules for MarketPrice
+
+	// no validation rules for OnSale
+
+	// no validation rules for IsNew
+
+	// no validation rules for IsHot
+
+	if len(errors) > 0 {
+		return GoodsItemMultiError(errors)
+	}
+
+	return nil
+}
+
+// GoodsItemMultiError is an error wrapping multiple validation errors returned
+// by GoodsItem.ValidateAll() if the designated constraints aren't met.
+type GoodsItemMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GoodsItemMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GoodsItemMultiError) AllErrors() []error { return m }
+
+// GoodsItemValidationError is the validation error returned by
+// GoodsItem.Validate if the designated constraints aren't met.
+type GoodsItemValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GoodsItemValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GoodsItemValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GoodsItemValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GoodsItemValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GoodsItemValidationError) ErrorName() string { return "GoodsItemValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GoodsItemValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGoodsItem.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GoodsItemValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GoodsItemValidationError{}
+
+// Validate checks the field values on GoodsListReply with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *GoodsListReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GoodsListReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in GoodsListReplyMultiError,
+// or nil if none found.
+func (m *GoodsListReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GoodsListReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Total
+
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GoodsListReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GoodsListReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GoodsListReplyValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GoodsListReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GoodsListReplyMultiError is an error wrapping multiple validation errors
+// returned by GoodsListReply.ValidateAll() if the designated constraints
+// aren't met.
+type GoodsListReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GoodsListReplyMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GoodsListReplyMultiError) AllErrors() []error { return m }
+
+// GoodsListReplyValidationError is the validation error returned by
+// GoodsListReply.Validate if the designated constraints aren't met.
+type GoodsListReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GoodsListReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GoodsListReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GoodsListReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GoodsListReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GoodsListReplyValidationError) ErrorName() string { return "GoodsListReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GoodsListReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGoodsListReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GoodsListReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GoodsListReplyValidationError{}
+
+// Validate checks the field values on GoodsDetailRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GoodsDetailRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GoodsDetailRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GoodsDetailRequestMultiError, or nil if none found.
+func (m *GoodsDetailRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GoodsDetailRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return GoodsDetailRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GoodsDetailRequestMultiError is an error wrapping multiple validation errors
+// returned by GoodsDetailRequest.ValidateAll() if the designated constraints
+// aren't met.
+type GoodsDetailRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GoodsDetailRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GoodsDetailRequestMultiError) AllErrors() []error { return m }
+
+// GoodsDetailRequestValidationError is the validation error returned by
+// GoodsDetailRequest.Validate if the designated constraints aren't met.
+type GoodsDetailRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GoodsDetailRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GoodsDetailRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GoodsDetailRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GoodsDetailRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GoodsDetailRequestValidationError) ErrorName() string {
+	return "GoodsDetailRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GoodsDetailRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGoodsDetailRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GoodsDetailRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GoodsDetailRequestValidationError{}
+
+// Validate checks the field values on GoodsSkuDetail with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *GoodsSkuDetail) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GoodsSkuDetail with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in GoodsSkuDetailMultiError,
+// or nil if none found.
+func (m *GoodsSkuDetail) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GoodsSkuDetail) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for GoodsId
+
+	// no validation rules for SkuName
+
+	// no validation rules for SkuCode
+
+	// no validation rules for Price
+
+	// no validation rules for PromotionPrice
+
+	// no validation rules for Pic
+
+	// no validation rules for Inventory
+
+	// no validation rules for OnSale
+
+	if len(errors) > 0 {
+		return GoodsSkuDetailMultiError(errors)
+	}
+
+	return nil
+}
+
+// GoodsSkuDetailMultiError is an error wrapping multiple validation errors
+// returned by GoodsSkuDetail.ValidateAll() if the designated constraints
+// aren't met.
+type GoodsSkuDetailMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GoodsSkuDetailMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GoodsSkuDetailMultiError) AllErrors() []error { return m }
+
+// GoodsSkuDetailValidationError is the validation error returned by
+// GoodsSkuDetail.Validate if the designated constraints aren't met.
+type GoodsSkuDetailValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GoodsSkuDetailValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GoodsSkuDetailValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GoodsSkuDetailValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GoodsSkuDetailValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GoodsSkuDetailValidationError) ErrorName() string { return "GoodsSkuDetailValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GoodsSkuDetailValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGoodsSkuDetail.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GoodsSkuDetailValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GoodsSkuDetailValidationError{}
+
+// Validate checks the field values on GoodsImageDetail with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GoodsImageDetail) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GoodsImageDetail with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GoodsImageDetailMultiError, or nil if none found.
+func (m *GoodsImageDetail) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GoodsImageDetail) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Url
+
+	// no validation rules for Position
+
+	// no validation rules for IsMaster
+
+	if len(errors) > 0 {
+		return GoodsImageDetailMultiError(errors)
+	}
+
+	return nil
+}
+
+// GoodsImageDetailMultiError is an error wrapping multiple validation errors
+// returned by GoodsImageDetail.ValidateAll() if the designated constraints
+// aren't met.
+type GoodsImageDetailMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GoodsImageDetailMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GoodsImageDetailMultiError) AllErrors() []error { return m }
+
+// GoodsImageDetailValidationError is the validation error returned by
+// GoodsImageDetail.Validate if the designated constraints aren't met.
+type GoodsImageDetailValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GoodsImageDetailValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GoodsImageDetailValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GoodsImageDetailValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GoodsImageDetailValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GoodsImageDetailValidationError) ErrorName() string { return "GoodsImageDetailValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GoodsImageDetailValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGoodsImageDetail.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GoodsImageDetailValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GoodsImageDetailValidationError{}
+
+// Validate checks the field values on GoodsDetailReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GoodsDetailReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GoodsDetailReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GoodsDetailReplyMultiError, or nil if none found.
+func (m *GoodsDetailReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GoodsDetailReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for CategoryId
+
+	// no validation rules for BrandId
+
+	// no validation rules for TypeId
+
+	// no validation rules for Name
+
+	// no validation rules for GoodsSn
+
+	// no validation rules for GoodsBrief
+
+	// no validation rules for GoodsFrontImage
+
+	// no validation rules for MarketPrice
+
+	// no validation rules for OnSale
+
+	// no validation rules for ShipFree
+
+	// no validation rules for IsNew
+
+	// no validation rules for IsHot
+
+	// no validation rules for SoldNum
+
+	for idx, item := range m.GetSkus() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GoodsDetailReplyValidationError{
+						field:  fmt.Sprintf("Skus[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GoodsDetailReplyValidationError{
+						field:  fmt.Sprintf("Skus[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GoodsDetailReplyValidationError{
+					field:  fmt.Sprintf("Skus[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetImages() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GoodsDetailReplyValidationError{
+						field:  fmt.Sprintf("Images[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GoodsDetailReplyValidationError{
+						field:  fmt.Sprintf("Images[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GoodsDetailReplyValidationError{
+					field:  fmt.Sprintf("Images[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GoodsDetailReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GoodsDetailReplyMultiError is an error wrapping multiple validation errors
+// returned by GoodsDetailReply.ValidateAll() if the designated constraints
+// aren't met.
+type GoodsDetailReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GoodsDetailReplyMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GoodsDetailReplyMultiError) AllErrors() []error { return m }
+
+// GoodsDetailReplyValidationError is the validation error returned by
+// GoodsDetailReply.Validate if the designated constraints aren't met.
+type GoodsDetailReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GoodsDetailReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GoodsDetailReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GoodsDetailReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GoodsDetailReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GoodsDetailReplyValidationError) ErrorName() string { return "GoodsDetailReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GoodsDetailReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGoodsDetailReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GoodsDetailReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GoodsDetailReplyValidationError{}

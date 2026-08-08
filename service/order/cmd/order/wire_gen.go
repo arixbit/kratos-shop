@@ -19,7 +19,7 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Data, auth *conf.Auth, confService *conf.Service, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Data, auth *conf.Auth, confService *conf.Service, mq *conf.Mq, logger log.Logger) (*kratos.App, func(), error) {
 	db := data.NewDB(confData)
 	client := data.NewRedis(confData)
 	dataData, cleanup, err := data.NewData(confData, logger, db, client)
@@ -31,8 +31,9 @@ func wireApp(confServer *conf.Server, registry *conf.Registry, confData *conf.Da
 	userClient := data.NewUserServiceClient(auth, confService, discovery)
 	cartClient := data.NewCartServiceClient(auth, confService, discovery)
 	goodsClient := data.NewGoodsServiceClient(auth, confService, discovery)
-	orderUsecase := biz.NewOrderUsecase(orderRepo, userClient, cartClient, goodsClient, logger)
-	orderService := service.NewOrderService(orderUsecase, logger)
+	publisher := data.NewPublisher(mq)
+	orderUsecase := biz.NewOrderUsecase(orderRepo, userClient, cartClient, goodsClient, publisher, logger)
+	orderService := service.NewOrderService(orderUsecase, mq, logger)
 	grpcServer := server.NewGRPCServer(confServer, orderService, logger)
 	registrar := server.NewRegistrar(registry)
 	app := newApp(logger, grpcServer, registrar)

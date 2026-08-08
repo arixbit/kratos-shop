@@ -20,6 +20,7 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
 
 	"admin/internal/conf"
+	"admin/internal/pkg/metrics"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -86,6 +87,9 @@ func main() {
 
 	err := setTracerProvider(bc.Trace.Endpoint)
 	if err != nil {
+		panic(err)
+	}
+	if err := metrics.Init("0.0.0.0:9108"); err != nil {
 		panic(err)
 	}
 

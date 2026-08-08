@@ -1,0 +1,18 @@
+server:
+  grpc:
+    addr: 0.0.0.0:50055
+    timeout: 1s
+data:
+  database:
+    driver: postgres
+    source: postgres://postgres:root@127.0.0.1:5432/shop_inventory?sslmode=disable&TimeZone=Asia/Shanghai
+  redis:
+    addr: 127.0.0.1:6379
+    password: root
+    dial_timeout: 1s
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+mq:
+  addr: amqp://root:root@127.0.0.1:5672/
+trace:
+  endpoint: http://127.0.0.1:14268/api/traces

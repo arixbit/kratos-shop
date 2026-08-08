@@ -51,26 +51,23 @@ func (esGoodsRepo) GetMapping() string {
             },
             "name": {
                 "type": "text",
-                "analyzer": "ik_max_word"
+                "analyzer": "standard"
             },
 			"brand_name": {
                 "type": "keyword",
-                "index": false,
-				"dec_values": false,
+                "index": false
             },
 			"category_name": {
                 "type": "keyword",
-                "index": false,
-				"dec_values": false,
+                "index": false
             },
 			"type_name": {
                 "type": "keyword",
-                "index": false,
-				"dec_values": false,
+                "index": false
             },
             "goods_brief": {
                 "type": "text",
-                "analyzer": "ik_max_word"
+                "analyzer": "standard"
             },
             "on_sale": {
                 "type": "boolean"
@@ -86,16 +83,18 @@ func (esGoodsRepo) GetMapping() string {
             },
 			"sku": {
 				"type": "nested",
-				"sku_id": {
-					"type": "integer",
-            	},
-				"sku_name": {
-					"type": "text",
-					"analyzer": "ik_max_word"
-            	},
-				"sku_price": {
-					"type": "integer",
-				},
+				"properties": {
+					"sku_id": {
+						"type": "integer"
+					},
+					"sku_name": {
+						"type": "text",
+						"analyzer": "standard"
+					},
+					"sku_price": {
+						"type": "integer"
+					}
+				}
 			}
         }
     }
@@ -117,6 +116,9 @@ func NewEsGoodsRepo(data *Data, logger log.Logger) biz.EsGoodsRepo {
 }
 
 func (p esGoodsRepo) GoodsList(ctx context.Context, filter *domain.EsSearch) ([]int64, int64, error) {
+	if err := p.ensureIndex(ctx); err != nil {
+		return nil, 0, err
+	}
 	boolQuery := elastic.NewBoolQuery()
 	boolQuery.Must(filter.MustQuery...)
 	boolQuery.MustNot(filter.MustNotQuery...)
@@ -147,11 +149,20 @@ func (p esGoodsRepo) GoodsList(ctx context.Context, filter *domain.EsSearch) ([]
 }
 
 func (p esGoodsRepo) InsertEsGoods(ctx context.Context, esModel domain.ESGoods) error {
-	// 新建 mapping 和 index
-	exists, err := p.data.EsClient.IndexExists(p.GetIndexName()).Do(ctx)
-
+	if err := p.ensureIndex(ctx); err != nil {
+		return err
+	}
+	_, err := p.data.EsClient.Index().Index(p.GetIndexName()).BodyJson(esModel).Id(strconv.Itoa(int(esModel.ID))).Do(ctx)
 	if err != nil {
-		panic(err)
+		return err
+	}
+	return nil
+}
+
+func (p esGoodsRepo) ensureIndex(ctx context.Context) error {
+	exists, err := p.data.EsClient.IndexExists(p.GetIndexName()).Do(ctx)
+	if err != nil {
+		return err
 	}
 	if !exists {
 		_, err = p.data.EsClient.CreateIndex(p.GetIndexName()).BodyString(p.GetMapping()).Do(ctx)
@@ -159,16 +170,5 @@ func (p esGoodsRepo) InsertEsGoods(ctx context.Context, esModel domain.ESGoods) 
 			return err
 		}
 	}
-
-	_, err = p.data.EsClient.Index().Index(p.GetIndexName()).BodyJson(esModel).Id(strconv.Itoa(int(esModel.ID))).Do(ctx)
-	if err != nil {
-		return err
-	}
-
-	_, err = p.data.EsClient.Index().Index(p.GetIndexName()).BodyJson(esModel).Id(strconv.Itoa(int(esModel.ID))).Do(ctx)
-
-	_, err = p.data.EsClient.Update().Index(p.GetIndexName()).
-		Doc(esModel).Id("自己的ID").Do(ctx)
-
 	return nil
 }

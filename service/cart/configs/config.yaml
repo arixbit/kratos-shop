@@ -7,10 +7,11 @@ server:
     timeout: 1s
 data:
   database:
-    driver: mysql
-    source: root:root@tcp(127.0.0.1:3306)/shop_cart?charset=utf8mb4&parseTime=True&loc=Local
+    driver: postgres
+    source: postgres://postgres:root@127.0.0.1:5432/shop_cart?sslmode=disable&TimeZone=Asia/Shanghai
   redis:
     addr: 127.0.0.1:6379
+    password: root
     dial_timeout: 1s
     read_timeout: 0.2s
     write_timeout: 0.2s

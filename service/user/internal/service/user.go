@@ -7,7 +7,6 @@ import (
 	"user/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/golang/protobuf/ptypes/empty"
 	"go.opentelemetry.io/otel"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -36,8 +35,7 @@ func (u *UserService) CreateUser(ctx context.Context, req *v1.CreateUserInfo) (*
 		return nil, err
 	}
 
-	userInfoRsp := UserResponse(user)
-	return &userInfoRsp, nil
+	return UserResponse(user), nil
 }
 
 // GetUserList .
@@ -54,15 +52,14 @@ func (u *UserService) GetUserList(ctx context.Context, req *v1.PageInfo) (*v1.Us
 	rsp.Total = int32(total)
 
 	for _, user := range list {
-		userInfoRsp := UserResponse(user)
-		rsp.Data = append(rsp.Data, &userInfoRsp)
+		rsp.Data = append(rsp.Data, UserResponse(user))
 	}
 
 	return rsp, nil
 }
 
-func UserResponse(user *biz.User) v1.UserInfoResponse {
-	userInfoRsp := v1.UserInfoResponse{
+func UserResponse(user *biz.User) *v1.UserInfoResponse {
+	userInfoRsp := &v1.UserInfoResponse{
 		Id:       user.ID,
 		Mobile:   user.Mobile,
 		Password: user.Password,
@@ -85,8 +82,7 @@ func (u *UserService) GetUserByMobile(ctx context.Context, req *v1.MobileRequest
 	if err != nil {
 		return nil, err
 	}
-	rsp := UserResponse(user)
-	return &rsp, nil
+	return UserResponse(user), nil
 }
 
 // UpdateUser .
@@ -107,7 +103,7 @@ func (u *UserService) UpdateUser(ctx context.Context, req *v1.UpdateUserInfo) (*
 		return nil, err
 	}
 
-	return &empty.Empty{}, nil
+	return &emptypb.Empty{}, nil
 }
 
 // CheckPassword .
@@ -131,6 +127,5 @@ func (u *UserService) GetUserById(ctx context.Context, req *v1.IdRequest) (*v1.U
 	if err != nil {
 		return nil, err
 	}
-	rsp := UserResponse(user)
-	return &rsp, nil
+	return UserResponse(user), nil
 }

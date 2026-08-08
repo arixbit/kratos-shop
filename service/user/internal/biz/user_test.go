@@ -18,7 +18,7 @@ var _ = Describe("UserUsecase", func() {
 		userCase = biz.NewUserUsecase(mUserRepo, nil)
 	})
 
-	FIt("Create", func() {
+	It("Create", func() {
 		info := testdata.User()
 		mUserRepo.EXPECT().CreateUser(ctx, gomock.Any()).Return(info, nil)
 		l, err := userCase.Create(ctx, info)

@@ -19,17 +19,18 @@ import (
 	"github.com/go-redis/redis/extra/redisotel"
 	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	"order/internal/pkg/mq"
 	cartV1 "order/api/cart/v1"
 	goodsV1 "order/api/goods/v1"
 	userV1 "order/api/user/v1"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewDB, NewTransaction, NewRedis, NewOrderRepo, NewUserServiceClient,
+var ProviderSet = wire.NewSet(NewData, NewDB, NewTransaction, NewRedis, NewOrderRepo, NewPublisher, NewUserServiceClient,
 	NewCartServiceClient, NewGoodsServiceClient, NewDiscovery)
 
 type Data struct {
@@ -79,7 +80,7 @@ func NewDB(c *conf.Data) *gorm.DB {
 		},
 	)
 
-	db, err := gorm.Open(mysql.Open(c.Database.Source), &gorm.Config{
+	db, err := gorm.Open(postgres.Open(c.Database.Source), &gorm.Config{
 		Logger:                                   newLogger,
 		DisableForeignKeyConstraintWhenMigrating: true,
 		NamingStrategy:                           schema.NamingStrategy{
@@ -91,8 +92,6 @@ func NewDB(c *conf.Data) *gorm.DB {
 		log.Errorf("failed opening connection to sqlite: %v", err)
 		panic("failed to connect database")
 	}
-	// &Order{}, &OrderGoods{},
-	_ = db.AutoMigrate(&Order{}, &OrderGoods{}, &OrderPay{}, &OrderAddress{})
 	return db
 }
 
@@ -106,10 +105,14 @@ func NewRedis(c *conf.Data) *redis.Client {
 		ReadTimeout:  c.Redis.ReadTimeout.AsDuration(),
 	})
 	rdb.AddHook(redisotel.TracingHook{})
-	if err := rdb.Close(); err != nil {
-		log.Error(err)
-	}
 	return rdb
+}
+
+func NewPublisher(c *conf.Mq) *mq.Publisher {
+	if c == nil {
+		return nil
+	}
+	return mq.NewPublisher(c.Addr)
 }
 
 // NewUserServiceClient 链接用户服务 grpc
@@ -156,7 +159,7 @@ func NewCartServiceClient(ac *conf.Auth, sr *conf.Service, rr registry.Discovery
 func NewGoodsServiceClient(ac *conf.Auth, sr *conf.Service, rr registry.Discovery) goodsV1.GoodsClient {
 	conn, err := grpc.DialInsecure(
 		context.Background(),
-		grpc.WithEndpoint(sr.Cart.Endpoint),
+		grpc.WithEndpoint(sr.Goods.Endpoint),
 		grpc.WithDiscovery(rr),
 		grpc.WithMiddleware(
 			tracing.Client(),

@@ -21,7 +21,6 @@ func TestData(t *testing.T) {
 	RunSpecs(t, "biz data test user")
 }
 
-var cleaner func()      // 定义删除 mysql 容器的回调函数
 var Db *data.Data       // 用于测试的 data
 var ctx context.Context // 上下文
 
@@ -35,28 +34,16 @@ func initialize(db *gorm.DB) error {
 
 // ginkgo 使用 BeforeEach 为您的 Specs 设置状态
 var _ = BeforeSuite(func() {
-	// 执行测试数据库操作之前，链接之前 docker 容器创建的 mysql
-	//con, f := data.DockerMysql("mysql", "latest")
-	con, f := data.DockerMysql("mariadb", "latest")
-	cleaner = f // 测试完成，关闭容器的回调方法
-	config := &conf.Data{Database: &conf.Data_Database{Driver: "mysql", Source: con}}
+	config := &conf.Data{
+		Database: &conf.Data_Database{
+			Driver: "postgres",
+			Source: "postgres://postgres:root@127.0.0.1:5432/shop_cart?sslmode=disable&TimeZone=Asia/Shanghai",
+		},
+	}
 	db := data.NewDB(config)
-	mySQLDb, _, err := data.NewData(config, nil, db, nil)
-	if err != nil {
-		return
-	}
-	if err != nil {
-		return
-	}
-	Db = mySQLDb
-	err = initialize(db)
-	if err != nil {
-		return
-	}
+	postgresDb, _, err := data.NewData(config, nil, db, nil)
 	Expect(err).NotTo(HaveOccurred())
-})
-
-// 测试结束后 通过回调函数，关闭并删除 docker 创建的容器
-var _ = AfterSuite(func() {
-	cleaner()
+	Db = postgresDb
+	err = initialize(db)
+	Expect(err).NotTo(HaveOccurred())
 })

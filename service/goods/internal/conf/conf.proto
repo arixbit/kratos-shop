@@ -9,6 +9,8 @@ message Bootstrap {
   Server server = 1;
   Data data = 2;
   Trace trace = 3;
+  Mq mq = 4;
+  Service service = 5;
 }
 
 message Server {
@@ -58,4 +60,15 @@ message Registry {
 
 message Trace {
   string endpoint = 1;
+}
+
+message Mq {
+  string addr = 1;
+}
+
+message Service {
+  message Inventory {
+    string endpoint = 1;
+  }
+  Inventory inventory = 1;
 }

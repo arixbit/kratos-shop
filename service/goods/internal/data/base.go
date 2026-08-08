@@ -3,6 +3,7 @@ package data
 import (
 	"database/sql/driver"
 	"encoding/json"
+	"fmt"
 	"gorm.io/gorm"
 	"time"
 )
@@ -14,11 +15,21 @@ func (g GormList) Value() (driver.Value, error) {
 }
 
 func (g *GormList) Scan(value interface{}) error {
-	return json.Unmarshal(value.([]byte), &g)
+	switch v := value.(type) {
+	case []byte:
+		return json.Unmarshal(v, &g)
+	case string:
+		return json.Unmarshal([]byte(v), &g)
+	case nil:
+		*g = nil
+		return nil
+	default:
+		return json.Unmarshal([]byte(fmt.Sprintf("%v", v)), &g)
+	}
 }
 
 type BaseFields struct {
-	ID        int64          `gorm:"primarykey;type:int" json:"id"` // bigint
+	ID        int64          `gorm:"primarykey;type:bigint" json:"id"` // bigint
 	CreatedAt time.Time      `gorm:"column:add_time" json:"created_at"`
 	UpdatedAt time.Time      `gorm:"column:update_time" json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`

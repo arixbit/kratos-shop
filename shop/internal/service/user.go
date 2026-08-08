@@ -23,6 +23,10 @@ func (s *ShopService) Login(ctx context.Context, req *v1.LoginReq) (*v1.Register
 	return s.uc.PassWordLogin(ctx, req)
 }
 
+func (s *ShopService) RefreshToken(ctx context.Context, req *v1.RefreshTokenRequest) (*v1.RegisterReply, error) {
+	return s.uc.RefreshToken(ctx, req.Token)
+}
+
 func (s *ShopService) Captcha(ctx context.Context, r *emptypb.Empty) (*v1.CaptchaReply, error) {
 	return s.uc.GetCaptcha(ctx)
 }

@@ -32,3 +32,11 @@ type GoodsListResponse struct {
 	Total int64
 	List  []*Goods
 }
+
+type GoodsImage struct {
+	ID       int64
+	GoodsID  int64
+	Link     string
+	Position int32
+	IsMaster bool
+}

@@ -56,3 +56,7 @@ func (uc *BrandUsecase) BrandList(ctx context.Context, b *Pagination) ([]*domain
 	return list, total, nil
 
 }
+
+func (uc *BrandUsecase) ListByIds(ctx context.Context, ids ...int32) (domain.BrandList, error) {
+	return uc.repo.ListByIds(ctx, ids...)
+}

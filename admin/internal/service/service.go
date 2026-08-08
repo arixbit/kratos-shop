@@ -16,14 +16,16 @@ type AdminService struct {
 
 	uc  *biz.UserUsecase
 	ua  *biz.AddressUsecase
+	gu  *biz.GoodsUsecase
 	log *log.Helper
 }
 
 // NewAdminService new a admin service.
-func NewAdminService(uc *biz.UserUsecase, ua *biz.AddressUsecase, logger log.Logger) *AdminService {
+func NewAdminService(uc *biz.UserUsecase, ua *biz.AddressUsecase, gu *biz.GoodsUsecase, logger log.Logger) *AdminService {
 	return &AdminService{
 		uc:  uc,
 		ua:  ua,
+		gu:  gu,
 		log: log.NewHelper(log.With(logger, "module", "service/admin")),
 	}
 }
