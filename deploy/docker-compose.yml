@@ -90,6 +90,16 @@ services:
       - "4317:4317"
       - "4318:4318"
 
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: ks-alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+
   prometheus:
     image: prom/prometheus:v2.53.0
     container_name: ks-prometheus
@@ -97,7 +107,9 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/rules:/etc/prometheus/rules:ro
     depends_on:
+      - alertmanager
       - postgres-exporter
       - redis-exporter
 
@@ -164,6 +176,12 @@ services:
       - ./configs/user:/data/conf:ro
     ports:
       - "50051:50051"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:9101/healthz || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
     depends_on:
       postgres:
         condition: service_healthy
@@ -179,6 +197,12 @@ services:
       - ./configs/goods:/data/conf:ro
     ports:
       - "50052:50052"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:9102/healthz || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
     depends_on:
       postgres:
         condition: service_healthy
@@ -196,6 +220,12 @@ services:
       - ./configs/cart:/data/conf:ro
     ports:
       - "50053:50053"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:9103/healthz || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
     depends_on:
       postgres:
         condition: service_healthy
@@ -211,6 +241,12 @@ services:
       - ./configs/order:/data/conf:ro
     ports:
       - "50054:50054"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:9104/healthz || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
     depends_on:
       postgres:
         condition: service_healthy
@@ -234,6 +270,12 @@ services:
       - ./configs/inventory:/data/conf:ro
     ports:
       - "50055:50055"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:9105/healthz || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
     depends_on:
       postgres:
         condition: service_healthy
@@ -251,6 +293,12 @@ services:
       - ./configs/payment:/data/conf:ro
     ports:
       - "50056:50056"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:9106/healthz || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
     depends_on:
       postgres:
         condition: service_healthy
@@ -267,6 +315,12 @@ services:
     ports:
       - "8097:8097"
       - "9001:9001"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:9107/healthz || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
     depends_on:
       consul:
         condition: service_healthy
@@ -282,6 +336,12 @@ services:
       - ./configs/admin:/data/conf:ro
     ports:
       - "9099:9099"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:9108/healthz || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
     depends_on:
       consul:
         condition: service_healthy

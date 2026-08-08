@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: shop
+  namespace: kratos-shop
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: shop.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: shop
+                port:
+                  number: 8097
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: admin
+  namespace: kratos-shop
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: admin.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: admin
+                port:
+                  number: 9099

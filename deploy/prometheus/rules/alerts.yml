@@ -1,0 +1,20 @@
+groups:
+  - name: kratos-shop
+    rules:
+      - alert: ServiceDown
+        expr: up{job=~"user|goods|cart|order|inventory|payment|shop|admin"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "服务 {{ $labels.job }} 已下线"
+          description: "Prometheus 已连续 2 分钟无法抓取 {{ $labels.job }} 的指标，请检查服务状态。"
+
+      - alert: InfrastructureDown
+        expr: up{job=~"postgres|redis|consul"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "基础设施 {{ $labels.job }} 已下线"
+          description: "Prometheus 已连续 2 分钟无法抓取 {{ $labels.job }} 的指标，请检查基础设施状态。"

@@ -5,21 +5,30 @@
 ```mermaid
 flowchart LR
     U["用户 / 浏览器"]
-    A["admin 管理后台 HTTP :9099"]
+    GW["Traefik 网关 :80"]
+    A["admin 后台管理 HTTP :9099"]
     S["shop 商城 BFF HTTP :8097"]
     US["user 用户服务 gRPC :50051"]
     GS["goods 商品服务 gRPC :50052"]
     CS["cart 购物车服务 gRPC :50053"]
     OS["order 订单服务 gRPC :50054"]
+    IS["inventory 库存服务 gRPC :50055"]
+    PS["payment 支付服务 gRPC :50056"]
     C["Consul 服务注册/发现 :8500"]
     P["PostgreSQL :5432"]
     R["Redis :6379"]
     E["Elasticsearch :9200"]
+    MQ["RabbitMQ :5672"]
     J["Jaeger :14268"]
+    PM["Prometheus :9090"]
+    GF["Grafana :3000"]
+    LK["Loki :3100"]
 
-    U --> A
-    U --> S
+    U --> GW
+    GW --> S
+    GW --> A
     A -->|gRPC discovery| US
+    A -->|gRPC discovery| GS
     S -->|gRPC discovery| US
     S -->|gRPC discovery| GS
     OS -->|gRPC discovery| US
@@ -29,23 +38,45 @@ flowchart LR
     GS --> P
     CS --> P
     OS --> P
+    IS --> P
+    PS --> P
     US --> R
     GS --> R
     CS --> R
     OS --> R
+    IS --> R
     GS --> E
+    OS -->|publish| MQ
+    PS -->|publish| MQ
+    MQ -->|consume| GS
+    MQ -->|consume| IS
+    MQ -->|consume| OS
     US --> C
     GS --> C
     CS --> C
     OS --> C
+    IS --> C
+    PS --> C
     A --> C
     S --> C
     US --> J
     GS --> J
     CS --> J
     OS --> J
+    IS --> J
+    PS --> J
     A --> J
     S --> J
+    US --> PM
+    GS --> PM
+    CS --> PM
+    OS --> PM
+    IS --> PM
+    PS --> PM
+    A --> PM
+    S --> PM
+    PM --> GF
+    LK --> GF
 ```
 
 ## 服务职责
@@ -58,6 +89,26 @@ flowchart LR
 | `service/goods` | gRPC | 50052 | 商品、SKU、分类、品牌、规格、属性、库存，并提供 ES 搜索 |
 | `service/cart` | gRPC | 50053 | 购物车增删改查 |
 | `service/order` | gRPC | 50054 | 创建订单，聚合 user/cart/goods 三个服务 |
+
+## 部署形态
+
+项目提供三种部署形态，详见 README「服务启动」：
+
+| 形态 | 说明 |
+| --- | --- |
+| Docker Compose 一键启动 | `make up`，本地体验整套环境最省事 |
+| 本地手动启动 | `make infra-up` + 逐个启动二进制，适合开发调试 |
+| 多服务器独立部署 | 每个服务独立二进制，通过同一个 Consul 互相发现 |
+| Kubernetes | `deploy/k8s/` Kustomize 清单，适合集群化部署 |
+
+## 可观测性
+
+`make up` 会一并启动 Prometheus、Grafana、Loki、Traefik 等组件。每个服务暴露：
+
+- 指标：`/metrics`（9101 ~ 9108）
+- 健康检查：`/healthz`（9101 ~ 9108）
+
+各组件的作用、访问地址与验证方法见 [开发指南](development.md) 第 6 节。
 | `service/inventory` | gRPC | 50055 | 库存查询、预占、确认扣减、释放，消费订单事件 |
 | `service/payment` | gRPC | 50056 | 支付单创建与回调，发布支付结果事件 |
 

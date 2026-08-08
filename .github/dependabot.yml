@@ -1,0 +1,70 @@
+version: 2
+updates:
+  - package-ecosystem: gomod
+    directory: /service/user
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /service/goods
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /service/cart
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /service/order
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /service/inventory
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /service/payment
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /shop
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /admin
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /service/user
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /service/goods
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /service/cart
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /service/order
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /service/inventory
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /service/payment
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /shop
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directory: /admin
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

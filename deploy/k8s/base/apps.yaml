@@ -1,0 +1,547 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user
+  namespace: kratos-shop
+  labels:
+    app: user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      containers:
+        - name: user
+          image: ghcr.io/arixbit/kratos-shop/user:latest
+          imagePullPolicy: IfNotPresent
+          args: ["-conf", "/data/conf"]
+          ports:
+            - containerPort: 50051
+              name: grpc
+            - containerPort: 9101
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9101
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9101
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          volumeMounts:
+            - name: config
+              mountPath: /data/conf
+              readOnly: true
+            - name: local-config
+              mountPath: /data/conf/config.local.yaml
+              subPath: config.local.yaml
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: user-config
+        - name: local-config
+          secret:
+            secretName: user-local-config
+            optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user
+  namespace: kratos-shop
+spec:
+  selector:
+    app: user
+  ports:
+    - port: 50051
+      targetPort: grpc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goods
+  namespace: kratos-shop
+  labels:
+    app: goods
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: goods
+  template:
+    metadata:
+      labels:
+        app: goods
+    spec:
+      containers:
+        - name: goods
+          image: ghcr.io/arixbit/kratos-shop/goods:latest
+          imagePullPolicy: IfNotPresent
+          args: ["-conf", "/data/conf"]
+          ports:
+            - containerPort: 50052
+              name: grpc
+            - containerPort: 9102
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9102
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9102
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          volumeMounts:
+            - name: config
+              mountPath: /data/conf
+              readOnly: true
+            - name: local-config
+              mountPath: /data/conf/config.local.yaml
+              subPath: config.local.yaml
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: goods-config
+        - name: local-config
+          secret:
+            secretName: goods-local-config
+            optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: goods
+  namespace: kratos-shop
+spec:
+  selector:
+    app: goods
+  ports:
+    - port: 50052
+      targetPort: grpc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart
+  namespace: kratos-shop
+  labels:
+    app: cart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart
+  template:
+    metadata:
+      labels:
+        app: cart
+    spec:
+      containers:
+        - name: cart
+          image: ghcr.io/arixbit/kratos-shop/cart:latest
+          imagePullPolicy: IfNotPresent
+          args: ["-conf", "/data/conf"]
+          ports:
+            - containerPort: 50053
+              name: grpc
+            - containerPort: 9103
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9103
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9103
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          volumeMounts:
+            - name: config
+              mountPath: /data/conf
+              readOnly: true
+            - name: local-config
+              mountPath: /data/conf/config.local.yaml
+              subPath: config.local.yaml
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: cart-config
+        - name: local-config
+          secret:
+            secretName: cart-local-config
+            optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart
+  namespace: kratos-shop
+spec:
+  selector:
+    app: cart
+  ports:
+    - port: 50053
+      targetPort: grpc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order
+  namespace: kratos-shop
+  labels:
+    app: order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+        - name: order
+          image: ghcr.io/arixbit/kratos-shop/order:latest
+          imagePullPolicy: IfNotPresent
+          args: ["-conf", "/data/conf"]
+          ports:
+            - containerPort: 50054
+              name: grpc
+            - containerPort: 9104
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9104
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9104
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          volumeMounts:
+            - name: config
+              mountPath: /data/conf
+              readOnly: true
+            - name: local-config
+              mountPath: /data/conf/config.local.yaml
+              subPath: config.local.yaml
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: order-config
+        - name: local-config
+          secret:
+            secretName: order-local-config
+            optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order
+  namespace: kratos-shop
+spec:
+  selector:
+    app: order
+  ports:
+    - port: 50054
+      targetPort: grpc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory
+  namespace: kratos-shop
+  labels:
+    app: inventory
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory
+  template:
+    metadata:
+      labels:
+        app: inventory
+    spec:
+      containers:
+        - name: inventory
+          image: ghcr.io/arixbit/kratos-shop/inventory:latest
+          imagePullPolicy: IfNotPresent
+          args: ["-conf", "/data/conf"]
+          ports:
+            - containerPort: 50055
+              name: grpc
+            - containerPort: 9105
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9105
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9105
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          volumeMounts:
+            - name: config
+              mountPath: /data/conf
+              readOnly: true
+            - name: local-config
+              mountPath: /data/conf/config.local.yaml
+              subPath: config.local.yaml
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: inventory-config
+        - name: local-config
+          secret:
+            secretName: inventory-local-config
+            optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory
+  namespace: kratos-shop
+spec:
+  selector:
+    app: inventory
+  ports:
+    - port: 50055
+      targetPort: grpc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment
+  namespace: kratos-shop
+  labels:
+    app: payment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+        - name: payment
+          image: ghcr.io/arixbit/kratos-shop/payment:latest
+          imagePullPolicy: IfNotPresent
+          args: ["-conf", "/data/conf"]
+          ports:
+            - containerPort: 50056
+              name: grpc
+            - containerPort: 9106
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9106
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9106
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          volumeMounts:
+            - name: config
+              mountPath: /data/conf
+              readOnly: true
+            - name: local-config
+              mountPath: /data/conf/config.local.yaml
+              subPath: config.local.yaml
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: payment-config
+        - name: local-config
+          secret:
+            secretName: payment-local-config
+            optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment
+  namespace: kratos-shop
+spec:
+  selector:
+    app: payment
+  ports:
+    - port: 50056
+      targetPort: grpc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shop
+  namespace: kratos-shop
+  labels:
+    app: shop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shop
+  template:
+    metadata:
+      labels:
+        app: shop
+    spec:
+      containers:
+        - name: shop
+          image: ghcr.io/arixbit/kratos-shop/shop:latest
+          imagePullPolicy: IfNotPresent
+          args: ["-conf", "/data/conf"]
+          ports:
+            - containerPort: 8097
+              name: http
+            - containerPort: 9001
+              name: grpc
+            - containerPort: 9107
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9107
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9107
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          volumeMounts:
+            - name: config
+              mountPath: /data/conf
+              readOnly: true
+            - name: local-config
+              mountPath: /data/conf/config.local.yaml
+              subPath: config.local.yaml
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: shop-config
+        - name: local-config
+          secret:
+            secretName: shop-local-config
+            optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shop
+  namespace: kratos-shop
+spec:
+  selector:
+    app: shop
+  ports:
+    - port: 8097
+      targetPort: http
+    - port: 9001
+      targetPort: grpc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin
+  namespace: kratos-shop
+  labels:
+    app: admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin
+  template:
+    metadata:
+      labels:
+        app: admin
+    spec:
+      containers:
+        - name: admin
+          image: ghcr.io/arixbit/kratos-shop/admin:latest
+          imagePullPolicy: IfNotPresent
+          args: ["-conf", "/data/conf"]
+          ports:
+            - containerPort: 9099
+              name: http
+            - containerPort: 9108
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9108
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9108
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          volumeMounts:
+            - name: config
+              mountPath: /data/conf
+              readOnly: true
+            - name: local-config
+              mountPath: /data/conf/config.local.yaml
+              subPath: config.local.yaml
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: admin-config
+        - name: local-config
+          secret:
+            secretName: admin-local-config
+            optional: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin
+  namespace: kratos-shop
+spec:
+  selector:
+    app: admin
+  ports:
+    - port: 9099
+      targetPort: http

@@ -55,7 +55,7 @@ func (r *userRepo) CreateUser(ctx context.Context, u *biz.User) (*biz.User, erro
 
 	user.Mobile = u.Mobile
 	user.NickName = u.NickName
-	user.Password = encrypt(u.Password) // 密码加密
+	user.Password = EncryptPassword(u.Password) // 密码加密
 	res := r.data.db.Create(&user)
 	if res.Error != nil {
 		return nil, errors.New(500, "CREAT_USER_ERROR", "用户创建失败")
@@ -64,11 +64,21 @@ func (r *userRepo) CreateUser(ctx context.Context, u *biz.User) (*biz.User, erro
 	return &userInfoRes, nil
 }
 
-// Password encryption
-func encrypt(psd string) string {
+// EncryptPassword 使用 PBKDF2-SHA512 生成密码哈希。
+func EncryptPassword(psd string) string {
 	options := &password.Options{SaltLen: 16, Iterations: 10000, KeyLen: 32, HashFunction: sha512.New}
 	salt, encodedPwd := password.Encode(psd, options)
 	return fmt.Sprintf("$pbkdf2-sha512$%s$%s", salt, encodedPwd)
+}
+
+// VerifyPassword 校验明文密码与哈希是否匹配。
+func VerifyPassword(psd, encryptedPassword string) (bool, error) {
+	parts := strings.Split(encryptedPassword, "$")
+	if len(parts) != 4 || parts[1] != "pbkdf2-sha512" || parts[2] == "" || parts[3] == "" {
+		return false, errors.New(500, "INVALID_PASSWORD_HASH", "非法的密码哈希格式")
+	}
+	options := &password.Options{SaltLen: 16, Iterations: 10000, KeyLen: 32, HashFunction: sha512.New}
+	return password.Verify(psd, parts[2], parts[3], options), nil
 }
 
 // ModelToResponse 转换 user 表中所有字段的值
@@ -190,8 +200,5 @@ func (r *userRepo) GetUserById(ctx context.Context, Id int64) (*biz.User, error)
 
 // CheckPassword .
 func (r *userRepo) CheckPassword(ctx context.Context, psd, encryptedPassword string) (bool, error) {
-	options := &password.Options{SaltLen: 16, Iterations: 10000, KeyLen: 32, HashFunction: sha512.New}
-	passwordInfo := strings.Split(encryptedPassword, "$")
-	check := password.Verify(psd, passwordInfo[2], passwordInfo[3], options)
-	return check, nil
+	return VerifyPassword(psd, encryptedPassword)
 }

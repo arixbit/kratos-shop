@@ -1,0 +1,20 @@
+# 配置覆盖模板：复制为同目录下的 config.local.yaml 后按需修改。
+# config.local.yaml 已加入 .gitignore，真实凭据不会提交到仓库。
+# Kratos 会自动合并同目录下所有 yaml，config.local.yaml 覆盖 config.yaml / registry.yaml 中的同名配置。
+#
+# 本服务数据库：shop_goods
+# 按需取消注释并修改：
+# data:
+#   database:
+#     source: postgres://postgres:CHANGE_ME@127.0.0.1:5432/shop_goods?sslmode=disable&TimeZone=Asia/Shanghai
+#   redis:
+#     password: CHANGE_ME
+#   elastic:
+#     addr: http://127.0.0.1:9200
+# mq:
+#   addr: amqp://CHANGE_ME:CHANGE_ME@127.0.0.1:5672/
+# trace:
+#   endpoint: http://127.0.0.1:14268/api/traces
+# consul:
+#   address: 127.0.0.1:8500
+#   scheme: http

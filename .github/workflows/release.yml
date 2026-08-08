@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: user
+            path: service/user
+          - service: goods
+            path: service/goods
+          - service: cart
+            path: service/cart
+          - service: order
+            path: service/order
+          - service: inventory
+            path: service/inventory
+          - service: payment
+            path: service/payment
+          - service: shop
+            path: shop
+          - service: admin
+            path: admin
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.path }}
+          file: ${{ matrix.path }}/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/${{ matrix.service }}:${{ github.ref_name }}
+            ghcr.io/${{ github.repository }}/${{ matrix.service }}:latest
+          build-args: |
+            VERSION=${{ github.ref_name }}
+            GOPROXY=https://proxy.golang.org,direct
+
+  release:
+    needs: build-images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true

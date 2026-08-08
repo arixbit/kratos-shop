@@ -1,0 +1,16 @@
+# 配置覆盖模板：复制为同目录下的 config.local.yaml 后按需修改。
+# config.local.yaml 已加入 .gitignore，真实凭据不会提交到仓库。
+# Kratos 会自动合并同目录下所有 yaml，config.local.yaml 覆盖 config.yaml / registry.yaml 中的同名配置。
+#
+# 本服务数据库：shop_payment；Compose 内部使用容器名，请保持或改为实际可达地址。
+# 按需取消注释并修改：
+# data:
+#   database:
+#     source: postgres://postgres:CHANGE_ME@postgres:5432/shop_payment?sslmode=disable&TimeZone=Asia/Shanghai
+# mq:
+#   addr: amqp://CHANGE_ME:CHANGE_ME@rabbitmq:5672/
+# trace:
+#   endpoint: http://jaeger:14268/api/traces
+# consul:
+#   address: consul:8500
+#   scheme: http

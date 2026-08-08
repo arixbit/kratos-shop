@@ -39,5 +39,8 @@ jobs:
       - name: Build all services
         run: make build
 
+      - name: Vet all services
+        run: make vet
+
       - name: Test all services
         run: make test

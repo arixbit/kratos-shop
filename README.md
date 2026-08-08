@@ -206,6 +206,14 @@ GOOS=linux GOARCH=amd64 make build
 
 更详细的组件说明与验证方法见 [docs/development.md](docs/development.md)。
 
+## 更多文档
+
+- [配置说明](docs/configuration.md)：Demo 配置与 `config.local.yaml` 本地覆盖机制
+- [架构与微服务关系](docs/architecture.md)：架构图、服务职责、部署形态
+- [数据库说明](docs/database.md)：连接信息、初始化与迁移
+- [本地开发指南](docs/development.md)：环境要求、启动、验证、可观测性
+- [Kubernetes 部署](deploy/k8s/README.md)：Kustomize 清单与部署步骤
+
 ---
 
 * 有任何建议，请扫码添加我微信进行交流。

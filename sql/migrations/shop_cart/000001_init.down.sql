@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS shop_carts CASCADE;
