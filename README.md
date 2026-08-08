@@ -182,6 +182,30 @@ GOOS=linux GOARCH=amd64 make build
 
 更详细的多服务器部署说明见 [docs/development.md](docs/development.md)。
 
+## 可观测性与辅助组件
+
+`make up` 启动的整套环境里，除了 8 个应用服务，还包含以下组件：
+
+| 组件 | 作用 | 访问地址 | 默认账号 |
+| --- | --- | --- | --- |
+| Prometheus | 采集 8 个服务及 Postgres/Redis/Consul 的指标 | http://127.0.0.1:9090 | 无 |
+| Grafana | 指标与日志可视化，已预置 Prometheus/Loki 数据源 | http://127.0.0.1:3000 | admin / admin |
+| RabbitMQ | 订单/支付/库存/商品之间的异步消息队列 | http://127.0.0.1:15672 | root / root |
+| Jaeger | 分布式链路追踪，查看请求经过哪些服务 | http://127.0.0.1:16686 | 无 |
+| Traefik | API 网关，统一入口转发到 shop 与 admin | http://localhost:8080 | 无 |
+| Loki + Promtail | 容器日志采集与存储，在 Grafana 中查询 | 通过 Grafana Explore 使用 | 无 |
+
+- Prometheus：已自动抓取 8 个服务的 `/metrics`（user 9101 ~ admin 9108）以及 Postgres、Redis、Consul，可在 Status → Targets 确认抓取正常。
+- Grafana：预置了 Prometheus 和 Loki 两个数据源，登录后可在 Explore 中查指标或日志。
+- RabbitMQ：order/payment 发布消息，goods/inventory/order 消费消息；管理台可查看队列、连接和消息积压。
+- Jaeger：各服务通过 Collector（14268）上报 trace，UI 中按 Service 搜索即可查看调用链。
+- Traefik：`localhost` 路由到商城 BFF，`admin.localhost` 路由到后台管理（需在 `/etc/hosts` 添加 `127.0.0.1 admin.localhost`）。
+- Loki + Promtail：自动采集所有容器日志，Grafana Explore 中选择 Loki 数据源，可按 `container` 或 `service` 标签过滤。
+
+> 默认账号仅适用于本地环境，公网部署请务必修改密码并限制管理端口暴露。
+
+更详细的组件说明与验证方法见 [docs/development.md](docs/development.md)。
+
 ---
 
 * 有任何建议，请扫码添加我微信进行交流。

@@ -169,6 +169,67 @@ make e2e
 - `POST /api/users/refresh`：用旧 token 换取新的 30 天 token（shop/admin 均支持）
 - admin 除登录/注册/验证码/刷新外，其余接口仅允许 `AuthorityId=2` 的管理员访问，普通用户返回 `403 ADMIN_ONLY`
 
+## 6. 可观测性与辅助组件
+
+`make up` 会在启动 8 个应用服务的同时，拉起一套完整的可观测性与辅助组件。以下介绍各组件的作用、配置位置和验证方法。
+
+> 注意：这些组件由 `make up` 全量启动；`make infra-up` 只启动业务依赖（Postgres、Redis、RabbitMQ、Consul、Elasticsearch、Jaeger），不会启动 Prometheus、Grafana、Loki、Traefik。
+
+### Prometheus
+
+- 作用：指标采集与查询，负责抓取全部服务的业务指标和基础设施指标。
+- 配置：`deploy/prometheus/prometheus.yml`
+- 已接入的抓取目标：
+  - 8 个应用服务：`user:9101/metrics`、`goods:9102/metrics`、`cart:9103/metrics`、`order:9104/metrics`、`inventory:9105/metrics`、`payment:9106/metrics`、`shop:9107/metrics`、`admin:9108/metrics`
+  - Postgres exporter（9187）、Redis exporter（9121）、Consul（8500）、Prometheus 自身
+- 访问：<http://127.0.0.1:9090>
+- 验证：打开 Status → Targets，所有目标应显示 `UP`；也可以在 Graph 页查询 `up` 或服务自身的指标。
+
+### Grafana
+
+- 作用：指标与日志的可视化面板。
+- 配置：`deploy/grafana/provisioning/`
+- 预置数据源：Prometheus（默认）、Loki。
+- 访问：<http://127.0.0.1:3000>，默认账号 `admin / admin`，首次登录建议立即修改。
+- 验证：Explore 中选择 Prometheus 查询 `up`；选择 Loki 可以按标签查询容器日志。
+
+### RabbitMQ
+
+- 作用：异步消息队列，用于微服务之间的解耦和削峰。`order`、`payment` 负责发布消息，`goods`、`inventory`、`order` 负责消费消息。
+- 配置：各服务 `configs/config.yaml` 中的 `data.mq.addr`（Compose 内为 `amqp://root:root@rabbitmq:5672/`）。
+- 访问：管理台 <http://127.0.0.1:15672>，默认 `root / root`。
+- 验证：Queues 页面查看队列与消息积压；跑完 `make e2e` 后观察是否有消息被消费。
+
+### Jaeger
+
+- 作用：分布式链路追踪，查看一次请求在多个微服务之间的调用链与耗时。
+- 配置：各服务 `configs/config.yaml` 中的 `trace.endpoint`（Compose 内为 `http://jaeger:14268/api/traces`）。
+- 访问：UI <http://127.0.0.1:16686>。
+- 验证：左侧选择 Service（例如 `shop.api`）与时间范围，点击 Find Traces 查看调用链。
+
+### Traefik
+
+- 作用：API 网关 / 反向代理，作为统一入口转发请求。
+- 配置：`deploy/traefik/traefik.yml`、`deploy/traefik/dynamic.yml`
+- 路由规则：
+  - `localhost` / `127.0.0.1` → `shop:8097`
+  - `admin.localhost` → `admin:9099`（需要在 `/etc/hosts` 中添加 `127.0.0.1 admin.localhost`）
+- 访问：业务入口 <http://localhost>（80），Dashboard <http://localhost:8080>。
+- 验证：`curl http://localhost/api/users/login`；Dashboard 中查看路由状态。
+
+### Loki + Promtail
+
+- 作用：容器日志采集与存储。Promtail 通过 Docker socket 自动发现容器并采集日志，写入 Loki；Grafana 中可查询。
+- 配置：`deploy/loki/loki-config.yml`、`deploy/promtail/promtail-config.yml`
+- 标签：`container`（容器名，如 `ks-order`）、`service`（compose 服务名，如 `order`）。
+- 访问：无需单独页面，直接在 Grafana → Explore 选择 Loki 数据源查询，例如 `{container="ks-order"}` 或 `{service="order"}`。
+
+### 安全提醒
+
+- 默认账号（Grafana `admin/admin`、RabbitMQ `root/root`）仅适合本地开发，公网部署前必须修改。
+- Prometheus、Grafana、Traefik Dashboard、RabbitMQ 管理台等端口不要直接暴露到公网，建议只在内网或通过 VPN 访问。
+- Jaeger、Loki 等组件同样建议限制访问来源。
+
 ## 6. 依赖升级说明
 
 全部模块统一到：
