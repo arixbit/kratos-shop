@@ -35,9 +35,11 @@
   <div class="api-tabs">
     <button type="button" class="api-tab on" data-target="redoc-shop">shop 商城 BFF</button>
     <button type="button" class="api-tab" data-target="redoc-admin">admin 后台管理</button>
+    <a class="api-tab" href="grpc.html">gRPC 服务参考</a>
   </div>
   <p class="api-note">
-    目前 HTTP 接口定义在 shop 与 admin；其余 gRPC 服务生成的 OpenAPI 为空 paths，暂未在页面展示。
+    shop 与 admin 为 HTTP 接口；6 个 gRPC 服务（user / goods / cart / order / inventory / payment）的方法见
+    <a href="grpc.html">gRPC 服务参考</a>。
   </p>
 
   <redoc id="redoc-shop" spec-url="openapi/shop.yaml"></redoc>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>gRPC 服务参考 · kratos-shop</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .svc-head { display: flex; align-items: baseline; gap: 12px; margin: 40px 0 10px; }
+    .svc-head h2 { margin: 0; font-size: 22px; }
+    .svc-head span { color: var(--muted); font-size: 13px; }
+    .grpc-note { color: var(--muted); font-size: 13px; margin: 14px 0 0; }
+    .rpc-name { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; font-weight: 600; }
+    .sig { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html">kratos<span>-shop</span></a>
+    <div class="links">
+      <a href="index.html">首页</a>
+      <a href="api.html">HTTP API</a>
+      <a href="https://github.com/arixbit/kratos-shop/blob/main/docs/README.md" target="_blank" rel="noopener">文档</a>
+      <a href="https://github.com/arixbit/kratos-shop" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 style="font-size:30px;margin:36px 0 6px;">gRPC 服务参考</h1>
+    <p class="grpc-note">
+      以下为 6 个 gRPC 服务自身定义的 RPC（不含跨服务引用用的 client proto）。服务间通过 Consul 服务发现调用，
+      HTTP 入口（shop / admin）见 <a href="api.html">API 文档</a>。
+    </p>
+
+    <div class="svc-head"><h2>user 用户服务</h2><span>:50051 · shop.user.service</span></div>
+    <table>
+      <thead><tr><th>方法</th><th>请求 → 响应</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td class="rpc-name">GetUserList</td><td class="sig">PageInfo → UserListResponse</td><td>用户列表</td></tr>
+        <tr><td class="rpc-name">GetUserByMobile</td><td class="sig">MobileRequest → UserInfoResponse</td><td>通过 mobile 查询用户</td></tr>
+        <tr><td class="rpc-name">GetUserById</td><td class="sig">IdRequest → UserInfoResponse</td><td>通过 Id 查询用户</td></tr>
+        <tr><td class="rpc-name">CreateUser</td><td class="sig">CreateUserInfo → UserInfoResponse</td><td>创建用户</td></tr>
+        <tr><td class="rpc-name">UpdateUser</td><td class="sig">UpdateUserInfo → Empty</td><td>更新用户</td></tr>
+        <tr><td class="rpc-name">CheckPassword</td><td class="sig">PasswordCheckInfo → CheckResponse</td><td>检查用户密码</td></tr>
+        <tr><td class="rpc-name">ListAddress</td><td class="sig">ListAddressReq → ListAddressReply</td><td>所有收货地址列表</td></tr>
+        <tr><td class="rpc-name">CreateAddress</td><td class="sig">CreateAddressReq → AddressInfo</td><td>新增收货地址</td></tr>
+        <tr><td class="rpc-name">UpdateAddress</td><td class="sig">UpdateAddressReq → CheckResponse</td><td>修改收货地址</td></tr>
+        <tr><td class="rpc-name">DefaultAddress</td><td class="sig">AddressReq → CheckResponse</td><td>设置默认地址</td></tr>
+        <tr><td class="rpc-name">DeleteAddress</td><td class="sig">AddressReq → CheckResponse</td><td>删除收货地址</td></tr>
+        <tr><td class="rpc-name">GetAddress</td><td class="sig">AddressReq → AddressInfo</td><td>查询收货地址</td></tr>
+      </tbody>
+    </table>
+
+    <div class="svc-head"><h2>goods 商品服务</h2><span>:50052 · shop.goods.service</span></div>
+    <table>
+      <thead><tr><th>方法</th><th>请求 → 响应</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td class="rpc-name">GetAllCategoryList</td><td class="sig">Empty → CategoryListResponse</td><td>获取所有分类</td></tr>
+        <tr><td class="rpc-name">GetSubCategory</td><td class="sig">CategoryListRequest → SubCategoryListResponse</td><td>获取子分类</td></tr>
+        <tr><td class="rpc-name">CreateCategory</td><td class="sig">CategoryInfoRequest → CategoryInfoResponse</td><td>新建分类</td></tr>
+        <tr><td class="rpc-name">DeleteCategory</td><td class="sig">DeleteCategoryRequest → Empty</td><td>删除分类</td></tr>
+        <tr><td class="rpc-name">UpdateCategory</td><td class="sig">CategoryInfoRequest → Empty</td><td>修改分类</td></tr>
+        <tr><td class="rpc-name">BrandList</td><td class="sig">BrandListRequest → BrandListResponse</td><td>品牌列表</td></tr>
+        <tr><td class="rpc-name">CreateBrand</td><td class="sig">BrandRequest → BrandInfoResponse</td><td>新建品牌</td></tr>
+        <tr><td class="rpc-name">DeleteBrand</td><td class="sig">BrandRequest → Empty</td><td>删除品牌</td></tr>
+        <tr><td class="rpc-name">UpdateBrand</td><td class="sig">BrandRequest → Empty</td><td>修改品牌</td></tr>
+        <tr><td class="rpc-name">CreateGoodsType</td><td class="sig">GoodsTypeRequest → GoodsTypeResponse</td><td>商品类型创建</td></tr>
+        <tr><td class="rpc-name">CreateGoodsSpecification</td><td class="sig">SpecificationRequest → SpecificationResponse</td><td>商品规格或属性</td></tr>
+        <tr><td class="rpc-name">CreateAttrGroup</td><td class="sig">AttrGroupRequest → AttrGroupResponse</td><td>商品参数属性组</td></tr>
+        <tr><td class="rpc-name">CreateAttrValue</td><td class="sig">AttrRequest → AttrResponse</td><td>商品参数属性值</td></tr>
+        <tr><td class="rpc-name">CreateGoods</td><td class="sig">CreateGoodsRequest → CreateGoodsResponse</td><td>创建商品</td></tr>
+        <tr><td class="rpc-name">UpdateGoods</td><td class="sig">CreateGoodsRequest → Empty</td><td>修改商品</td></tr>
+        <tr><td class="rpc-name">UpdateGoodsInfo</td><td class="sig">UpdateGoodsInfoRequest → CheckResponse</td><td>更新商品基础信息</td></tr>
+        <tr><td class="rpc-name">DeleteGoods</td><td class="sig">DeleteGoodsRequest → CheckResponse</td><td>删除商品</td></tr>
+        <tr><td class="rpc-name">UpdateGoodsStatus</td><td class="sig">UpdateGoodsStatusRequest → CheckResponse</td><td>上下架</td></tr>
+        <tr><td class="rpc-name">GoodsList</td><td class="sig">GoodsFilterRequest → GoodsListResponse</td><td>商品列表</td></tr>
+        <tr><td class="rpc-name">AdminGoodsList</td><td class="sig">GoodsFilterRequest → GoodsListResponse</td><td>管理端商品列表</td></tr>
+        <tr><td class="rpc-name">GoodsDetail</td><td class="sig">GoodsDetailRequest → GoodsDetailResponse</td><td>商品详情（含 SKU/图片）</td></tr>
+        <tr><td class="rpc-name">SkuList</td><td class="sig">SkuListRequest → SkuListResponse</td><td>SKU 列表</td></tr>
+      </tbody>
+    </table>
+
+    <div class="svc-head"><h2>cart 购物车服务</h2><span>:50053 · shop.cart.service</span></div>
+    <table>
+      <thead><tr><th>方法</th><th>请求 → 响应</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td class="rpc-name">CreateCart</td><td class="sig">CreateCartRequest → CartInfoReply</td><td>添加商品进购物车</td></tr>
+        <tr><td class="rpc-name">UpdateCart</td><td class="sig">UpdateCartRequest → CheckResponse</td><td>修改购物车商品数量</td></tr>
+        <tr><td class="rpc-name">DeleteCart</td><td class="sig">DeleteCartRequest → CheckResponse</td><td>删除购物车商品</td></tr>
+        <tr><td class="rpc-name">GetCart</td><td class="sig">GetCartRequest → GetCartReply</td><td>查询购物车单条记录</td></tr>
+        <tr><td class="rpc-name">ListCart</td><td class="sig">ListCartRequest → CartListReply</td><td>购物车商品列表</td></tr>
+      </tbody>
+    </table>
+
+    <div class="svc-head"><h2>order 订单服务</h2><span>:50054 · shop.order.service</span></div>
+    <table>
+      <thead><tr><th>方法</th><th>请求 → 响应</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td class="rpc-name">CreateOrder</td><td class="sig">OrderRequest → OrderInfoResponse</td><td>创建订单</td></tr>
+        <tr><td class="rpc-name">CancelOrder</td><td class="sig">CancelOrderRequest → CheckResponse</td><td>取消订单</td></tr>
+        <tr><td class="rpc-name">GetOrder</td><td class="sig">GetOrderRequest → OrderInfoResponse</td><td>查询订单详情</td></tr>
+        <tr><td class="rpc-name">ListOrders</td><td class="sig">ListOrderRequest → ListOrderReply</td><td>查询订单列表</td></tr>
+      </tbody>
+    </table>
+
+    <div class="svc-head"><h2>inventory 库存服务</h2><span>:50055 · shop.inventory.service</span></div>
+    <table>
+      <thead><tr><th>方法</th><th>请求 → 响应</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td class="rpc-name">QueryStock</td><td class="sig">StockQueryRequest → StockQueryReply</td><td>查询库存</td></tr>
+        <tr><td class="rpc-name">TryLock</td><td class="sig">TryLockRequest → TryLockReply</td><td>预占库存</td></tr>
+        <tr><td class="rpc-name">ConfirmDeduct</td><td class="sig">ConfirmDeductRequest → CheckReply</td><td>确认扣减</td></tr>
+        <tr><td class="rpc-name">Release</td><td class="sig">ReleaseRequest → CheckReply</td><td>释放库存</td></tr>
+      </tbody>
+    </table>
+
+    <div class="svc-head"><h2>payment 支付服务</h2><span>:50056 · shop.payment.service</span></div>
+    <table>
+      <thead><tr><th>方法</th><th>请求 → 响应</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td class="rpc-name">CreatePayment</td><td class="sig">CreatePaymentRequest → PaymentInfoReply</td><td>创建支付单</td></tr>
+        <tr><td class="rpc-name">PaymentCallback</td><td class="sig">PaymentCallbackRequest → CheckReply</td><td>支付回调（本地模拟）</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <footer class="footer">
+    <span>© 2022-2026 arix · MIT License</span>
+    <span>gRPC 方法来自各服务 api/*.proto</span>
+  </footer>
+</body>
+</html>
