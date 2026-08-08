@@ -34,6 +34,61 @@ kratos 框架写商品微服务
     |-- admin // 后端管理系统 web
 ```
 
+## 服务启动
+
+### 方式一：一键启动（推荐）
+
+环境需要 Docker Desktop / OrbStack，在项目根目录执行：
+
+```bash
+make up
+```
+
+该命令通过 `deploy/docker-compose.yml` 一次性启动全部 8 个应用服务以及基础设施（Postgres、Redis、RabbitMQ、Consul、Elasticsearch、Jaeger、Prometheus、Grafana 等）。
+
+停止环境：
+
+```bash
+make down
+```
+
+### 方式二：手动启动
+
+1. 先启动依赖服务（Postgres、Redis、Consul、Elasticsearch 等），具体命令见 [docs/development.md](docs/development.md)。
+2. 初始化数据库与 Mock 数据：
+
+```bash
+./scripts/init-db.sh
+```
+
+3. 构建全部服务：
+
+```bash
+make build
+```
+
+4. 分别启动各个服务（每个服务在自己的目录下执行）：
+
+```bash
+cd service/user && ./bin/user -conf configs
+cd service/goods && ./bin/goods -conf configs
+cd service/cart && ./bin/cart -conf configs
+cd service/order && ./bin/order -conf configs
+cd service/inventory && ./bin/inventory -conf configs
+cd service/payment && ./bin/payment -conf configs
+cd shop && ./bin/shop -conf configs
+cd admin && ./bin/admin -conf configs
+```
+
+启动后可通过以下地址验证：
+
+- 商城 BFF：`http://127.0.0.1:8097`
+- 后台管理：`http://127.0.0.1:9099`
+- Consul 服务列表：`http://127.0.0.1:8500/ui`
+
+更详细的本地开发说明见 [docs/development.md](docs/development.md)。
+
+---
 
 * 有任何建议，请扫码添加我微信进行交流。
 
