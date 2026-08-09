@@ -96,6 +96,97 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CheckResponse'
+    /api/goods/delete:
+        delete:
+            tags:
+                - Admin
+            operationId: Admin_DeleteGoods
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/goods/list:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_GoodsList
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: keywords
+                  in: query
+                  schema:
+                    type: string
+                - name: categoryId
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: brandId
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GoodsListReply'
+    /api/goods/status:
+        put:
+            tags:
+                - Admin
+            operationId: Admin_UpdateGoodsStatus
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateGoodsStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/goods/update:
+        put:
+            tags:
+                - Admin
+            operationId: Admin_UpdateGoods
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateGoodsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
     /api/users/captcha:
         get:
             tags:
@@ -130,6 +221,24 @@ paths:
                     application/json:
                         schema:
                             $ref: '#/components/schemas/LoginReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RegisterReply'
+    /api/users/refresh:
+        post:
+            tags:
+                - Admin
+            operationId: Admin_RefreshToken
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RefreshTokenRequest'
                 required: true
             responses:
                 "200":
@@ -225,6 +334,35 @@ components:
                 isDefault:
                     type: integer
                     format: int32
+        GoodsItem:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                goodsSn:
+                    type: string
+                marketPrice:
+                    type: integer
+                    format: int64
+                onSale:
+                    type: boolean
+                isNew:
+                    type: boolean
+                isHot:
+                    type: boolean
+        GoodsListReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoodsItem'
         ListAddressReply:
             type: object
             properties:
@@ -238,6 +376,11 @@ components:
                 username:
                     type: string
                 password:
+                    type: string
+        RefreshTokenRequest:
+            type: object
+            properties:
+                token:
                     type: string
         RegisterReply:
             type: object
@@ -290,6 +433,37 @@ components:
                 id:
                     type: integer
                     format: int64
+        UpdateGoodsRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                nameAlias:
+                    type: string
+                goodsBrief:
+                    type: string
+                goodsFrontImage:
+                    type: string
+                marketPrice:
+                    type: integer
+                    format: int64
+                shipFree:
+                    type: boolean
+                isNew:
+                    type: boolean
+                isHot:
+                    type: boolean
+        UpdateGoodsStatusRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                onSale:
+                    type: boolean
         UserDetailResponse:
             type: object
             properties:
