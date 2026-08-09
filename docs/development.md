@@ -230,6 +230,41 @@ make e2e
 - Prometheus、Grafana、Traefik Dashboard、RabbitMQ 管理台等端口不要直接暴露到公网，建议只在内网或通过 VPN 访问。
 - Jaeger、Loki 等组件同样建议限制访问来源。
 
+## 7. 常见问题与排查
+
+### RabbitMQ 启动失败：.erlang.cookie eacces
+
+通常是数据卷属主不对导致（例如旧版本镜像创建过同名卷）。修复属主后重启即可：
+
+```bash
+docker run --rm --user root \
+  -v kratos-shop_rabbitmqdata:/var/lib/rabbitmq \
+  rabbitmq:3-management-alpine \
+  chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
+
+docker compose -f deploy/docker-compose.yml up -d
+```
+
+### 端口被占用（5432 / 6379 / 5672 / 8500 / 9200 等）
+
+通常是本机还有另一套基础设施在运行，先停掉旧容器再启动本项目：
+
+```bash
+docker stop infra-postgres infra-redis infra-rabbitmq infra-consul infra-elasticsearch infra-jaeger
+```
+
+### RabbitMQ 健康检查迟迟不通过
+
+RabbitMQ 首次启动约需 1 分钟，compose 已配置 60 秒启动宽限期与 30 秒超时，耐心等待即可。
+
+### make e2e 提示缺少 grpcurl
+
+```bash
+go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
+```
+
+e2e 脚本默认通过 `ks-postgres` 容器执行数据库校验，请使用本项目 compose 启动的 PostgreSQL。
+
 ## 6. 依赖升级说明
 
 全部模块统一到：

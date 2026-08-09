@@ -45,10 +45,11 @@ services:
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "ping"]
-      interval: 5s
-      timeout: 5s
-      retries: 20
+      test: ["CMD-SHELL", "rabbitmq-diagnostics ping"]
+      interval: 10s
+      timeout: 30s
+      retries: 10
+      start_period: 60s
 
   consul:
     image: hashicorp/consul:1.19.1
