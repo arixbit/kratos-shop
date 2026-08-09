@@ -277,6 +277,28 @@ go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
 
 e2e 脚本默认通过 `ks-postgres` 容器执行数据库校验，请使用本项目 compose 启动的 PostgreSQL。
 
+## 8. API 调试工具
+
+### HTTP 接口（shop / admin）
+
+推荐使用 Postman 或 Apifox，直接导入仓库内的 OpenAPI 文件，接口、参数、请求体自动生成：
+
+- `shop/openapi.yaml`
+- `admin/openapi.yaml`
+
+注意：shop 登录需要先调用 `GET /api/users/captcha` 获取验证码，再携带 `captcha` 与 `captchaId` 登录；admin 登录使用 `username` 字段。
+
+### gRPC 服务（user / goods / cart / order / inventory / payment）
+
+推荐 `grpcui`（grpcurl 的浏览器 UI）：
+
+```bash
+go install github.com/fullstorydev/grpcui/cmd/grpcui@latest
+grpcui -plaintext 127.0.0.1:50051
+```
+
+启动后会自动打开网页列出 `user.v1.User` 的全部方法。其他服务替换端口即可（50052 ~ 50056）。如果服务未开启 gRPC reflection，可像 grpcurl 一样用 `-import-path` / `-proto` 指定 proto 文件。
+
 ## 6. 依赖升级说明
 
 全部模块统一到：
