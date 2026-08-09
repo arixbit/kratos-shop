@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PG_CONTAINER="${PG_CONTAINER:-infra-postgres}"
+PG_CONTAINER="${PG_CONTAINER:-ks-postgres}"
 
 command -v grpcurl >/dev/null 2>&1 || { echo "缺少 grpcurl，请先安装：go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest"; exit 1; }
 command -v python3 >/dev/null 2>&1 || { echo "缺少 python3"; exit 1; }
