@@ -108,12 +108,24 @@ GOOS=linux GOARCH=amd64 make build
 
 检查 Consul UI：<http://127.0.0.1:8500/ui>，应能看到 8 个应用服务注册。
 
-通过 HTTP 验证商城 BFF：
+通过 HTTP 验证商城 BFF（登录需要图形验证码）：
 
 ```bash
+# 1. 获取验证码，返回 captchaId 和 base64 图片
+curl -s http://127.0.0.1:8097/api/users/captcha
+
+# 2. 用图片查看器打开验证码图片，读取 5 位数字后登录
 curl -X POST http://127.0.0.1:8097/api/users/login \
   -H 'Content-Type: application/json' \
-  -d '{"mobile":"13800138000","password":"12345678"}'
+  -d '{"mobile":"13800138000","password":"12345678","captcha":"12345","captchaId":"<captchaId>"}'
+```
+
+后台管理使用 `username` 登录（实现中固定校验管理员手机号 `13501167215`，验证码校验已关闭）：
+
+```bash
+curl -X POST http://127.0.0.1:9099/api/users/login \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"admin","password":"12345678"}'
 ```
 
 通过 gRPC 工具验证用户服务：
