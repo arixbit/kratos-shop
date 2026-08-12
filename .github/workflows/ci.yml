@@ -24,8 +24,10 @@ jobs:
           --health-timeout 5s
           --health-retries 20
       redis:
-        image: redis:7
-        command: ["redis-server", "--requirepass", "root"]
+        image: bitnami/redis:7.4
+        env:
+          REDIS_PASSWORD: root
+          ALLOW_EMPTY_PASSWORD: "no"
         ports:
           - 6379:6379
         options: >-
