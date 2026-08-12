@@ -24,7 +24,7 @@ jobs:
           --health-timeout 5s
           --health-retries 20
       redis:
-        image: bitnami/redis:7.4
+        image: bitnami/redis:latest
         env:
           REDIS_PASSWORD: root
           ALLOW_EMPTY_PASSWORD: "no"
