@@ -21,35 +21,76 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationAdminAddressListByUid = "/admin.admin.v1.admin/AddressListByUid"
+const OperationAdminBrandList = "/admin.admin.v1.admin/BrandList"
 const OperationAdminCaptcha = "/admin.admin.v1.admin/Captcha"
+const OperationAdminCategoryList = "/admin.admin.v1.admin/CategoryList"
 const OperationAdminCreateAddress = "/admin.admin.v1.admin/CreateAddress"
+const OperationAdminCreateCategory = "/admin.admin.v1.admin/CreateCategory"
+const OperationAdminCreateGoods = "/admin.admin.v1.admin/CreateGoods"
+const OperationAdminDashboardStats = "/admin.admin.v1.admin/DashboardStats"
 const OperationAdminDefaultAddress = "/admin.admin.v1.admin/DefaultAddress"
 const OperationAdminDeleteAddress = "/admin.admin.v1.admin/DeleteAddress"
+const OperationAdminDeleteCategory = "/admin.admin.v1.admin/DeleteCategory"
 const OperationAdminDeleteGoods = "/admin.admin.v1.admin/DeleteGoods"
 const OperationAdminDetail = "/admin.admin.v1.admin/Detail"
+const OperationAdminGoodsDetail = "/admin.admin.v1.admin/GoodsDetail"
 const OperationAdminGoodsList = "/admin.admin.v1.admin/GoodsList"
 const OperationAdminLogin = "/admin.admin.v1.admin/Login"
+const OperationAdminOrderDetail = "/admin.admin.v1.admin/OrderDetail"
+const OperationAdminOrderList = "/admin.admin.v1.admin/OrderList"
+const OperationAdminPermissionList = "/admin.admin.v1.admin/PermissionList"
 const OperationAdminRefreshToken = "/admin.admin.v1.admin/RefreshToken"
+const OperationAdminRefundOrder = "/admin.admin.v1.admin/RefundOrder"
 const OperationAdminRegister = "/admin.admin.v1.admin/Register"
+const OperationAdminRolePermissionList = "/admin.admin.v1.admin/RolePermissionList"
+const OperationAdminRolePermissionUpdate = "/admin.admin.v1.admin/RolePermissionUpdate"
+const OperationAdminShipOrder = "/admin.admin.v1.admin/ShipOrder"
 const OperationAdminUpdateAddress = "/admin.admin.v1.admin/UpdateAddress"
+const OperationAdminUpdateCategory = "/admin.admin.v1.admin/UpdateCategory"
 const OperationAdminUpdateGoods = "/admin.admin.v1.admin/UpdateGoods"
 const OperationAdminUpdateGoodsStatus = "/admin.admin.v1.admin/UpdateGoodsStatus"
+const OperationAdminUserAddressDelete = "/admin.admin.v1.admin/UserAddressDelete"
+const OperationAdminUserAddressList = "/admin.admin.v1.admin/UserAddressList"
+const OperationAdminUserList = "/admin.admin.v1.admin/UserList"
 
 type AdminHTTPServer interface {
 	AddressListByUid(context.Context, *emptypb.Empty) (*ListAddressReply, error)
+	BrandList(context.Context, *BrandListRequest) (*BrandListReply, error)
 	Captcha(context.Context, *emptypb.Empty) (*CaptchaReply, error)
+	CategoryList(context.Context, *emptypb.Empty) (*CategoryListReply, error)
 	CreateAddress(context.Context, *CreateAddressReq) (*AddressInfo, error)
+	CreateCategory(context.Context, *CategorySaveRequest) (*CategoryItem, error)
+	// CreateGoods 商品新增
+	CreateGoods(context.Context, *CreateGoodsRequest) (*CheckResponse, error)
+	// DashboardStats 运营看板
+	DashboardStats(context.Context, *emptypb.Empty) (*DashboardStatsReply, error)
 	DefaultAddress(context.Context, *AddressReq) (*CheckResponse, error)
 	DeleteAddress(context.Context, *AddressReq) (*CheckResponse, error)
+	DeleteCategory(context.Context, *CategoryDeleteRequest) (*CheckResponse, error)
 	DeleteGoods(context.Context, *DeleteGoodsRequest) (*CheckResponse, error)
 	Detail(context.Context, *emptypb.Empty) (*UserDetailResponse, error)
+	GoodsDetail(context.Context, *GoodsDetailRequest) (*GoodsDetailReply, error)
 	GoodsList(context.Context, *GoodsListRequest) (*GoodsListReply, error)
 	Login(context.Context, *LoginReq) (*RegisterReply, error)
+	OrderDetail(context.Context, *OrderDetailRequest) (*OrderInfo, error)
+	// OrderList 订单管理
+	OrderList(context.Context, *OrderListRequest) (*OrderListReply, error)
+	// PermissionList 系统权限
+	PermissionList(context.Context, *emptypb.Empty) (*PermissionListReply, error)
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RegisterReply, error)
+	RefundOrder(context.Context, *RefundOrderRequest) (*CheckResponse, error)
 	Register(context.Context, *RegisterReq) (*RegisterReply, error)
+	RolePermissionList(context.Context, *RolePermissionListRequest) (*RolePermissionListReply, error)
+	RolePermissionUpdate(context.Context, *RolePermissionUpdateRequest) (*CheckResponse, error)
+	ShipOrder(context.Context, *ShipOrderRequest) (*CheckResponse, error)
 	UpdateAddress(context.Context, *UpdateAddressReq) (*CheckResponse, error)
+	UpdateCategory(context.Context, *CategorySaveRequest) (*CheckResponse, error)
 	UpdateGoods(context.Context, *UpdateGoodsRequest) (*CheckResponse, error)
 	UpdateGoodsStatus(context.Context, *UpdateGoodsStatusRequest) (*CheckResponse, error)
+	UserAddressDelete(context.Context, *UserAddressDeleteRequest) (*CheckResponse, error)
+	UserAddressList(context.Context, *UserAddressListRequest) (*UserAddressListReply, error)
+	// UserList 用户管理
+	UserList(context.Context, *UserListRequest) (*UserListReply, error)
 }
 
 func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
@@ -68,6 +109,24 @@ func RegisterAdminHTTPServer(s *http.Server, srv AdminHTTPServer) {
 	r.PUT("/api/goods/update", _Admin_UpdateGoods0_HTTP_Handler(srv))
 	r.DELETE("/api/goods/delete", _Admin_DeleteGoods0_HTTP_Handler(srv))
 	r.PUT("/api/goods/status", _Admin_UpdateGoodsStatus0_HTTP_Handler(srv))
+	r.GET("/api/order/list", _Admin_OrderList0_HTTP_Handler(srv))
+	r.GET("/api/order/detail", _Admin_OrderDetail0_HTTP_Handler(srv))
+	r.POST("/api/order/ship", _Admin_ShipOrder0_HTTP_Handler(srv))
+	r.POST("/api/order/refund", _Admin_RefundOrder0_HTTP_Handler(srv))
+	r.GET("/api/user/list", _Admin_UserList0_HTTP_Handler(srv))
+	r.GET("/api/user/address/list", _Admin_UserAddressList0_HTTP_Handler(srv))
+	r.DELETE("/api/user/address/delete", _Admin_UserAddressDelete0_HTTP_Handler(srv))
+	r.POST("/api/goods/create", _Admin_CreateGoods0_HTTP_Handler(srv))
+	r.GET("/api/goods/detail", _Admin_GoodsDetail0_HTTP_Handler(srv))
+	r.GET("/api/goods/categories", _Admin_CategoryList0_HTTP_Handler(srv))
+	r.GET("/api/goods/brands", _Admin_BrandList0_HTTP_Handler(srv))
+	r.POST("/api/goods/category/create", _Admin_CreateCategory0_HTTP_Handler(srv))
+	r.PUT("/api/goods/category/update", _Admin_UpdateCategory0_HTTP_Handler(srv))
+	r.DELETE("/api/goods/category/delete", _Admin_DeleteCategory0_HTTP_Handler(srv))
+	r.GET("/api/dashboard/stats", _Admin_DashboardStats0_HTTP_Handler(srv))
+	r.GET("/api/system/permissions", _Admin_PermissionList0_HTTP_Handler(srv))
+	r.GET("/api/system/role-permissions", _Admin_RolePermissionList0_HTTP_Handler(srv))
+	r.PUT("/api/system/role-permissions", _Admin_RolePermissionUpdate0_HTTP_Handler(srv))
 }
 
 func _Admin_Register0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
@@ -360,21 +419,404 @@ func _Admin_UpdateGoodsStatus0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.C
 	}
 }
 
+func _Admin_OrderList0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in OrderListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminOrderList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.OrderList(ctx, req.(*OrderListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OrderListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_OrderDetail0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in OrderDetailRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminOrderDetail)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.OrderDetail(ctx, req.(*OrderDetailRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OrderInfo)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_ShipOrder0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ShipOrderRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminShipOrder)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ShipOrder(ctx, req.(*ShipOrderRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CheckResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_RefundOrder0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RefundOrderRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminRefundOrder)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.RefundOrder(ctx, req.(*RefundOrderRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CheckResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_UserList0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UserListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminUserList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UserList(ctx, req.(*UserListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UserListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_UserAddressList0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UserAddressListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminUserAddressList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UserAddressList(ctx, req.(*UserAddressListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UserAddressListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_UserAddressDelete0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UserAddressDeleteRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminUserAddressDelete)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UserAddressDelete(ctx, req.(*UserAddressDeleteRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CheckResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_CreateGoods0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateGoodsRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminCreateGoods)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateGoods(ctx, req.(*CreateGoodsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CheckResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_GoodsDetail0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GoodsDetailRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminGoodsDetail)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GoodsDetail(ctx, req.(*GoodsDetailRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GoodsDetailReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_CategoryList0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminCategoryList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CategoryList(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CategoryListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_BrandList0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in BrandListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminBrandList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.BrandList(ctx, req.(*BrandListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*BrandListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_CreateCategory0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CategorySaveRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminCreateCategory)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateCategory(ctx, req.(*CategorySaveRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CategoryItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_UpdateCategory0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CategorySaveRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminUpdateCategory)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateCategory(ctx, req.(*CategorySaveRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CheckResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_DeleteCategory0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CategoryDeleteRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminDeleteCategory)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteCategory(ctx, req.(*CategoryDeleteRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CheckResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_DashboardStats0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminDashboardStats)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DashboardStats(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DashboardStatsReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_PermissionList0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminPermissionList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.PermissionList(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*PermissionListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_RolePermissionList0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RolePermissionListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminRolePermissionList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.RolePermissionList(ctx, req.(*RolePermissionListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RolePermissionListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Admin_RolePermissionUpdate0_HTTP_Handler(srv AdminHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RolePermissionUpdateRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminRolePermissionUpdate)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.RolePermissionUpdate(ctx, req.(*RolePermissionUpdateRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CheckResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type AdminHTTPClient interface {
 	AddressListByUid(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListAddressReply, err error)
+	BrandList(ctx context.Context, req *BrandListRequest, opts ...http.CallOption) (rsp *BrandListReply, err error)
 	Captcha(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *CaptchaReply, err error)
+	CategoryList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *CategoryListReply, err error)
 	CreateAddress(ctx context.Context, req *CreateAddressReq, opts ...http.CallOption) (rsp *AddressInfo, err error)
+	CreateCategory(ctx context.Context, req *CategorySaveRequest, opts ...http.CallOption) (rsp *CategoryItem, err error)
+	// CreateGoods 商品新增
+	CreateGoods(ctx context.Context, req *CreateGoodsRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
+	// DashboardStats 运营看板
+	DashboardStats(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *DashboardStatsReply, err error)
 	DefaultAddress(ctx context.Context, req *AddressReq, opts ...http.CallOption) (rsp *CheckResponse, err error)
 	DeleteAddress(ctx context.Context, req *AddressReq, opts ...http.CallOption) (rsp *CheckResponse, err error)
+	DeleteCategory(ctx context.Context, req *CategoryDeleteRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
 	DeleteGoods(ctx context.Context, req *DeleteGoodsRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
 	Detail(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *UserDetailResponse, err error)
+	GoodsDetail(ctx context.Context, req *GoodsDetailRequest, opts ...http.CallOption) (rsp *GoodsDetailReply, err error)
 	GoodsList(ctx context.Context, req *GoodsListRequest, opts ...http.CallOption) (rsp *GoodsListReply, err error)
 	Login(ctx context.Context, req *LoginReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
+	OrderDetail(ctx context.Context, req *OrderDetailRequest, opts ...http.CallOption) (rsp *OrderInfo, err error)
+	// OrderList 订单管理
+	OrderList(ctx context.Context, req *OrderListRequest, opts ...http.CallOption) (rsp *OrderListReply, err error)
+	// PermissionList 系统权限
+	PermissionList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *PermissionListReply, err error)
 	RefreshToken(ctx context.Context, req *RefreshTokenRequest, opts ...http.CallOption) (rsp *RegisterReply, err error)
+	RefundOrder(ctx context.Context, req *RefundOrderRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
 	Register(ctx context.Context, req *RegisterReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
+	RolePermissionList(ctx context.Context, req *RolePermissionListRequest, opts ...http.CallOption) (rsp *RolePermissionListReply, err error)
+	RolePermissionUpdate(ctx context.Context, req *RolePermissionUpdateRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
+	ShipOrder(ctx context.Context, req *ShipOrderRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
 	UpdateAddress(ctx context.Context, req *UpdateAddressReq, opts ...http.CallOption) (rsp *CheckResponse, err error)
+	UpdateCategory(ctx context.Context, req *CategorySaveRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
 	UpdateGoods(ctx context.Context, req *UpdateGoodsRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
 	UpdateGoodsStatus(ctx context.Context, req *UpdateGoodsStatusRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
+	UserAddressDelete(ctx context.Context, req *UserAddressDeleteRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
+	UserAddressList(ctx context.Context, req *UserAddressListRequest, opts ...http.CallOption) (rsp *UserAddressListReply, err error)
+	// UserList 用户管理
+	UserList(ctx context.Context, req *UserListRequest, opts ...http.CallOption) (rsp *UserListReply, err error)
 }
 
 type AdminHTTPClientImpl struct {
@@ -398,11 +840,37 @@ func (c *AdminHTTPClientImpl) AddressListByUid(ctx context.Context, in *emptypb.
 	return &out, nil
 }
 
+func (c *AdminHTTPClientImpl) BrandList(ctx context.Context, in *BrandListRequest, opts ...http.CallOption) (*BrandListReply, error) {
+	var out BrandListReply
+	pattern := "/api/goods/brands"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminBrandList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminHTTPClientImpl) Captcha(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*CaptchaReply, error) {
 	var out CaptchaReply
 	pattern := "/api/users/captcha"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminCaptcha))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminHTTPClientImpl) CategoryList(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*CategoryListReply, error) {
+	var out CategoryListReply
+	pattern := "/api/goods/categories"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminCategoryList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -418,6 +886,47 @@ func (c *AdminHTTPClientImpl) CreateAddress(ctx context.Context, in *CreateAddre
 	opts = append(opts, http.Operation(OperationAdminCreateAddress))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminHTTPClientImpl) CreateCategory(ctx context.Context, in *CategorySaveRequest, opts ...http.CallOption) (*CategoryItem, error) {
+	var out CategoryItem
+	pattern := "/api/goods/category/create"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminCreateCategory))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateGoods 商品新增
+func (c *AdminHTTPClientImpl) CreateGoods(ctx context.Context, in *CreateGoodsRequest, opts ...http.CallOption) (*CheckResponse, error) {
+	var out CheckResponse
+	pattern := "/api/goods/create"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminCreateGoods))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DashboardStats 运营看板
+func (c *AdminHTTPClientImpl) DashboardStats(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*DashboardStatsReply, error) {
+	var out DashboardStatsReply
+	pattern := "/api/dashboard/stats"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminDashboardStats))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -442,6 +951,19 @@ func (c *AdminHTTPClientImpl) DeleteAddress(ctx context.Context, in *AddressReq,
 	pattern := "/api/address/delete"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminDeleteAddress))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminHTTPClientImpl) DeleteCategory(ctx context.Context, in *CategoryDeleteRequest, opts ...http.CallOption) (*CheckResponse, error) {
+	var out CheckResponse
+	pattern := "/api/goods/category/delete"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminDeleteCategory))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -476,6 +998,19 @@ func (c *AdminHTTPClientImpl) Detail(ctx context.Context, in *emptypb.Empty, opt
 	return &out, nil
 }
 
+func (c *AdminHTTPClientImpl) GoodsDetail(ctx context.Context, in *GoodsDetailRequest, opts ...http.CallOption) (*GoodsDetailReply, error) {
+	var out GoodsDetailReply
+	pattern := "/api/goods/detail"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminGoodsDetail))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminHTTPClientImpl) GoodsList(ctx context.Context, in *GoodsListRequest, opts ...http.CallOption) (*GoodsListReply, error) {
 	var out GoodsListReply
 	pattern := "/api/goods/list"
@@ -502,11 +1037,65 @@ func (c *AdminHTTPClientImpl) Login(ctx context.Context, in *LoginReq, opts ...h
 	return &out, nil
 }
 
+func (c *AdminHTTPClientImpl) OrderDetail(ctx context.Context, in *OrderDetailRequest, opts ...http.CallOption) (*OrderInfo, error) {
+	var out OrderInfo
+	pattern := "/api/order/detail"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminOrderDetail))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// OrderList 订单管理
+func (c *AdminHTTPClientImpl) OrderList(ctx context.Context, in *OrderListRequest, opts ...http.CallOption) (*OrderListReply, error) {
+	var out OrderListReply
+	pattern := "/api/order/list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminOrderList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// PermissionList 系统权限
+func (c *AdminHTTPClientImpl) PermissionList(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*PermissionListReply, error) {
+	var out PermissionListReply
+	pattern := "/api/system/permissions"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminPermissionList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminHTTPClientImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...http.CallOption) (*RegisterReply, error) {
 	var out RegisterReply
 	pattern := "/api/users/refresh"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminRefreshToken))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminHTTPClientImpl) RefundOrder(ctx context.Context, in *RefundOrderRequest, opts ...http.CallOption) (*CheckResponse, error) {
+	var out CheckResponse
+	pattern := "/api/order/refund"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminRefundOrder))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -528,11 +1117,63 @@ func (c *AdminHTTPClientImpl) Register(ctx context.Context, in *RegisterReq, opt
 	return &out, nil
 }
 
+func (c *AdminHTTPClientImpl) RolePermissionList(ctx context.Context, in *RolePermissionListRequest, opts ...http.CallOption) (*RolePermissionListReply, error) {
+	var out RolePermissionListReply
+	pattern := "/api/system/role-permissions"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminRolePermissionList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminHTTPClientImpl) RolePermissionUpdate(ctx context.Context, in *RolePermissionUpdateRequest, opts ...http.CallOption) (*CheckResponse, error) {
+	var out CheckResponse
+	pattern := "/api/system/role-permissions"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminRolePermissionUpdate))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminHTTPClientImpl) ShipOrder(ctx context.Context, in *ShipOrderRequest, opts ...http.CallOption) (*CheckResponse, error) {
+	var out CheckResponse
+	pattern := "/api/order/ship"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminShipOrder))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminHTTPClientImpl) UpdateAddress(ctx context.Context, in *UpdateAddressReq, opts ...http.CallOption) (*CheckResponse, error) {
 	var out CheckResponse
 	pattern := "/api/address/update"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminUpdateAddress))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminHTTPClientImpl) UpdateCategory(ctx context.Context, in *CategorySaveRequest, opts ...http.CallOption) (*CheckResponse, error) {
+	var out CheckResponse
+	pattern := "/api/goods/category/update"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminUpdateCategory))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
@@ -561,6 +1202,46 @@ func (c *AdminHTTPClientImpl) UpdateGoodsStatus(ctx context.Context, in *UpdateG
 	opts = append(opts, http.Operation(OperationAdminUpdateGoodsStatus))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminHTTPClientImpl) UserAddressDelete(ctx context.Context, in *UserAddressDeleteRequest, opts ...http.CallOption) (*CheckResponse, error) {
+	var out CheckResponse
+	pattern := "/api/user/address/delete"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminUserAddressDelete))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminHTTPClientImpl) UserAddressList(ctx context.Context, in *UserAddressListRequest, opts ...http.CallOption) (*UserAddressListReply, error) {
+	var out UserAddressListReply
+	pattern := "/api/user/address/list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminUserAddressList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// UserList 用户管理
+func (c *AdminHTTPClientImpl) UserList(ctx context.Context, in *UserListRequest, opts ...http.CallOption) (*UserListReply, error) {
+	var out UserListReply
+	pattern := "/api/user/list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminUserList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

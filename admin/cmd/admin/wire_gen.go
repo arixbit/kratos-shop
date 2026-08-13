@@ -23,7 +23,9 @@ func initApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, conf
 	discovery := data.NewDiscovery(registry)
 	userClient := data.NewUserServiceClient(auth, confService, discovery)
 	goodsClient := data.NewGoodsServiceClient(auth, confService, discovery)
-	dataData, err := data.NewData(confData, userClient, goodsClient, logger)
+	orderClient := data.NewOrderServiceClient(auth, confService, discovery)
+	db := data.NewDB(confData)
+	dataData, err := data.NewData(confData, db, userClient, goodsClient, logger)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -32,7 +34,10 @@ func initApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, conf
 	addressRepo := data.NewAddressRepo(dataData, logger)
 	addressUsecase := biz.NewAddressUsecase(userRepo, addressRepo, logger, auth)
 	goodsUsecase := biz.NewGoodsUsecase(goodsClient, logger)
-	adminService := service.NewAdminService(userUsecase, addressUsecase, goodsUsecase, logger)
+	orderUsecase := biz.NewOrderUsecase(orderClient, logger)
+	permissionRepo := data.NewPermissionRepo(dataData, logger)
+	permissionUsecase := biz.NewPermissionUsecase(permissionRepo, logger)
+	adminService := service.NewAdminService(userUsecase, addressUsecase, goodsUsecase, orderUsecase, permissionUsecase, logger)
 	httpServer := server.NewHTTPServer(confServer, auth, adminService, logger)
 	registrar := data.NewRegistrar(registry)
 	app := newApp(logger, httpServer, registrar)

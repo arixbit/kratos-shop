@@ -32,7 +32,31 @@ func (s *AdminService) Captcha(ctx context.Context, r *emptypb.Empty) (*v1.Captc
 }
 
 func (s *AdminService) Detail(ctx context.Context, r *emptypb.Empty) (*v1.UserDetailResponse, error) {
-	return s.uc.UserDetailByID(ctx)
+	reply, err := s.uc.UserDetailByID(ctx)
+	if err != nil {
+		return nil, err
+	}
+	perms, err := s.pu.CodesForRole(ctx, reply.Role)
+	if err != nil {
+		return nil, err
+	}
+	reply.Permissions = perms
+	return reply, nil
+}
+
+func (s *AdminService) UserList(ctx context.Context, req *v1.UserListRequest) (*v1.UserListReply, error) {
+	return s.uc.UserList(ctx, req)
+}
+
+func (s *AdminService) UserAddressList(ctx context.Context, req *v1.UserAddressListRequest) (*v1.UserAddressListReply, error) {
+	return s.ua.UserAddressList(ctx, req.Uid)
+}
+
+func (s *AdminService) UserAddressDelete(ctx context.Context, req *v1.UserAddressDeleteRequest) (*v1.CheckResponse, error) {
+	if err := s.ua.UserAddressDelete(ctx, req.Id, req.Uid); err != nil {
+		return nil, err
+	}
+	return &v1.CheckResponse{Success: true}, nil
 }
 
 func (s *AdminService) CreateAddress(ctx context.Context, r *v1.CreateAddressReq) (*v1.AddressInfo, error) {

@@ -96,6 +96,127 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CheckResponse'
+    /api/dashboard/stats:
+        get:
+            tags:
+                - Admin
+            description: 运营看板
+            operationId: Admin_DashboardStats
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DashboardStatsReply'
+    /api/goods/brands:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_BrandList
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BrandListReply'
+    /api/goods/categories:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_CategoryList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CategoryListReply'
+    /api/goods/category/create:
+        post:
+            tags:
+                - Admin
+            operationId: Admin_CreateCategory
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CategorySaveRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CategoryItem'
+    /api/goods/category/delete:
+        delete:
+            tags:
+                - Admin
+            operationId: Admin_DeleteCategory
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/goods/category/update:
+        put:
+            tags:
+                - Admin
+            operationId: Admin_UpdateCategory
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CategorySaveRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/goods/create:
+        post:
+            tags:
+                - Admin
+            description: 商品新增
+            operationId: Admin_CreateGoods
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateGoodsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
     /api/goods/delete:
         delete:
             tags:
@@ -114,6 +235,24 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CheckResponse'
+    /api/goods/detail:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_GoodsDetail
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GoodsDetailReply'
     /api/goods/list:
         get:
             tags:
@@ -144,6 +283,10 @@ paths:
                   schema:
                     type: integer
                     format: int64
+                - name: skuCode
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -187,6 +330,201 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CheckResponse'
+    /api/order/detail:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_OrderDetail
+            parameters:
+                - name: orderSn
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OrderInfo'
+    /api/order/list:
+        get:
+            tags:
+                - Admin
+            description: 订单管理
+            operationId: Admin_OrderList
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: status
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OrderListReply'
+    /api/order/refund:
+        post:
+            tags:
+                - Admin
+            operationId: Admin_RefundOrder
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RefundOrderRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/order/ship:
+        post:
+            tags:
+                - Admin
+            operationId: Admin_ShipOrder
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ShipOrderRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/system/permissions:
+        get:
+            tags:
+                - Admin
+            description: 系统权限
+            operationId: Admin_PermissionList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PermissionListReply'
+    /api/system/role-permissions:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_RolePermissionList
+            parameters:
+                - name: role
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RolePermissionListReply'
+        put:
+            tags:
+                - Admin
+            operationId: Admin_RolePermissionUpdate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RolePermissionUpdateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/user/address/delete:
+        delete:
+            tags:
+                - Admin
+            operationId: Admin_UserAddressDelete
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: uid
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/user/address/list:
+        get:
+            tags:
+                - Admin
+            operationId: Admin_UserAddressList
+            parameters:
+                - name: uid
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UserAddressListReply'
+    /api/user/list:
+        get:
+            tags:
+                - Admin
+            description: 用户管理
+            operationId: Admin_UserList
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UserListReply'
     /api/users/captcha:
         get:
             tags:
@@ -299,6 +637,23 @@ components:
                 uid:
                     type: integer
                     format: int64
+        BrandItem:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                logo:
+                    type: string
+        BrandListReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/BrandItem'
         CaptchaReply:
             type: object
             properties:
@@ -306,6 +661,44 @@ components:
                     type: string
                 picPath:
                     type: string
+        CategoryItem:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                parentCategory:
+                    type: integer
+                    format: int64
+                level:
+                    type: integer
+                    format: int32
+        CategoryListReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CategoryItem'
+        CategorySaveRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                parentCategory:
+                    type: integer
+                    format: int64
+                level:
+                    type: integer
+                    format: int32
+                sort:
+                    type: integer
+                    format: int32
         CheckResponse:
             type: object
             properties:
@@ -334,6 +727,164 @@ components:
                 isDefault:
                     type: integer
                     format: int32
+        CreateGoodsRequest:
+            type: object
+            properties:
+                categoryId:
+                    type: integer
+                    format: int32
+                brandId:
+                    type: integer
+                    format: int32
+                typeId:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                goodsSn:
+                    type: string
+                marketPrice:
+                    type: integer
+                    format: int64
+                inventory:
+                    type: integer
+                    format: int64
+                goodsBrief:
+                    type: string
+                goodsFrontImage:
+                    type: string
+                shipFree:
+                    type: boolean
+                isNew:
+                    type: boolean
+                isHot:
+                    type: boolean
+                onSale:
+                    type: boolean
+                skuName:
+                    type: string
+                skuCode:
+                    type: string
+                barCode:
+                    type: string
+                skuPrice:
+                    type: integer
+                    format: int64
+                promotionPrice:
+                    type: integer
+                    format: int64
+                skuInventory:
+                    type: integer
+                    format: int64
+                skuImage:
+                    type: string
+            description: 商品新增
+        DailySales:
+            type: object
+            properties:
+                date:
+                    type: string
+                orderCount:
+                    type: integer
+                    format: int64
+                amount:
+                    type: integer
+                    format: int64
+        DashboardStatsReply:
+            type: object
+            properties:
+                totalOrders:
+                    type: integer
+                    format: int64
+                totalSales:
+                    type: integer
+                    format: int64
+                todayOrders:
+                    type: integer
+                    format: int64
+                todaySales:
+                    type: integer
+                    format: int64
+                totalUsers:
+                    type: integer
+                    format: int64
+                statusCounts:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/StatusCount'
+                last30Days:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DailySales'
+                topGoods:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/TopGoods'
+            description: 运营看板
+        GoodsDetailReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                categoryId:
+                    type: integer
+                    format: int64
+                brandId:
+                    type: integer
+                    format: int64
+                typeId:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                goodsSn:
+                    type: string
+                marketPrice:
+                    type: integer
+                    format: int64
+                goodsBrief:
+                    type: string
+                goodsFrontImage:
+                    type: string
+                goodsImages:
+                    type: array
+                    items:
+                        type: string
+                onSale:
+                    type: boolean
+                isNew:
+                    type: boolean
+                isHot:
+                    type: boolean
+                soldNum:
+                    type: integer
+                    format: int64
+                brandName:
+                    type: string
+                categoryName:
+                    type: string
+                skus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoodsSkuDetail'
+                images:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoodsImageDetail'
+        GoodsImageDetail:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                url:
+                    type: string
+                position:
+                    type: integer
+                    format: int32
+                isMaster:
+                    type: boolean
         GoodsItem:
             type: object
             properties:
@@ -353,6 +904,22 @@ components:
                     type: boolean
                 isHot:
                     type: boolean
+                categoryId:
+                    type: integer
+                    format: int64
+                brandId:
+                    type: integer
+                    format: int64
+                categoryName:
+                    type: string
+                brandName:
+                    type: string
+                skuCount:
+                    type: integer
+                    format: int32
+                soldNum:
+                    type: integer
+                    format: int64
         GoodsListReply:
             type: object
             properties:
@@ -363,6 +930,34 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/GoodsItem'
+        GoodsSkuDetail:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                goodsId:
+                    type: integer
+                    format: int64
+                skuName:
+                    type: string
+                skuCode:
+                    type: string
+                barCode:
+                    type: string
+                price:
+                    type: integer
+                    format: int64
+                promotionPrice:
+                    type: integer
+                    format: int64
+                inventory:
+                    type: integer
+                    format: int64
+                onSale:
+                    type: boolean
+                pic:
+                    type: string
         ListAddressReply:
             type: object
             properties:
@@ -377,10 +972,98 @@ components:
                     type: string
                 password:
                     type: string
+        OrderGoodsInfo:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                skuId:
+                    type: integer
+                    format: int64
+                skuName:
+                    type: string
+                skuPrice:
+                    type: integer
+                    format: int64
+                num:
+                    type: integer
+                    format: int32
+                totalPrice:
+                    type: integer
+                    format: int64
+        OrderInfo:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                userId:
+                    type: integer
+                    format: int64
+                orderSn:
+                    type: string
+                status:
+                    type: string
+                post:
+                    type: string
+                total:
+                    type: integer
+                    format: int64
+                address:
+                    type: string
+                name:
+                    type: string
+                mobile:
+                    type: string
+                addTime:
+                    type: string
+                goods:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/OrderGoodsInfo'
+        OrderListReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/OrderInfo'
+        PermissionItem:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                code:
+                    type: string
+                name:
+                    type: string
+                groupName:
+                    type: string
+                sort:
+                    type: integer
+                    format: int32
+            description: 系统权限
+        PermissionListReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/PermissionItem'
         RefreshTokenRequest:
             type: object
             properties:
                 token:
+                    type: string
+        RefundOrderRequest:
+            type: object
+            properties:
+                orderSn:
                     type: string
         RegisterReply:
             type: object
@@ -407,6 +1090,53 @@ components:
                     type: string
                 password:
                     type: string
+        RolePermissionListReply:
+            type: object
+            properties:
+                codes:
+                    type: array
+                    items:
+                        type: string
+        RolePermissionUpdateRequest:
+            type: object
+            properties:
+                role:
+                    type: integer
+                    format: int32
+                codes:
+                    type: array
+                    items:
+                        type: string
+        ShipOrderRequest:
+            type: object
+            properties:
+                orderSn:
+                    type: string
+                post:
+                    type: string
+        StatusCount:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    format: int32
+                count:
+                    type: integer
+                    format: int64
+        TopGoods:
+            type: object
+            properties:
+                skuId:
+                    type: integer
+                    format: int64
+                skuName:
+                    type: string
+                num:
+                    type: integer
+                    format: int64
+                amount:
+                    type: integer
+                    format: int64
         UpdateAddressReq:
             type: object
             properties:
@@ -464,6 +1194,13 @@ components:
                     format: int64
                 onSale:
                     type: boolean
+        UserAddressListReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AddressInfo'
         UserDetailResponse:
             type: object
             properties:
@@ -482,6 +1219,38 @@ components:
                 role:
                     type: integer
                     format: int32
+                permissions:
+                    type: array
+                    items:
+                        type: string
             description: user Detail returned
+        UserInfo:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                mobile:
+                    type: string
+                nickName:
+                    type: string
+                birthday:
+                    type: integer
+                    format: int64
+                gender:
+                    type: string
+                role:
+                    type: integer
+                    format: int32
+        UserListReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/UserInfo'
 tags:
     - name: Admin

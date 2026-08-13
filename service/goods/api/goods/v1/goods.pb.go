@@ -1213,6 +1213,7 @@ type GoodsInfoResponse struct {
 	BrandName     string                 `protobuf:"bytes,18,opt,name=brandName,proto3" json:"brandName,omitempty"`
 	CategoryName  string                 `protobuf:"bytes,19,opt,name=categoryName,proto3" json:"categoryName,omitempty"`
 	Skus          []*SkuInfo             `protobuf:"bytes,20,rep,name=skus,proto3" json:"skus,omitempty"`
+	SkuCount      int32                  `protobuf:"varint,21,opt,name=skuCount,proto3" json:"skuCount,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1387,6 +1388,13 @@ func (x *GoodsInfoResponse) GetSkus() []*SkuInfo {
 	return nil
 }
 
+func (x *GoodsInfoResponse) GetSkuCount() int32 {
+	if x != nil {
+		return x.SkuCount
+	}
+	return 0
+}
+
 type GoodsListResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
@@ -1455,6 +1463,7 @@ type GoodsFilterRequest struct {
 	Pages         int64                  `protobuf:"varint,12,opt,name=pages,proto3" json:"pages,omitempty"`
 	PagePerNums   int64                  `protobuf:"varint,13,opt,name=pagePerNums,proto3" json:"pagePerNums,omitempty"`
 	Id            int64                  `protobuf:"varint,14,opt,name=id,proto3" json:"id,omitempty"`
+	SkuCode       string                 `protobuf:"bytes,15,opt,name=skuCode,proto3" json:"skuCode,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1585,6 +1594,13 @@ func (x *GoodsFilterRequest) GetId() int64 {
 		return x.Id
 	}
 	return 0
+}
+
+func (x *GoodsFilterRequest) GetSkuCode() string {
+	if x != nil {
+		return x.SkuCode
+	}
+	return ""
 }
 
 // 商品分类
@@ -3605,7 +3621,7 @@ const file_api_goods_v1_goods_proto_rawDesc = "" +
 	"\vattrValueId\x18\x03 \x01(\x03B\a\xfaB\x04\"\x02(\x01R\vattrValueId\x12-\n" +
 	"\rattrValueName\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\rattrValueName\"%\n" +
 	"\x13CreateGoodsResponse\x12\x0e\n" +
-	"\x02ID\x18\x01 \x01(\x03R\x02ID\"\xbc\x04\n" +
+	"\x02ID\x18\x01 \x01(\x03R\x02ID\"\xd8\x04\n" +
 	"\x11GoodsInfoResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1e\n" +
 	"\n" +
@@ -3631,10 +3647,11 @@ const file_api_goods_v1_goods_proto_rawDesc = "" +
 	"\x06onSale\x18\x11 \x01(\bR\x06onSale\x12\x1c\n" +
 	"\tbrandName\x18\x12 \x01(\tR\tbrandName\x12\"\n" +
 	"\fcategoryName\x18\x13 \x01(\tR\fcategoryName\x12%\n" +
-	"\x04skus\x18\x14 \x03(\v2\x11.goods.v1.SkuInfoR\x04skus\"Z\n" +
+	"\x04skus\x18\x14 \x03(\v2\x11.goods.v1.SkuInfoR\x04skus\x12\x1a\n" +
+	"\bskuCount\x18\x15 \x01(\x05R\bskuCount\"Z\n" +
 	"\x11GoodsListResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x03R\x05total\x12/\n" +
-	"\x04list\x18\x02 \x03(\v2\x1b.goods.v1.GoodsInfoResponseR\x04list\"\xfa\x02\n" +
+	"\x04list\x18\x02 \x03(\v2\x1b.goods.v1.GoodsInfoResponseR\x04list\"\x94\x03\n" +
 	"\x12GoodsFilterRequest\x12\x1a\n" +
 	"\bkeywords\x18\x01 \x01(\tR\bkeywords\x12\x1e\n" +
 	"\n" +
@@ -3652,7 +3669,8 @@ const file_api_goods_v1_goods_proto_rawDesc = "" +
 	"\x06favNum\x18\v \x01(\x03R\x06favNum\x12\x14\n" +
 	"\x05pages\x18\f \x01(\x03R\x05pages\x12 \n" +
 	"\vpagePerNums\x18\r \x01(\x03R\vpagePerNums\x12\x0e\n" +
-	"\x02id\x18\x0e \x01(\x03R\x02id\"\xa2\x01\n" +
+	"\x02id\x18\x0e \x01(\x03R\x02id\x12\x18\n" +
+	"\askuCode\x18\x0f \x01(\tR\askuCode\"\xa2\x01\n" +
 	"\x14CategoryInfoResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12&\n" +

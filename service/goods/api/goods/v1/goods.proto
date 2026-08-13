@@ -228,6 +228,7 @@ message GoodsInfoResponse {
   string brandName = 18;
   string categoryName = 19;
   repeated SkuInfo skus = 20;
+  int32 skuCount = 21;
 }
 
 message GoodsListResponse {
@@ -250,6 +251,7 @@ message GoodsFilterRequest  {
   int64 pages = 12;
   int64 pagePerNums = 13;
   int64 id = 14;
+  string skuCode = 15;
 }
 
 // 商品分类

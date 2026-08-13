@@ -87,6 +87,107 @@ service admin {
       body: "*",
     };
   }
+  // 订单管理
+  rpc OrderList (OrderListRequest) returns (OrderListReply) {
+    option (google.api.http) = {
+      get: "/api/order/list",
+    };
+  }
+  rpc OrderDetail (OrderDetailRequest) returns (OrderInfo) {
+    option (google.api.http) = {
+      get: "/api/order/detail",
+    };
+  }
+  rpc ShipOrder (ShipOrderRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      post: "/api/order/ship",
+      body: "*",
+    };
+  }
+  rpc RefundOrder (RefundOrderRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      post: "/api/order/refund",
+      body: "*",
+    };
+  }
+  // 用户管理
+  rpc UserList (UserListRequest) returns (UserListReply) {
+    option (google.api.http) = {
+      get: "/api/user/list",
+    };
+  }
+  rpc UserAddressList (UserAddressListRequest) returns (UserAddressListReply) {
+    option (google.api.http) = {
+      get: "/api/user/address/list",
+    };
+  }
+  rpc UserAddressDelete (UserAddressDeleteRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      delete: "/api/user/address/delete",
+    };
+  }
+  // 商品新增
+  rpc CreateGoods (CreateGoodsRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      post: "/api/goods/create",
+      body: "*",
+    };
+  }
+  rpc GoodsDetail (GoodsDetailRequest) returns (GoodsDetailReply) {
+    option (google.api.http) = {
+      get: "/api/goods/detail",
+    };
+  }
+  rpc CategoryList (google.protobuf.Empty) returns (CategoryListReply) {
+    option (google.api.http) = {
+      get: "/api/goods/categories",
+    };
+  }
+  rpc BrandList (BrandListRequest) returns (BrandListReply) {
+    option (google.api.http) = {
+      get: "/api/goods/brands",
+    };
+  }
+  rpc CreateCategory (CategorySaveRequest) returns (CategoryItem) {
+    option (google.api.http) = {
+      post: "/api/goods/category/create",
+      body: "*",
+    };
+  }
+  rpc UpdateCategory (CategorySaveRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      put: "/api/goods/category/update",
+      body: "*",
+    };
+  }
+  rpc DeleteCategory (CategoryDeleteRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      delete: "/api/goods/category/delete",
+    };
+  }
+  // 运营看板
+  rpc DashboardStats (google.protobuf.Empty) returns (DashboardStatsReply) {
+    option (google.api.http) = {
+      get: "/api/dashboard/stats",
+    };
+  }
+  // 系统权限
+  rpc PermissionList (google.protobuf.Empty) returns (PermissionListReply) {
+    option (google.api.http) = {
+      get: "/api/system/permissions",
+    };
+  }
+  rpc RolePermissionList (RolePermissionListRequest) returns (RolePermissionListReply) {
+    option (google.api.http) = {
+      get: "/api/system/role-permissions",
+    };
+  }
+  rpc RolePermissionUpdate (RolePermissionUpdateRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      put: "/api/system/role-permissions",
+      body: "*",
+    };
+  }
 }
 
 message CreateAddressReq {
@@ -173,6 +274,7 @@ message UserDetailResponse{
   int64 birthday = 4;
   string gender = 5;
   int32 role = 6;
+  repeated string permissions = 7;
 }
 
 message CaptchaReply{
@@ -190,6 +292,7 @@ message GoodsListRequest {
   string keywords = 3;
   int64 categoryId = 4;
   int64 brandId = 5;
+  string skuCode = 6;
 }
 
 message GoodsItem {
@@ -200,6 +303,12 @@ message GoodsItem {
   bool onSale = 5;
   bool isNew = 6;
   bool isHot = 7;
+  int64 categoryId = 8;
+  int64 brandId = 9;
+  string categoryName = 10;
+  string brandName = 11;
+  int32 skuCount = 12;
+  int64 soldNum = 13;
 }
 
 message GoodsListReply {
@@ -226,4 +335,248 @@ message DeleteGoodsRequest {
 message UpdateGoodsStatusRequest {
   int64 id = 1 [(validate.rules).int64.gte = 1];
   bool onSale = 2;
+}
+
+// 订单管理
+message OrderListRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+  int32 status = 3;
+}
+
+message OrderInfo {
+  int64 id = 1;
+  int64 userId = 2;
+  string orderSn = 3;
+  string status = 4;
+  string post = 5;
+  int64 total = 6;
+  string address = 7;
+  string name = 8;
+  string mobile = 9;
+  string addTime = 10;
+  repeated OrderGoodsInfo goods = 11;
+}
+
+message OrderGoodsInfo {
+  int64 id = 1;
+  int64 skuId = 2;
+  string skuName = 3;
+  int64 skuPrice = 4;
+  int32 num = 5;
+  int64 totalPrice = 6;
+}
+
+message OrderListReply {
+  int32 total = 1;
+  repeated OrderInfo list = 2;
+}
+
+message OrderDetailRequest {
+  string orderSn = 1 [(validate.rules).string.min_len = 1];
+}
+
+message ShipOrderRequest {
+  string orderSn = 1 [(validate.rules).string.min_len = 1];
+  string post = 2 [(validate.rules).string.min_len = 1];
+}
+
+message RefundOrderRequest {
+  string orderSn = 1 [(validate.rules).string.min_len = 1];
+}
+
+// 用户管理
+message UserListRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+}
+
+message UserInfo {
+  int64 id = 1;
+  string mobile = 2;
+  string nickName = 3;
+  int64 birthday = 4;
+  string gender = 5;
+  int32 role = 6;
+}
+
+message UserListReply {
+  int32 total = 1;
+  repeated UserInfo list = 2;
+}
+
+message UserAddressListRequest {
+  int64 uid = 1 [(validate.rules).int64.gt = 0];
+}
+
+message UserAddressListReply {
+  repeated AddressInfo list = 1;
+}
+
+message UserAddressDeleteRequest {
+  int64 id = 1 [(validate.rules).int64.gt = 0];
+  int64 uid = 2 [(validate.rules).int64.gt = 0];
+}
+
+// 商品新增
+message CreateGoodsRequest {
+  int32 categoryId = 1 [(validate.rules).int32.gte = 1];
+  int32 brandId = 2 [(validate.rules).int32.gte = 1];
+  int64 typeId = 3 [(validate.rules).int64.gte = 1];
+  string name = 4 [(validate.rules).string.min_len = 1];
+  string goodsSn = 5 [(validate.rules).string.min_len = 1];
+  int64 marketPrice = 6 [(validate.rules).int64.gt = 0];
+  int64 inventory = 7;
+  string goodsBrief = 8;
+  string goodsFrontImage = 9;
+  bool shipFree = 10;
+  bool isNew = 11;
+  bool isHot = 12;
+  bool onSale = 13;
+  string skuName = 14 [(validate.rules).string.min_len = 1];
+  string skuCode = 15 [(validate.rules).string.min_len = 1];
+  string barCode = 16 [(validate.rules).string.min_len = 1];
+  int64 skuPrice = 17 [(validate.rules).int64.gt = 0];
+  int64 promotionPrice = 18;
+  int64 skuInventory = 19;
+  string skuImage = 20;
+}
+
+message GoodsDetailRequest {
+  int64 id = 1 [(validate.rules).int64.gte = 1];
+}
+
+message GoodsSkuDetail {
+  int64 id = 1;
+  int64 goodsId = 2;
+  string skuName = 3;
+  string skuCode = 4;
+  string barCode = 5;
+  int64 price = 6;
+  int64 promotionPrice = 7;
+  int64 inventory = 8;
+  bool onSale = 9;
+  string pic = 10;
+}
+
+message GoodsImageDetail {
+  int64 id = 1;
+  string url = 2;
+  int32 position = 3;
+  bool isMaster = 4;
+}
+
+message GoodsDetailReply {
+  int64 id = 1;
+  int64 categoryId = 2;
+  int64 brandId = 3;
+  int64 typeId = 4;
+  string name = 5;
+  string goodsSn = 6;
+  int64 marketPrice = 7;
+  string goodsBrief = 8;
+  string goodsFrontImage = 9;
+  repeated string goodsImages = 10;
+  bool onSale = 11;
+  bool isNew = 12;
+  bool isHot = 13;
+  int64 soldNum = 14;
+  string brandName = 15;
+  string categoryName = 16;
+  repeated GoodsSkuDetail skus = 17;
+  repeated GoodsImageDetail images = 18;
+}
+
+message CategoryItem {
+  int64 id = 1;
+  string name = 2;
+  int64 parentCategory = 3;
+  int32 level = 4;
+}
+
+message CategoryListReply {
+  repeated CategoryItem list = 1;
+}
+
+message BrandListRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+}
+
+message BrandItem {
+  int64 id = 1;
+  string name = 2;
+  string logo = 3;
+}
+
+message BrandListReply {
+  repeated BrandItem list = 1;
+}
+
+message CategorySaveRequest {
+  int64 id = 1;
+  string name = 2 [(validate.rules).string.min_len = 1];
+  int64 parentCategory = 3;
+  int32 level = 4 [(validate.rules).int32.gte = 1];
+  int32 sort = 5;
+}
+
+message CategoryDeleteRequest {
+  int64 id = 1 [(validate.rules).int64.gte = 1];
+}
+
+// 运营看板
+message DashboardStatsReply {
+  int64 totalOrders = 1;
+  int64 totalSales = 2;
+  int64 todayOrders = 3;
+  int64 todaySales = 4;
+  int64 totalUsers = 5;
+  repeated StatusCount statusCounts = 6;
+  repeated DailySales last30Days = 7;
+  repeated TopGoods topGoods = 8;
+}
+
+message StatusCount {
+  int32 status = 1;
+  int64 count = 2;
+}
+
+message DailySales {
+  string date = 1;
+  int64 orderCount = 2;
+  int64 amount = 3;
+}
+
+message TopGoods {
+  int64 skuId = 1;
+  string skuName = 2;
+  int64 num = 3;
+  int64 amount = 4;
+}
+
+// 系统权限
+message PermissionItem {
+  int64 id = 1;
+  string code = 2;
+  string name = 3;
+  string groupName = 4;
+  int32 sort = 5;
+}
+
+message PermissionListReply {
+  repeated PermissionItem list = 1;
+}
+
+message RolePermissionListRequest {
+  int32 role = 1 [(validate.rules).int32.gte = 1];
+}
+
+message RolePermissionListReply {
+  repeated string codes = 1;
+}
+
+message RolePermissionUpdateRequest {
+  int32 role = 1 [(validate.rules).int32.gte = 1];
+  repeated string codes = 2;
 }

@@ -22,6 +22,10 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationShopAddressListByUid = "/shop.shop.v1.Shop/AddressListByUid"
 const OperationShopCaptcha = "/shop.shop.v1.Shop/Captcha"
+const OperationShopCartAdd = "/shop.shop.v1.Shop/CartAdd"
+const OperationShopCartDelete = "/shop.shop.v1.Shop/CartDelete"
+const OperationShopCartList = "/shop.shop.v1.Shop/CartList"
+const OperationShopCartUpdate = "/shop.shop.v1.Shop/CartUpdate"
 const OperationShopCreateAddress = "/shop.shop.v1.Shop/CreateAddress"
 const OperationShopDefaultAddress = "/shop.shop.v1.Shop/DefaultAddress"
 const OperationShopDeleteAddress = "/shop.shop.v1.Shop/DeleteAddress"
@@ -29,6 +33,12 @@ const OperationShopDetail = "/shop.shop.v1.Shop/Detail"
 const OperationShopGoodsDetail = "/shop.shop.v1.Shop/GoodsDetail"
 const OperationShopGoodsList = "/shop.shop.v1.Shop/GoodsList"
 const OperationShopLogin = "/shop.shop.v1.Shop/Login"
+const OperationShopOrderCancel = "/shop.shop.v1.Shop/OrderCancel"
+const OperationShopOrderCreate = "/shop.shop.v1.Shop/OrderCreate"
+const OperationShopOrderDetail = "/shop.shop.v1.Shop/OrderDetail"
+const OperationShopOrderList = "/shop.shop.v1.Shop/OrderList"
+const OperationShopPaymentCreate = "/shop.shop.v1.Shop/PaymentCreate"
+const OperationShopPaymentMockPay = "/shop.shop.v1.Shop/PaymentMockPay"
 const OperationShopRefreshToken = "/shop.shop.v1.Shop/RefreshToken"
 const OperationShopRegister = "/shop.shop.v1.Shop/Register"
 const OperationShopUpdateAddress = "/shop.shop.v1.Shop/UpdateAddress"
@@ -36,6 +46,11 @@ const OperationShopUpdateAddress = "/shop.shop.v1.Shop/UpdateAddress"
 type ShopHTTPServer interface {
 	AddressListByUid(context.Context, *emptypb.Empty) (*ListAddressReply, error)
 	Captcha(context.Context, *emptypb.Empty) (*CaptchaReply, error)
+	CartAdd(context.Context, *CartAddRequest) (*CartItemReply, error)
+	CartDelete(context.Context, *CartDeleteRequest) (*CheckResponse, error)
+	// CartList 购物车
+	CartList(context.Context, *CartListRequest) (*CartListReply, error)
+	CartUpdate(context.Context, *CartUpdateRequest) (*CheckResponse, error)
 	CreateAddress(context.Context, *CreateAddressReq) (*AddressInfo, error)
 	DefaultAddress(context.Context, *AddressReq) (*CheckResponse, error)
 	DeleteAddress(context.Context, *AddressReq) (*CheckResponse, error)
@@ -43,6 +58,14 @@ type ShopHTTPServer interface {
 	GoodsDetail(context.Context, *GoodsDetailRequest) (*GoodsDetailReply, error)
 	GoodsList(context.Context, *GoodsListRequest) (*GoodsListReply, error)
 	Login(context.Context, *LoginReq) (*RegisterReply, error)
+	OrderCancel(context.Context, *OrderCancelRequest) (*CheckResponse, error)
+	// OrderCreate 订单
+	OrderCreate(context.Context, *OrderCreateRequest) (*OrderInfoReply, error)
+	OrderDetail(context.Context, *OrderDetailRequest) (*OrderInfoReply, error)
+	OrderList(context.Context, *OrderListRequest) (*OrderListReply, error)
+	// PaymentCreate 支付（本地模拟，不接真实支付渠道）
+	PaymentCreate(context.Context, *PaymentCreateRequest) (*PaymentInfoReply, error)
+	PaymentMockPay(context.Context, *PaymentMockPayRequest) (*CheckResponse, error)
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RegisterReply, error)
 	Register(context.Context, *RegisterReq) (*RegisterReply, error)
 	UpdateAddress(context.Context, *UpdateAddressReq) (*CheckResponse, error)
@@ -62,6 +85,16 @@ func RegisterShopHTTPServer(s *http.Server, srv ShopHTTPServer) {
 	r.DELETE("/api/address/delete", _Shop_DeleteAddress0_HTTP_Handler(srv))
 	r.GET("/api/goods/list", _Shop_GoodsList0_HTTP_Handler(srv))
 	r.GET("/api/goods/detail", _Shop_GoodsDetail0_HTTP_Handler(srv))
+	r.GET("/api/cart/list", _Shop_CartList0_HTTP_Handler(srv))
+	r.POST("/api/cart/add", _Shop_CartAdd0_HTTP_Handler(srv))
+	r.PUT("/api/cart/update", _Shop_CartUpdate0_HTTP_Handler(srv))
+	r.DELETE("/api/cart/delete", _Shop_CartDelete0_HTTP_Handler(srv))
+	r.POST("/api/order/create", _Shop_OrderCreate0_HTTP_Handler(srv))
+	r.POST("/api/order/cancel", _Shop_OrderCancel0_HTTP_Handler(srv))
+	r.GET("/api/order/list", _Shop_OrderList0_HTTP_Handler(srv))
+	r.GET("/api/order/detail", _Shop_OrderDetail0_HTTP_Handler(srv))
+	r.POST("/api/payment/create", _Shop_PaymentCreate0_HTTP_Handler(srv))
+	r.POST("/api/payment/mock-pay", _Shop_PaymentMockPay0_HTTP_Handler(srv))
 }
 
 func _Shop_Register0_HTTP_Handler(srv ShopHTTPServer) func(ctx http.Context) error {
@@ -310,9 +343,222 @@ func _Shop_GoodsDetail0_HTTP_Handler(srv ShopHTTPServer) func(ctx http.Context) 
 	}
 }
 
+func _Shop_CartList0_HTTP_Handler(srv ShopHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CartListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopCartList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CartList(ctx, req.(*CartListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CartListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Shop_CartAdd0_HTTP_Handler(srv ShopHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CartAddRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopCartAdd)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CartAdd(ctx, req.(*CartAddRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CartItemReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Shop_CartUpdate0_HTTP_Handler(srv ShopHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CartUpdateRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopCartUpdate)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CartUpdate(ctx, req.(*CartUpdateRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CheckResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Shop_CartDelete0_HTTP_Handler(srv ShopHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CartDeleteRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopCartDelete)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CartDelete(ctx, req.(*CartDeleteRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CheckResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Shop_OrderCreate0_HTTP_Handler(srv ShopHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in OrderCreateRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopOrderCreate)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.OrderCreate(ctx, req.(*OrderCreateRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OrderInfoReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Shop_OrderCancel0_HTTP_Handler(srv ShopHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in OrderCancelRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopOrderCancel)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.OrderCancel(ctx, req.(*OrderCancelRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CheckResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Shop_OrderList0_HTTP_Handler(srv ShopHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in OrderListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopOrderList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.OrderList(ctx, req.(*OrderListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OrderListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Shop_OrderDetail0_HTTP_Handler(srv ShopHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in OrderDetailRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopOrderDetail)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.OrderDetail(ctx, req.(*OrderDetailRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OrderInfoReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Shop_PaymentCreate0_HTTP_Handler(srv ShopHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in PaymentCreateRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopPaymentCreate)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.PaymentCreate(ctx, req.(*PaymentCreateRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*PaymentInfoReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Shop_PaymentMockPay0_HTTP_Handler(srv ShopHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in PaymentMockPayRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopPaymentMockPay)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.PaymentMockPay(ctx, req.(*PaymentMockPayRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CheckResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type ShopHTTPClient interface {
 	AddressListByUid(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListAddressReply, err error)
 	Captcha(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *CaptchaReply, err error)
+	CartAdd(ctx context.Context, req *CartAddRequest, opts ...http.CallOption) (rsp *CartItemReply, err error)
+	CartDelete(ctx context.Context, req *CartDeleteRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
+	// CartList 购物车
+	CartList(ctx context.Context, req *CartListRequest, opts ...http.CallOption) (rsp *CartListReply, err error)
+	CartUpdate(ctx context.Context, req *CartUpdateRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
 	CreateAddress(ctx context.Context, req *CreateAddressReq, opts ...http.CallOption) (rsp *AddressInfo, err error)
 	DefaultAddress(ctx context.Context, req *AddressReq, opts ...http.CallOption) (rsp *CheckResponse, err error)
 	DeleteAddress(ctx context.Context, req *AddressReq, opts ...http.CallOption) (rsp *CheckResponse, err error)
@@ -320,6 +566,14 @@ type ShopHTTPClient interface {
 	GoodsDetail(ctx context.Context, req *GoodsDetailRequest, opts ...http.CallOption) (rsp *GoodsDetailReply, err error)
 	GoodsList(ctx context.Context, req *GoodsListRequest, opts ...http.CallOption) (rsp *GoodsListReply, err error)
 	Login(ctx context.Context, req *LoginReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
+	OrderCancel(ctx context.Context, req *OrderCancelRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
+	// OrderCreate 订单
+	OrderCreate(ctx context.Context, req *OrderCreateRequest, opts ...http.CallOption) (rsp *OrderInfoReply, err error)
+	OrderDetail(ctx context.Context, req *OrderDetailRequest, opts ...http.CallOption) (rsp *OrderInfoReply, err error)
+	OrderList(ctx context.Context, req *OrderListRequest, opts ...http.CallOption) (rsp *OrderListReply, err error)
+	// PaymentCreate 支付（本地模拟，不接真实支付渠道）
+	PaymentCreate(ctx context.Context, req *PaymentCreateRequest, opts ...http.CallOption) (rsp *PaymentInfoReply, err error)
+	PaymentMockPay(ctx context.Context, req *PaymentMockPayRequest, opts ...http.CallOption) (rsp *CheckResponse, err error)
 	RefreshToken(ctx context.Context, req *RefreshTokenRequest, opts ...http.CallOption) (rsp *RegisterReply, err error)
 	Register(ctx context.Context, req *RegisterReq, opts ...http.CallOption) (rsp *RegisterReply, err error)
 	UpdateAddress(ctx context.Context, req *UpdateAddressReq, opts ...http.CallOption) (rsp *CheckResponse, err error)
@@ -353,6 +607,59 @@ func (c *ShopHTTPClientImpl) Captcha(ctx context.Context, in *emptypb.Empty, opt
 	opts = append(opts, http.Operation(OperationShopCaptcha))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopHTTPClientImpl) CartAdd(ctx context.Context, in *CartAddRequest, opts ...http.CallOption) (*CartItemReply, error) {
+	var out CartItemReply
+	pattern := "/api/cart/add"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationShopCartAdd))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopHTTPClientImpl) CartDelete(ctx context.Context, in *CartDeleteRequest, opts ...http.CallOption) (*CheckResponse, error) {
+	var out CheckResponse
+	pattern := "/api/cart/delete"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationShopCartDelete))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CartList 购物车
+func (c *ShopHTTPClientImpl) CartList(ctx context.Context, in *CartListRequest, opts ...http.CallOption) (*CartListReply, error) {
+	var out CartListReply
+	pattern := "/api/cart/list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationShopCartList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopHTTPClientImpl) CartUpdate(ctx context.Context, in *CartUpdateRequest, opts ...http.CallOption) (*CheckResponse, error) {
+	var out CheckResponse
+	pattern := "/api/cart/update"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationShopCartUpdate))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -442,6 +749,86 @@ func (c *ShopHTTPClientImpl) Login(ctx context.Context, in *LoginReq, opts ...ht
 	pattern := "/api/users/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationShopLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopHTTPClientImpl) OrderCancel(ctx context.Context, in *OrderCancelRequest, opts ...http.CallOption) (*CheckResponse, error) {
+	var out CheckResponse
+	pattern := "/api/order/cancel"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationShopOrderCancel))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// OrderCreate 订单
+func (c *ShopHTTPClientImpl) OrderCreate(ctx context.Context, in *OrderCreateRequest, opts ...http.CallOption) (*OrderInfoReply, error) {
+	var out OrderInfoReply
+	pattern := "/api/order/create"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationShopOrderCreate))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopHTTPClientImpl) OrderDetail(ctx context.Context, in *OrderDetailRequest, opts ...http.CallOption) (*OrderInfoReply, error) {
+	var out OrderInfoReply
+	pattern := "/api/order/detail"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationShopOrderDetail))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopHTTPClientImpl) OrderList(ctx context.Context, in *OrderListRequest, opts ...http.CallOption) (*OrderListReply, error) {
+	var out OrderListReply
+	pattern := "/api/order/list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationShopOrderList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// PaymentCreate 支付（本地模拟，不接真实支付渠道）
+func (c *ShopHTTPClientImpl) PaymentCreate(ctx context.Context, in *PaymentCreateRequest, opts ...http.CallOption) (*PaymentInfoReply, error) {
+	var out PaymentInfoReply
+	pattern := "/api/payment/create"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationShopPaymentCreate))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopHTTPClientImpl) PaymentMockPay(ctx context.Context, in *PaymentMockPayRequest, opts ...http.CallOption) (*CheckResponse, error) {
+	var out CheckResponse
+	pattern := "/api/payment/mock-pay"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationShopPaymentMockPay))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

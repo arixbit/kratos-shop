@@ -7,8 +7,8 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/go-kratos/kratos/v2/log"
 	kerrors "github.com/go-kratos/kratos/v2/errors"
+	"github.com/go-kratos/kratos/v2/log"
 	cartV1 "order/api/cart/v1"
 	goodsV1 "order/api/goods/v1"
 	userV1 "order/api/user/v1"
@@ -27,29 +27,34 @@ type OrderRepo interface {
 	ListPendingTimeout(ctx context.Context, minutes int) ([]*domain.Order, error)
 	GetDetail(ctx context.Context, userId int64, orderSn string) (*domain.Order, error)
 	ListByUser(ctx context.Context, userId int64, page, pageSize int) ([]*domain.Order, int64, error)
+	AdminList(ctx context.Context, page, pageSize, status int) ([]*domain.Order, int64, error)
+	GetByOrderSn(ctx context.Context, orderSn string) (*domain.Order, error)
+	Ship(ctx context.Context, orderSn, post string) (bool, error)
+	Refund(ctx context.Context, orderSn string) (bool, error)
+	DashboardStats(ctx context.Context) (*domain.DashboardStats, error)
 	IncrementOutboxRetry(ctx context.Context, id int64) error
 	MarkOutboxFailed(ctx context.Context, id int64) error
 }
 
 type OrderUsecase struct {
-	repo     OrderRepo
-	userRPC  userV1.UserClient
-	cartRPC  cartV1.CartClient
-	goodsRPC goodsV1.GoodsClient
+	repo      OrderRepo
+	userRPC   userV1.UserClient
+	cartRPC   cartV1.CartClient
+	goodsRPC  goodsV1.GoodsClient
 	publisher *mq.Publisher
-	log      *log.Helper
+	log       *log.Helper
 }
 
 func NewOrderUsecase(repo OrderRepo, userRPC userV1.UserClient, cartRPC cartV1.CartClient, goodsRPC goodsV1.GoodsClient, publisher *mq.Publisher,
 	logger log.Logger) *OrderUsecase {
 
 	uc := &OrderUsecase{
-		repo:     repo,
-		userRPC:  userRPC,
-		cartRPC:  cartRPC,
-		goodsRPC: goodsRPC,
+		repo:      repo,
+		userRPC:   userRPC,
+		cartRPC:   cartRPC,
+		goodsRPC:  goodsRPC,
 		publisher: publisher,
-		log:      log.NewHelper(logger),
+		log:       log.NewHelper(logger),
 	}
 	if publisher != nil {
 		go uc.relayLoop()
@@ -263,6 +268,40 @@ func (oc *OrderUsecase) GetOrder(ctx context.Context, userId int64, orderSn stri
 
 func (oc *OrderUsecase) ListOrders(ctx context.Context, userId int64, page, pageSize int) ([]*domain.Order, int64, error) {
 	return oc.repo.ListByUser(ctx, userId, page, pageSize)
+}
+
+func (oc *OrderUsecase) AdminListOrders(ctx context.Context, page, pageSize, status int) ([]*domain.Order, int64, error) {
+	return oc.repo.AdminList(ctx, page, pageSize, status)
+}
+
+func (oc *OrderUsecase) AdminGetOrder(ctx context.Context, orderSn string) (*domain.Order, error) {
+	return oc.repo.GetByOrderSn(ctx, orderSn)
+}
+
+func (oc *OrderUsecase) ShipOrder(ctx context.Context, orderSn, post string) error {
+	changed, err := oc.repo.Ship(ctx, orderSn, post)
+	if err != nil {
+		return err
+	}
+	if !changed {
+		return kerrors.New(400, "ORDER_STATUS_INVALID", "只有已支付订单可以发货")
+	}
+	return nil
+}
+
+func (oc *OrderUsecase) RefundOrder(ctx context.Context, orderSn string) error {
+	changed, err := oc.repo.Refund(ctx, orderSn)
+	if err != nil {
+		return err
+	}
+	if !changed {
+		return kerrors.New(400, "ORDER_STATUS_INVALID", "当前订单状态不支持退款")
+	}
+	return nil
+}
+
+func (oc *OrderUsecase) DashboardStats(ctx context.Context) (*domain.DashboardStats, error) {
+	return oc.repo.DashboardStats(ctx)
 }
 
 func (oc *OrderUsecase) relayLoop() {

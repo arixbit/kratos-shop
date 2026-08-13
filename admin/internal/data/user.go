@@ -1,10 +1,10 @@
 package data
 
 import (
-	"context"
-	"github.com/go-kratos/kratos/v2/log"
 	userService "admin/api/service/user/v1"
 	"admin/internal/biz"
+	"context"
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 type userRepo struct {
@@ -71,4 +71,32 @@ func (u *userRepo) UserById(c context.Context, id int64) (*biz.User, error) {
 		Role:     int(user.Role),
 		Birthday: int64(user.Birthday),
 	}, nil
+}
+
+func (u *userRepo) ListUser(ctx context.Context, pageNum, pageSize int) ([]*biz.User, int, error) {
+	if pageNum <= 0 {
+		pageNum = 1
+	}
+	if pageSize <= 0 || pageSize > 100 {
+		pageSize = 10
+	}
+	resp, err := u.data.uc.GetUserList(ctx, &userService.PageInfo{
+		Pn:    uint32(pageNum),
+		PSize: uint32(pageSize),
+	})
+	if err != nil {
+		return nil, 0, err
+	}
+	list := make([]*biz.User, 0, len(resp.Data))
+	for _, item := range resp.Data {
+		list = append(list, &biz.User{
+			ID:       item.Id,
+			Mobile:   item.Mobile,
+			NickName: item.NickName,
+			Birthday: int64(item.Birthday),
+			Gender:   item.Gender,
+			Role:     int(item.Role),
+		})
+	}
+	return list, int(resp.Total), nil
 }

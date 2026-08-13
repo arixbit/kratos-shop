@@ -167,13 +167,18 @@ func (g goodsRepo) UpdateStatus(ctx context.Context, id int64, onSale bool) erro
 		}).Error
 }
 
-func (g goodsRepo) ListPage(ctx context.Context, keywords string, categoryID, brandID int32, page, pageSize int) ([]*domain.Goods, int64, error) {
+func (g goodsRepo) ListPage(ctx context.Context, keywords, skuCode string, categoryID, brandID int32, page, pageSize int) ([]*domain.Goods, int64, error) {
 	countQuery := g.data.DB(ctx).Model(&Goods{})
 	listQuery := g.data.DB(ctx).Model(&Goods{})
 	if keywords != "" {
 		like := "%" + keywords + "%"
 		countQuery = countQuery.Where("name ILIKE ? OR name_alias ILIKE ? OR goods_sn ILIKE ?", like, like, like)
 		listQuery = listQuery.Where("name ILIKE ? OR name_alias ILIKE ? OR goods_sn ILIKE ?", like, like, like)
+	}
+	if skuCode != "" {
+		like := "%" + skuCode + "%"
+		countQuery = countQuery.Where("id IN (SELECT goods_id FROM goods_skus WHERE sku_code ILIKE ?)", like)
+		listQuery = listQuery.Where("id IN (SELECT goods_id FROM goods_skus WHERE sku_code ILIKE ?)", like)
 	}
 	if categoryID > 0 {
 		countQuery = countQuery.Where("category_id = ?", categoryID)

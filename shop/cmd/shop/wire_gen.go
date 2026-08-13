@@ -23,6 +23,9 @@ func initApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, conf
 	discovery := data.NewDiscovery(registry)
 	userClient := data.NewUserServiceClient(auth, confService, discovery)
 	goodsClient := data.NewGoodsServiceClient(auth, confService, discovery)
+	cartClient := data.NewCartServiceClient(auth, confService, discovery)
+	orderClient := data.NewOrderServiceClient(auth, confService, discovery)
+	paymentClient := data.NewPaymentServiceClient(auth, confService, discovery)
 	dataData, err := data.NewData(confData, userClient, goodsClient, logger)
 	if err != nil {
 		return nil, nil, err
@@ -32,7 +35,10 @@ func initApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, conf
 	addressRepo := data.NewAddressRepo(dataData, logger)
 	addressUsecase := biz.NewAddressUsecase(userRepo, addressRepo, logger, auth)
 	goodsUsecase := biz.NewGoodsUsecase(goodsClient, logger)
-	shopService := service.NewShopService(userUsecase, addressUsecase, goodsUsecase, logger)
+	cartUsecase := biz.NewCartUsecase(cartClient, logger)
+	orderUsecase := biz.NewOrderUsecase(orderClient, logger)
+	paymentUsecase := biz.NewPaymentUsecase(paymentClient, logger)
+	shopService := service.NewShopService(userUsecase, addressUsecase, goodsUsecase, cartUsecase, orderUsecase, paymentUsecase, logger)
 	httpServer := server.NewHTTPServer(confServer, auth, shopService, logger)
 	grpcServer := server.NewGRPCServer(confServer, shopService, logger)
 	registrar := data.NewRegistrar(registry)

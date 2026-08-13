@@ -1,12 +1,12 @@
 package biz
 
 import (
+	v1 "admin/api/admin/v1"
+	"admin/internal/conf"
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	jwt2 "github.com/golang-jwt/jwt/v5"
-	v1 "admin/api/admin/v1"
-	"admin/internal/conf"
 )
 
 type Address struct {
@@ -106,6 +106,32 @@ func (ua *AddressUsecase) AddressListByUid(ctx context.Context) (*v1.ListAddress
 		res.Results = append(res.Results, addressInfoTmp)
 	}
 	return &res, err
+}
+
+func (ua *AddressUsecase) UserAddressList(ctx context.Context, uid int64) (*v1.UserAddressListReply, error) {
+	addressList, err := ua.aRepo.AddressListByUid(ctx, uid)
+	if err != nil {
+		return nil, err
+	}
+	reply := &v1.UserAddressListReply{}
+	for _, v := range addressList {
+		reply.List = append(reply.List, &v1.AddressInfo{
+			Id:        v.ID,
+			Name:      v.Name,
+			Mobile:    v.Mobile,
+			Province:  v.Province,
+			City:      v.City,
+			Districts: v.Districts,
+			Address:   v.Address,
+			PostCode:  v.PostCode,
+			IsDefault: v.IsDefault,
+		})
+	}
+	return reply, nil
+}
+
+func (ua *AddressUsecase) UserAddressDelete(ctx context.Context, id, uid int64) error {
+	return ua.aRepo.DeleteAddress(ctx, &Address{ID: id, UserID: uid})
 }
 
 func (ua *AddressUsecase) UpdateAddress(ctx context.Context, a *Address) (bool, error) {

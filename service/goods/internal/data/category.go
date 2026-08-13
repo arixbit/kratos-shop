@@ -82,13 +82,12 @@ func (r *CategoryRepo) UpdateCategory(ctx context.Context, req *biz.CategoryInfo
 }
 
 func (r *CategoryRepo) AddCategory(ctx context.Context, req *biz.CategoryInfo) (*biz.CategoryInfo, error) {
-	cMap := map[string]interface{}{}
-	cMap["name"] = req.Name
-	cMap["level"] = req.Level
-	cMap["is_tab"] = req.IsTab
-	cMap["sort"] = req.Sort
-	cMap["add_time"] = time.Now()
-	cMap["update_time"] = time.Now()
+	cat := Category{
+		Name:  req.Name,
+		Level: req.Level,
+		IsTab: req.IsTab,
+		Sort:  req.Sort,
+	}
 
 	// 去查询父类目是否存在
 	if req.Level != 1 {
@@ -96,27 +95,22 @@ func (r *CategoryRepo) AddCategory(ctx context.Context, req *biz.CategoryInfo) (
 		if res := r.data.db.First(&categories, req.ParentCategory); res.RowsAffected == 0 {
 			return nil, errors.NotFound("CATEGORY_NOT_FOUND", "商品分类不存在")
 		}
-		cMap["parent_category_id"] = req.ParentCategory
+		cat.ParentCategoryID = req.ParentCategory
 	}
 
-	result := r.data.db.Model(&Category{}).Create(&cMap)
+	result := r.data.db.Create(&cat)
 	if result.Error != nil {
 		return nil, errors.InternalServer("CATEGORY_CREATE_ERROR", result.Error.Error())
 	}
-	var value int32
-	value, ok := cMap["parent_category_id"].(int32)
-	if !ok {
-		value = 0
-	}
 	res := &biz.CategoryInfo{
-		Name:           cMap["name"].(string),
-		ParentCategory: value,
-		Level:          cMap["level"].(int32),
-		IsTab:          cMap["is_tab"].(bool),
-		Sort:           cMap["sort"].(int32),
+		ID:             cat.ID,
+		Name:           cat.Name,
+		ParentCategory: cat.ParentCategoryID,
+		Level:          cat.Level,
+		IsTab:          cat.IsTab,
+		Sort:           cat.Sort,
 	}
 	return res, nil
-
 }
 
 func (r *CategoryRepo) Category(ctx context.Context) ([]*biz.Category, error) {

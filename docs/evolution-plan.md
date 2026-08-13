@@ -352,7 +352,7 @@ consumed_event           -- 消息消费幂等表
 | Phase 0：基线 | ✅ 已完成 |
 | Phase 1：订单与购物车闭环 | ✅ 已完成（购物车增删改查、SkuList 真实查询、订单落库与查询/列表、下单清购物车、商品更新/删除/上下架、admin/shop 商品代理、商品详情含 SKU/图片、SKU 库存实时来自 inventory 服务、ES 启动自动重建索引并组合分类/品牌/SKU、GormList 扫描修复、RabbitMQ 客户端、端到端测试脚本、基础单元测试） |
 | Phase 2：库存服务 + 消息队列 | ✅ 完成（独立 inventory 服务、outbox + 重试上限、消费幂等、Redis 热库存、order.created 预占、order.paid 确认扣减、order.cancelled/超时释放、商品销量同步与幂等、消费者重试退避与 DLQ 死信队列、inventory 数据层集成测试） |
-| Phase 3：支付服务 | ✅ 本地模拟完成（创建支付单、金额与订单校验、回调幂等、回调校验订单待支付状态、payment.success → 订单已支付 → 库存确认扣减、payment 数据层测试）；待补：支付宝/微信真实对接 |
+| Phase 3：支付服务 | ✅ 本地模拟完成（创建支付单、金额与订单校验、回调幂等、回调校验订单待支付状态、payment.success → 订单已支付 → 库存确认扣减、payment 数据层测试）；✅ shop BFF 已补齐购物车/下单/模拟支付/订单列表与详情的 HTTP 接口；✅ admin BFF 订单管理（列表/详情/发货/退款）、商品新增、用户列表与地址管理、运营看板统计（用户数/订单量/成交额/近30天趋势），运营后台使用 Ant Design Pro v6（Umi Max 4 + React 19 + antd 6）；✅ `make seed-demo` 可一键生成演示数据；待补：支付宝/微信真实对接、退款库存/支付补偿 |
 | Phase 4：工程化与运维 | ✅ 完成（统一 compose、Prometheus/Grafana、应用级 /metrics、Loki/Promtail 日志采集、Traefik API 网关、GitHub Actions CI、shop/admin 限流、JWT 刷新令牌、管理员角色校验）；真实镜像仓库发布需仓库凭据，列为部署增强 |
 
 ### Phase 0：基线（已完成）

@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.2
 // - protoc             v7.35.1
-// source: order/v1/order.proto
+// source: api/order/v1/order.proto
 
 package v1
 
@@ -19,10 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Order_CreateOrder_FullMethodName = "/order.v1.Order/CreateOrder"
-	Order_CancelOrder_FullMethodName = "/order.v1.Order/CancelOrder"
-	Order_GetOrder_FullMethodName    = "/order.v1.Order/GetOrder"
-	Order_ListOrders_FullMethodName  = "/order.v1.Order/ListOrders"
+	Order_CreateOrder_FullMethodName     = "/order.v1.Order/CreateOrder"
+	Order_CancelOrder_FullMethodName     = "/order.v1.Order/CancelOrder"
+	Order_GetOrder_FullMethodName        = "/order.v1.Order/GetOrder"
+	Order_ListOrders_FullMethodName      = "/order.v1.Order/ListOrders"
+	Order_AdminListOrders_FullMethodName = "/order.v1.Order/AdminListOrders"
+	Order_AdminGetOrder_FullMethodName   = "/order.v1.Order/AdminGetOrder"
+	Order_ShipOrder_FullMethodName       = "/order.v1.Order/ShipOrder"
+	Order_RefundOrder_FullMethodName     = "/order.v1.Order/RefundOrder"
+	Order_DashboardStats_FullMethodName  = "/order.v1.Order/DashboardStats"
 )
 
 // OrderClient is the client API for Order service.
@@ -33,6 +38,11 @@ type OrderClient interface {
 	CancelOrder(ctx context.Context, in *CancelOrderRequest, opts ...grpc.CallOption) (*CheckResponse, error)
 	GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*OrderInfoResponse, error)
 	ListOrders(ctx context.Context, in *ListOrderRequest, opts ...grpc.CallOption) (*ListOrderReply, error)
+	AdminListOrders(ctx context.Context, in *AdminListOrderRequest, opts ...grpc.CallOption) (*ListOrderReply, error)
+	AdminGetOrder(ctx context.Context, in *AdminGetOrderRequest, opts ...grpc.CallOption) (*OrderInfoResponse, error)
+	ShipOrder(ctx context.Context, in *ShipOrderRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	RefundOrder(ctx context.Context, in *RefundOrderRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	DashboardStats(ctx context.Context, in *DashboardStatsRequest, opts ...grpc.CallOption) (*DashboardStatsReply, error)
 }
 
 type orderClient struct {
@@ -83,6 +93,56 @@ func (c *orderClient) ListOrders(ctx context.Context, in *ListOrderRequest, opts
 	return out, nil
 }
 
+func (c *orderClient) AdminListOrders(ctx context.Context, in *AdminListOrderRequest, opts ...grpc.CallOption) (*ListOrderReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListOrderReply)
+	err := c.cc.Invoke(ctx, Order_AdminListOrders_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderClient) AdminGetOrder(ctx context.Context, in *AdminGetOrderRequest, opts ...grpc.CallOption) (*OrderInfoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrderInfoResponse)
+	err := c.cc.Invoke(ctx, Order_AdminGetOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderClient) ShipOrder(ctx context.Context, in *ShipOrderRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Order_ShipOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderClient) RefundOrder(ctx context.Context, in *RefundOrderRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Order_RefundOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderClient) DashboardStats(ctx context.Context, in *DashboardStatsRequest, opts ...grpc.CallOption) (*DashboardStatsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DashboardStatsReply)
+	err := c.cc.Invoke(ctx, Order_DashboardStats_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderServer is the server API for Order service.
 // All implementations must embed UnimplementedOrderServer
 // for forward compatibility.
@@ -91,6 +151,11 @@ type OrderServer interface {
 	CancelOrder(context.Context, *CancelOrderRequest) (*CheckResponse, error)
 	GetOrder(context.Context, *GetOrderRequest) (*OrderInfoResponse, error)
 	ListOrders(context.Context, *ListOrderRequest) (*ListOrderReply, error)
+	AdminListOrders(context.Context, *AdminListOrderRequest) (*ListOrderReply, error)
+	AdminGetOrder(context.Context, *AdminGetOrderRequest) (*OrderInfoResponse, error)
+	ShipOrder(context.Context, *ShipOrderRequest) (*CheckResponse, error)
+	RefundOrder(context.Context, *RefundOrderRequest) (*CheckResponse, error)
+	DashboardStats(context.Context, *DashboardStatsRequest) (*DashboardStatsReply, error)
 	mustEmbedUnimplementedOrderServer()
 }
 
@@ -112,6 +177,21 @@ func (UnimplementedOrderServer) GetOrder(context.Context, *GetOrderRequest) (*Or
 }
 func (UnimplementedOrderServer) ListOrders(context.Context, *ListOrderRequest) (*ListOrderReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListOrders not implemented")
+}
+func (UnimplementedOrderServer) AdminListOrders(context.Context, *AdminListOrderRequest) (*ListOrderReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminListOrders not implemented")
+}
+func (UnimplementedOrderServer) AdminGetOrder(context.Context, *AdminGetOrderRequest) (*OrderInfoResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminGetOrder not implemented")
+}
+func (UnimplementedOrderServer) ShipOrder(context.Context, *ShipOrderRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ShipOrder not implemented")
+}
+func (UnimplementedOrderServer) RefundOrder(context.Context, *RefundOrderRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RefundOrder not implemented")
+}
+func (UnimplementedOrderServer) DashboardStats(context.Context, *DashboardStatsRequest) (*DashboardStatsReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method DashboardStats not implemented")
 }
 func (UnimplementedOrderServer) mustEmbedUnimplementedOrderServer() {}
 func (UnimplementedOrderServer) testEmbeddedByValue()               {}
@@ -206,6 +286,96 @@ func _Order_ListOrders_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Order_AdminListOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminListOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServer).AdminListOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Order_AdminListOrders_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServer).AdminListOrders(ctx, req.(*AdminListOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Order_AdminGetOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminGetOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServer).AdminGetOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Order_AdminGetOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServer).AdminGetOrder(ctx, req.(*AdminGetOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Order_ShipOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ShipOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServer).ShipOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Order_ShipOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServer).ShipOrder(ctx, req.(*ShipOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Order_RefundOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefundOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServer).RefundOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Order_RefundOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServer).RefundOrder(ctx, req.(*RefundOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Order_DashboardStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DashboardStatsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServer).DashboardStats(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Order_DashboardStats_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServer).DashboardStats(ctx, req.(*DashboardStatsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Order_ServiceDesc is the grpc.ServiceDesc for Order service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -229,7 +399,27 @@ var Order_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "ListOrders",
 			Handler:    _Order_ListOrders_Handler,
 		},
+		{
+			MethodName: "AdminListOrders",
+			Handler:    _Order_AdminListOrders_Handler,
+		},
+		{
+			MethodName: "AdminGetOrder",
+			Handler:    _Order_AdminGetOrder_Handler,
+		},
+		{
+			MethodName: "ShipOrder",
+			Handler:    _Order_ShipOrder_Handler,
+		},
+		{
+			MethodName: "RefundOrder",
+			Handler:    _Order_RefundOrder_Handler,
+		},
+		{
+			MethodName: "DashboardStats",
+			Handler:    _Order_DashboardStats_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "order/v1/order.proto",
+	Metadata: "api/order/v1/order.proto",
 }

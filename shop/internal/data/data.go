@@ -11,14 +11,17 @@ import (
 	"github.com/google/wire"
 	consulAPI "github.com/hashicorp/consul/api"
 	grpcx "google.golang.org/grpc"
+	cartV1 "shop/api/service/cart/v1"
 	goodsV1 "shop/api/service/goods/v1"
+	orderV1 "shop/api/service/order/v1"
+	paymentV1 "shop/api/service/payment/v1"
 	userV1 "shop/api/service/user/v1"
 	"shop/internal/conf"
 	"time"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewUserRepo, NewAddressRepo, NewUserServiceClient, NewGoodsServiceClient, NewRegistrar, NewDiscovery)
+var ProviderSet = wire.NewSet(NewData, NewUserRepo, NewAddressRepo, NewUserServiceClient, NewGoodsServiceClient, NewCartServiceClient, NewOrderServiceClient, NewPaymentServiceClient, NewRegistrar, NewDiscovery)
 
 // Data .
 type Data struct {
@@ -70,6 +73,63 @@ func NewGoodsServiceClient(ac *conf.Auth, sr *conf.Service, rr registry.Discover
 		panic(err)
 	}
 	return goodsV1.NewGoodsClient(conn)
+}
+
+// NewCartServiceClient 链接购物车服务 grpc
+func NewCartServiceClient(ac *conf.Auth, sr *conf.Service, rr registry.Discovery) cartV1.CartClient {
+	conn, err := grpc.DialInsecure(
+		context.Background(),
+		grpc.WithEndpoint(sr.Cart.Endpoint),
+		grpc.WithDiscovery(rr),
+		grpc.WithMiddleware(
+			tracing.Client(),
+			recovery.Recovery(),
+		),
+		grpc.WithTimeout(2*time.Second),
+		grpc.WithOptions(grpcx.WithStatsHandler(&tracing.ClientHandler{})),
+	)
+	if err != nil {
+		panic(err)
+	}
+	return cartV1.NewCartClient(conn)
+}
+
+// NewOrderServiceClient 链接订单服务 grpc
+func NewOrderServiceClient(ac *conf.Auth, sr *conf.Service, rr registry.Discovery) orderV1.OrderClient {
+	conn, err := grpc.DialInsecure(
+		context.Background(),
+		grpc.WithEndpoint(sr.Order.Endpoint),
+		grpc.WithDiscovery(rr),
+		grpc.WithMiddleware(
+			tracing.Client(),
+			recovery.Recovery(),
+		),
+		grpc.WithTimeout(2*time.Second),
+		grpc.WithOptions(grpcx.WithStatsHandler(&tracing.ClientHandler{})),
+	)
+	if err != nil {
+		panic(err)
+	}
+	return orderV1.NewOrderClient(conn)
+}
+
+// NewPaymentServiceClient 链接支付服务 grpc
+func NewPaymentServiceClient(ac *conf.Auth, sr *conf.Service, rr registry.Discovery) paymentV1.PaymentClient {
+	conn, err := grpc.DialInsecure(
+		context.Background(),
+		grpc.WithEndpoint(sr.Payment.Endpoint),
+		grpc.WithDiscovery(rr),
+		grpc.WithMiddleware(
+			tracing.Client(),
+			recovery.Recovery(),
+		),
+		grpc.WithTimeout(2*time.Second),
+		grpc.WithOptions(grpcx.WithStatsHandler(&tracing.ClientHandler{})),
+	)
+	if err != nil {
+		panic(err)
+	}
+	return paymentV1.NewPaymentClient(conn)
 }
 
 // NewRegistrar add consul

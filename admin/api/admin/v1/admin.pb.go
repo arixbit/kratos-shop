@@ -738,6 +738,7 @@ type UserDetailResponse struct {
 	Birthday      int64                  `protobuf:"varint,4,opt,name=birthday,proto3" json:"birthday,omitempty"`
 	Gender        string                 `protobuf:"bytes,5,opt,name=gender,proto3" json:"gender,omitempty"`
 	Role          int32                  `protobuf:"varint,6,opt,name=role,proto3" json:"role,omitempty"`
+	Permissions   []string               `protobuf:"bytes,7,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -812,6 +813,13 @@ func (x *UserDetailResponse) GetRole() int32 {
 		return x.Role
 	}
 	return 0
+}
+
+func (x *UserDetailResponse) GetPermissions() []string {
+	if x != nil {
+		return x.Permissions
+	}
+	return nil
 }
 
 type CaptchaReply struct {
@@ -917,6 +925,7 @@ type GoodsListRequest struct {
 	Keywords      string                 `protobuf:"bytes,3,opt,name=keywords,proto3" json:"keywords,omitempty"`
 	CategoryId    int64                  `protobuf:"varint,4,opt,name=categoryId,proto3" json:"categoryId,omitempty"`
 	BrandId       int64                  `protobuf:"varint,5,opt,name=brandId,proto3" json:"brandId,omitempty"`
+	SkuCode       string                 `protobuf:"bytes,6,opt,name=skuCode,proto3" json:"skuCode,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -986,6 +995,13 @@ func (x *GoodsListRequest) GetBrandId() int64 {
 	return 0
 }
 
+func (x *GoodsListRequest) GetSkuCode() string {
+	if x != nil {
+		return x.SkuCode
+	}
+	return ""
+}
+
 type GoodsItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -995,6 +1011,12 @@ type GoodsItem struct {
 	OnSale        bool                   `protobuf:"varint,5,opt,name=onSale,proto3" json:"onSale,omitempty"`
 	IsNew         bool                   `protobuf:"varint,6,opt,name=isNew,proto3" json:"isNew,omitempty"`
 	IsHot         bool                   `protobuf:"varint,7,opt,name=isHot,proto3" json:"isHot,omitempty"`
+	CategoryId    int64                  `protobuf:"varint,8,opt,name=categoryId,proto3" json:"categoryId,omitempty"`
+	BrandId       int64                  `protobuf:"varint,9,opt,name=brandId,proto3" json:"brandId,omitempty"`
+	CategoryName  string                 `protobuf:"bytes,10,opt,name=categoryName,proto3" json:"categoryName,omitempty"`
+	BrandName     string                 `protobuf:"bytes,11,opt,name=brandName,proto3" json:"brandName,omitempty"`
+	SkuCount      int32                  `protobuf:"varint,12,opt,name=skuCount,proto3" json:"skuCount,omitempty"`
+	SoldNum       int64                  `protobuf:"varint,13,opt,name=soldNum,proto3" json:"soldNum,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1076,6 +1098,48 @@ func (x *GoodsItem) GetIsHot() bool {
 		return x.IsHot
 	}
 	return false
+}
+
+func (x *GoodsItem) GetCategoryId() int64 {
+	if x != nil {
+		return x.CategoryId
+	}
+	return 0
+}
+
+func (x *GoodsItem) GetBrandId() int64 {
+	if x != nil {
+		return x.BrandId
+	}
+	return 0
+}
+
+func (x *GoodsItem) GetCategoryName() string {
+	if x != nil {
+		return x.CategoryName
+	}
+	return ""
+}
+
+func (x *GoodsItem) GetBrandName() string {
+	if x != nil {
+		return x.BrandName
+	}
+	return ""
+}
+
+func (x *GoodsItem) GetSkuCount() int32 {
+	if x != nil {
+		return x.SkuCount
+	}
+	return 0
+}
+
+func (x *GoodsItem) GetSoldNum() int64 {
+	if x != nil {
+		return x.SoldNum
+	}
+	return 0
 }
 
 type GoodsListReply struct {
@@ -1334,6 +1398,2331 @@ func (x *UpdateGoodsStatusRequest) GetOnSale() bool {
 	return false
 }
 
+// 订单管理
+type OrderListRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Status        int32                  `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderListRequest) Reset() {
+	*x = OrderListRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderListRequest) ProtoMessage() {}
+
+func (x *OrderListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderListRequest.ProtoReflect.Descriptor instead.
+func (*OrderListRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *OrderListRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *OrderListRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *OrderListRequest) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+type OrderInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        int64                  `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`
+	OrderSn       string                 `protobuf:"bytes,3,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
+	Status        string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	Post          string                 `protobuf:"bytes,5,opt,name=post,proto3" json:"post,omitempty"`
+	Total         int64                  `protobuf:"varint,6,opt,name=total,proto3" json:"total,omitempty"`
+	Address       string                 `protobuf:"bytes,7,opt,name=address,proto3" json:"address,omitempty"`
+	Name          string                 `protobuf:"bytes,8,opt,name=name,proto3" json:"name,omitempty"`
+	Mobile        string                 `protobuf:"bytes,9,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	AddTime       string                 `protobuf:"bytes,10,opt,name=addTime,proto3" json:"addTime,omitempty"`
+	Goods         []*OrderGoodsInfo      `protobuf:"bytes,11,rep,name=goods,proto3" json:"goods,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderInfo) Reset() {
+	*x = OrderInfo{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderInfo) ProtoMessage() {}
+
+func (x *OrderInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderInfo.ProtoReflect.Descriptor instead.
+func (*OrderInfo) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *OrderInfo) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *OrderInfo) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *OrderInfo) GetOrderSn() string {
+	if x != nil {
+		return x.OrderSn
+	}
+	return ""
+}
+
+func (x *OrderInfo) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *OrderInfo) GetPost() string {
+	if x != nil {
+		return x.Post
+	}
+	return ""
+}
+
+func (x *OrderInfo) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *OrderInfo) GetAddress() string {
+	if x != nil {
+		return x.Address
+	}
+	return ""
+}
+
+func (x *OrderInfo) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *OrderInfo) GetMobile() string {
+	if x != nil {
+		return x.Mobile
+	}
+	return ""
+}
+
+func (x *OrderInfo) GetAddTime() string {
+	if x != nil {
+		return x.AddTime
+	}
+	return ""
+}
+
+func (x *OrderInfo) GetGoods() []*OrderGoodsInfo {
+	if x != nil {
+		return x.Goods
+	}
+	return nil
+}
+
+type OrderGoodsInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	SkuId         int64                  `protobuf:"varint,2,opt,name=skuId,proto3" json:"skuId,omitempty"`
+	SkuName       string                 `protobuf:"bytes,3,opt,name=skuName,proto3" json:"skuName,omitempty"`
+	SkuPrice      int64                  `protobuf:"varint,4,opt,name=skuPrice,proto3" json:"skuPrice,omitempty"`
+	Num           int32                  `protobuf:"varint,5,opt,name=num,proto3" json:"num,omitempty"`
+	TotalPrice    int64                  `protobuf:"varint,6,opt,name=totalPrice,proto3" json:"totalPrice,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderGoodsInfo) Reset() {
+	*x = OrderGoodsInfo{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderGoodsInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderGoodsInfo) ProtoMessage() {}
+
+func (x *OrderGoodsInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderGoodsInfo.ProtoReflect.Descriptor instead.
+func (*OrderGoodsInfo) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *OrderGoodsInfo) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *OrderGoodsInfo) GetSkuId() int64 {
+	if x != nil {
+		return x.SkuId
+	}
+	return 0
+}
+
+func (x *OrderGoodsInfo) GetSkuName() string {
+	if x != nil {
+		return x.SkuName
+	}
+	return ""
+}
+
+func (x *OrderGoodsInfo) GetSkuPrice() int64 {
+	if x != nil {
+		return x.SkuPrice
+	}
+	return 0
+}
+
+func (x *OrderGoodsInfo) GetNum() int32 {
+	if x != nil {
+		return x.Num
+	}
+	return 0
+}
+
+func (x *OrderGoodsInfo) GetTotalPrice() int64 {
+	if x != nil {
+		return x.TotalPrice
+	}
+	return 0
+}
+
+type OrderListReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	List          []*OrderInfo           `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderListReply) Reset() {
+	*x = OrderListReply{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderListReply) ProtoMessage() {}
+
+func (x *OrderListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderListReply.ProtoReflect.Descriptor instead.
+func (*OrderListReply) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *OrderListReply) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *OrderListReply) GetList() []*OrderInfo {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type OrderDetailRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderDetailRequest) Reset() {
+	*x = OrderDetailRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderDetailRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderDetailRequest) ProtoMessage() {}
+
+func (x *OrderDetailRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderDetailRequest.ProtoReflect.Descriptor instead.
+func (*OrderDetailRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *OrderDetailRequest) GetOrderSn() string {
+	if x != nil {
+		return x.OrderSn
+	}
+	return ""
+}
+
+type ShipOrderRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
+	Post          string                 `protobuf:"bytes,2,opt,name=post,proto3" json:"post,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ShipOrderRequest) Reset() {
+	*x = ShipOrderRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ShipOrderRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ShipOrderRequest) ProtoMessage() {}
+
+func (x *ShipOrderRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ShipOrderRequest.ProtoReflect.Descriptor instead.
+func (*ShipOrderRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *ShipOrderRequest) GetOrderSn() string {
+	if x != nil {
+		return x.OrderSn
+	}
+	return ""
+}
+
+func (x *ShipOrderRequest) GetPost() string {
+	if x != nil {
+		return x.Post
+	}
+	return ""
+}
+
+type RefundOrderRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RefundOrderRequest) Reset() {
+	*x = RefundOrderRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RefundOrderRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RefundOrderRequest) ProtoMessage() {}
+
+func (x *RefundOrderRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RefundOrderRequest.ProtoReflect.Descriptor instead.
+func (*RefundOrderRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *RefundOrderRequest) GetOrderSn() string {
+	if x != nil {
+		return x.OrderSn
+	}
+	return ""
+}
+
+// 用户管理
+type UserListRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserListRequest) Reset() {
+	*x = UserListRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserListRequest) ProtoMessage() {}
+
+func (x *UserListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserListRequest.ProtoReflect.Descriptor instead.
+func (*UserListRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *UserListRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *UserListRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+type UserInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Mobile        string                 `protobuf:"bytes,2,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	NickName      string                 `protobuf:"bytes,3,opt,name=nickName,proto3" json:"nickName,omitempty"`
+	Birthday      int64                  `protobuf:"varint,4,opt,name=birthday,proto3" json:"birthday,omitempty"`
+	Gender        string                 `protobuf:"bytes,5,opt,name=gender,proto3" json:"gender,omitempty"`
+	Role          int32                  `protobuf:"varint,6,opt,name=role,proto3" json:"role,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserInfo) Reset() {
+	*x = UserInfo{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserInfo) ProtoMessage() {}
+
+func (x *UserInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserInfo.ProtoReflect.Descriptor instead.
+func (*UserInfo) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *UserInfo) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UserInfo) GetMobile() string {
+	if x != nil {
+		return x.Mobile
+	}
+	return ""
+}
+
+func (x *UserInfo) GetNickName() string {
+	if x != nil {
+		return x.NickName
+	}
+	return ""
+}
+
+func (x *UserInfo) GetBirthday() int64 {
+	if x != nil {
+		return x.Birthday
+	}
+	return 0
+}
+
+func (x *UserInfo) GetGender() string {
+	if x != nil {
+		return x.Gender
+	}
+	return ""
+}
+
+func (x *UserInfo) GetRole() int32 {
+	if x != nil {
+		return x.Role
+	}
+	return 0
+}
+
+type UserListReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	List          []*UserInfo            `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserListReply) Reset() {
+	*x = UserListReply{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserListReply) ProtoMessage() {}
+
+func (x *UserListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserListReply.ProtoReflect.Descriptor instead.
+func (*UserListReply) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *UserListReply) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *UserListReply) GetList() []*UserInfo {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type UserAddressListRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Uid           int64                  `protobuf:"varint,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserAddressListRequest) Reset() {
+	*x = UserAddressListRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserAddressListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserAddressListRequest) ProtoMessage() {}
+
+func (x *UserAddressListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserAddressListRequest.ProtoReflect.Descriptor instead.
+func (*UserAddressListRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *UserAddressListRequest) GetUid() int64 {
+	if x != nil {
+		return x.Uid
+	}
+	return 0
+}
+
+type UserAddressListReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*AddressInfo         `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserAddressListReply) Reset() {
+	*x = UserAddressListReply{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserAddressListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserAddressListReply) ProtoMessage() {}
+
+func (x *UserAddressListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserAddressListReply.ProtoReflect.Descriptor instead.
+func (*UserAddressListReply) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *UserAddressListReply) GetList() []*AddressInfo {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type UserAddressDeleteRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Uid           int64                  `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserAddressDeleteRequest) Reset() {
+	*x = UserAddressDeleteRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserAddressDeleteRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserAddressDeleteRequest) ProtoMessage() {}
+
+func (x *UserAddressDeleteRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserAddressDeleteRequest.ProtoReflect.Descriptor instead.
+func (*UserAddressDeleteRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *UserAddressDeleteRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UserAddressDeleteRequest) GetUid() int64 {
+	if x != nil {
+		return x.Uid
+	}
+	return 0
+}
+
+// 商品新增
+type CreateGoodsRequest struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	CategoryId      int32                  `protobuf:"varint,1,opt,name=categoryId,proto3" json:"categoryId,omitempty"`
+	BrandId         int32                  `protobuf:"varint,2,opt,name=brandId,proto3" json:"brandId,omitempty"`
+	TypeId          int64                  `protobuf:"varint,3,opt,name=typeId,proto3" json:"typeId,omitempty"`
+	Name            string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	GoodsSn         string                 `protobuf:"bytes,5,opt,name=goodsSn,proto3" json:"goodsSn,omitempty"`
+	MarketPrice     int64                  `protobuf:"varint,6,opt,name=marketPrice,proto3" json:"marketPrice,omitempty"`
+	Inventory       int64                  `protobuf:"varint,7,opt,name=inventory,proto3" json:"inventory,omitempty"`
+	GoodsBrief      string                 `protobuf:"bytes,8,opt,name=goodsBrief,proto3" json:"goodsBrief,omitempty"`
+	GoodsFrontImage string                 `protobuf:"bytes,9,opt,name=goodsFrontImage,proto3" json:"goodsFrontImage,omitempty"`
+	ShipFree        bool                   `protobuf:"varint,10,opt,name=shipFree,proto3" json:"shipFree,omitempty"`
+	IsNew           bool                   `protobuf:"varint,11,opt,name=isNew,proto3" json:"isNew,omitempty"`
+	IsHot           bool                   `protobuf:"varint,12,opt,name=isHot,proto3" json:"isHot,omitempty"`
+	OnSale          bool                   `protobuf:"varint,13,opt,name=onSale,proto3" json:"onSale,omitempty"`
+	SkuName         string                 `protobuf:"bytes,14,opt,name=skuName,proto3" json:"skuName,omitempty"`
+	SkuCode         string                 `protobuf:"bytes,15,opt,name=skuCode,proto3" json:"skuCode,omitempty"`
+	BarCode         string                 `protobuf:"bytes,16,opt,name=barCode,proto3" json:"barCode,omitempty"`
+	SkuPrice        int64                  `protobuf:"varint,17,opt,name=skuPrice,proto3" json:"skuPrice,omitempty"`
+	PromotionPrice  int64                  `protobuf:"varint,18,opt,name=promotionPrice,proto3" json:"promotionPrice,omitempty"`
+	SkuInventory    int64                  `protobuf:"varint,19,opt,name=skuInventory,proto3" json:"skuInventory,omitempty"`
+	SkuImage        string                 `protobuf:"bytes,20,opt,name=skuImage,proto3" json:"skuImage,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *CreateGoodsRequest) Reset() {
+	*x = CreateGoodsRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateGoodsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateGoodsRequest) ProtoMessage() {}
+
+func (x *CreateGoodsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateGoodsRequest.ProtoReflect.Descriptor instead.
+func (*CreateGoodsRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{32}
+}
+
+func (x *CreateGoodsRequest) GetCategoryId() int32 {
+	if x != nil {
+		return x.CategoryId
+	}
+	return 0
+}
+
+func (x *CreateGoodsRequest) GetBrandId() int32 {
+	if x != nil {
+		return x.BrandId
+	}
+	return 0
+}
+
+func (x *CreateGoodsRequest) GetTypeId() int64 {
+	if x != nil {
+		return x.TypeId
+	}
+	return 0
+}
+
+func (x *CreateGoodsRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CreateGoodsRequest) GetGoodsSn() string {
+	if x != nil {
+		return x.GoodsSn
+	}
+	return ""
+}
+
+func (x *CreateGoodsRequest) GetMarketPrice() int64 {
+	if x != nil {
+		return x.MarketPrice
+	}
+	return 0
+}
+
+func (x *CreateGoodsRequest) GetInventory() int64 {
+	if x != nil {
+		return x.Inventory
+	}
+	return 0
+}
+
+func (x *CreateGoodsRequest) GetGoodsBrief() string {
+	if x != nil {
+		return x.GoodsBrief
+	}
+	return ""
+}
+
+func (x *CreateGoodsRequest) GetGoodsFrontImage() string {
+	if x != nil {
+		return x.GoodsFrontImage
+	}
+	return ""
+}
+
+func (x *CreateGoodsRequest) GetShipFree() bool {
+	if x != nil {
+		return x.ShipFree
+	}
+	return false
+}
+
+func (x *CreateGoodsRequest) GetIsNew() bool {
+	if x != nil {
+		return x.IsNew
+	}
+	return false
+}
+
+func (x *CreateGoodsRequest) GetIsHot() bool {
+	if x != nil {
+		return x.IsHot
+	}
+	return false
+}
+
+func (x *CreateGoodsRequest) GetOnSale() bool {
+	if x != nil {
+		return x.OnSale
+	}
+	return false
+}
+
+func (x *CreateGoodsRequest) GetSkuName() string {
+	if x != nil {
+		return x.SkuName
+	}
+	return ""
+}
+
+func (x *CreateGoodsRequest) GetSkuCode() string {
+	if x != nil {
+		return x.SkuCode
+	}
+	return ""
+}
+
+func (x *CreateGoodsRequest) GetBarCode() string {
+	if x != nil {
+		return x.BarCode
+	}
+	return ""
+}
+
+func (x *CreateGoodsRequest) GetSkuPrice() int64 {
+	if x != nil {
+		return x.SkuPrice
+	}
+	return 0
+}
+
+func (x *CreateGoodsRequest) GetPromotionPrice() int64 {
+	if x != nil {
+		return x.PromotionPrice
+	}
+	return 0
+}
+
+func (x *CreateGoodsRequest) GetSkuInventory() int64 {
+	if x != nil {
+		return x.SkuInventory
+	}
+	return 0
+}
+
+func (x *CreateGoodsRequest) GetSkuImage() string {
+	if x != nil {
+		return x.SkuImage
+	}
+	return ""
+}
+
+type GoodsDetailRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GoodsDetailRequest) Reset() {
+	*x = GoodsDetailRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GoodsDetailRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GoodsDetailRequest) ProtoMessage() {}
+
+func (x *GoodsDetailRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GoodsDetailRequest.ProtoReflect.Descriptor instead.
+func (*GoodsDetailRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *GoodsDetailRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type GoodsSkuDetail struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	GoodsId        int64                  `protobuf:"varint,2,opt,name=goodsId,proto3" json:"goodsId,omitempty"`
+	SkuName        string                 `protobuf:"bytes,3,opt,name=skuName,proto3" json:"skuName,omitempty"`
+	SkuCode        string                 `protobuf:"bytes,4,opt,name=skuCode,proto3" json:"skuCode,omitempty"`
+	BarCode        string                 `protobuf:"bytes,5,opt,name=barCode,proto3" json:"barCode,omitempty"`
+	Price          int64                  `protobuf:"varint,6,opt,name=price,proto3" json:"price,omitempty"`
+	PromotionPrice int64                  `protobuf:"varint,7,opt,name=promotionPrice,proto3" json:"promotionPrice,omitempty"`
+	Inventory      int64                  `protobuf:"varint,8,opt,name=inventory,proto3" json:"inventory,omitempty"`
+	OnSale         bool                   `protobuf:"varint,9,opt,name=onSale,proto3" json:"onSale,omitempty"`
+	Pic            string                 `protobuf:"bytes,10,opt,name=pic,proto3" json:"pic,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *GoodsSkuDetail) Reset() {
+	*x = GoodsSkuDetail{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GoodsSkuDetail) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GoodsSkuDetail) ProtoMessage() {}
+
+func (x *GoodsSkuDetail) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GoodsSkuDetail.ProtoReflect.Descriptor instead.
+func (*GoodsSkuDetail) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *GoodsSkuDetail) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *GoodsSkuDetail) GetGoodsId() int64 {
+	if x != nil {
+		return x.GoodsId
+	}
+	return 0
+}
+
+func (x *GoodsSkuDetail) GetSkuName() string {
+	if x != nil {
+		return x.SkuName
+	}
+	return ""
+}
+
+func (x *GoodsSkuDetail) GetSkuCode() string {
+	if x != nil {
+		return x.SkuCode
+	}
+	return ""
+}
+
+func (x *GoodsSkuDetail) GetBarCode() string {
+	if x != nil {
+		return x.BarCode
+	}
+	return ""
+}
+
+func (x *GoodsSkuDetail) GetPrice() int64 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
+func (x *GoodsSkuDetail) GetPromotionPrice() int64 {
+	if x != nil {
+		return x.PromotionPrice
+	}
+	return 0
+}
+
+func (x *GoodsSkuDetail) GetInventory() int64 {
+	if x != nil {
+		return x.Inventory
+	}
+	return 0
+}
+
+func (x *GoodsSkuDetail) GetOnSale() bool {
+	if x != nil {
+		return x.OnSale
+	}
+	return false
+}
+
+func (x *GoodsSkuDetail) GetPic() string {
+	if x != nil {
+		return x.Pic
+	}
+	return ""
+}
+
+type GoodsImageDetail struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Url           string                 `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
+	Position      int32                  `protobuf:"varint,3,opt,name=position,proto3" json:"position,omitempty"`
+	IsMaster      bool                   `protobuf:"varint,4,opt,name=isMaster,proto3" json:"isMaster,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GoodsImageDetail) Reset() {
+	*x = GoodsImageDetail{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GoodsImageDetail) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GoodsImageDetail) ProtoMessage() {}
+
+func (x *GoodsImageDetail) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GoodsImageDetail.ProtoReflect.Descriptor instead.
+func (*GoodsImageDetail) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *GoodsImageDetail) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *GoodsImageDetail) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *GoodsImageDetail) GetPosition() int32 {
+	if x != nil {
+		return x.Position
+	}
+	return 0
+}
+
+func (x *GoodsImageDetail) GetIsMaster() bool {
+	if x != nil {
+		return x.IsMaster
+	}
+	return false
+}
+
+type GoodsDetailReply struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Id              int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	CategoryId      int64                  `protobuf:"varint,2,opt,name=categoryId,proto3" json:"categoryId,omitempty"`
+	BrandId         int64                  `protobuf:"varint,3,opt,name=brandId,proto3" json:"brandId,omitempty"`
+	TypeId          int64                  `protobuf:"varint,4,opt,name=typeId,proto3" json:"typeId,omitempty"`
+	Name            string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
+	GoodsSn         string                 `protobuf:"bytes,6,opt,name=goodsSn,proto3" json:"goodsSn,omitempty"`
+	MarketPrice     int64                  `protobuf:"varint,7,opt,name=marketPrice,proto3" json:"marketPrice,omitempty"`
+	GoodsBrief      string                 `protobuf:"bytes,8,opt,name=goodsBrief,proto3" json:"goodsBrief,omitempty"`
+	GoodsFrontImage string                 `protobuf:"bytes,9,opt,name=goodsFrontImage,proto3" json:"goodsFrontImage,omitempty"`
+	GoodsImages     []string               `protobuf:"bytes,10,rep,name=goodsImages,proto3" json:"goodsImages,omitempty"`
+	OnSale          bool                   `protobuf:"varint,11,opt,name=onSale,proto3" json:"onSale,omitempty"`
+	IsNew           bool                   `protobuf:"varint,12,opt,name=isNew,proto3" json:"isNew,omitempty"`
+	IsHot           bool                   `protobuf:"varint,13,opt,name=isHot,proto3" json:"isHot,omitempty"`
+	SoldNum         int64                  `protobuf:"varint,14,opt,name=soldNum,proto3" json:"soldNum,omitempty"`
+	BrandName       string                 `protobuf:"bytes,15,opt,name=brandName,proto3" json:"brandName,omitempty"`
+	CategoryName    string                 `protobuf:"bytes,16,opt,name=categoryName,proto3" json:"categoryName,omitempty"`
+	Skus            []*GoodsSkuDetail      `protobuf:"bytes,17,rep,name=skus,proto3" json:"skus,omitempty"`
+	Images          []*GoodsImageDetail    `protobuf:"bytes,18,rep,name=images,proto3" json:"images,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *GoodsDetailReply) Reset() {
+	*x = GoodsDetailReply{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GoodsDetailReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GoodsDetailReply) ProtoMessage() {}
+
+func (x *GoodsDetailReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GoodsDetailReply.ProtoReflect.Descriptor instead.
+func (*GoodsDetailReply) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *GoodsDetailReply) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *GoodsDetailReply) GetCategoryId() int64 {
+	if x != nil {
+		return x.CategoryId
+	}
+	return 0
+}
+
+func (x *GoodsDetailReply) GetBrandId() int64 {
+	if x != nil {
+		return x.BrandId
+	}
+	return 0
+}
+
+func (x *GoodsDetailReply) GetTypeId() int64 {
+	if x != nil {
+		return x.TypeId
+	}
+	return 0
+}
+
+func (x *GoodsDetailReply) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *GoodsDetailReply) GetGoodsSn() string {
+	if x != nil {
+		return x.GoodsSn
+	}
+	return ""
+}
+
+func (x *GoodsDetailReply) GetMarketPrice() int64 {
+	if x != nil {
+		return x.MarketPrice
+	}
+	return 0
+}
+
+func (x *GoodsDetailReply) GetGoodsBrief() string {
+	if x != nil {
+		return x.GoodsBrief
+	}
+	return ""
+}
+
+func (x *GoodsDetailReply) GetGoodsFrontImage() string {
+	if x != nil {
+		return x.GoodsFrontImage
+	}
+	return ""
+}
+
+func (x *GoodsDetailReply) GetGoodsImages() []string {
+	if x != nil {
+		return x.GoodsImages
+	}
+	return nil
+}
+
+func (x *GoodsDetailReply) GetOnSale() bool {
+	if x != nil {
+		return x.OnSale
+	}
+	return false
+}
+
+func (x *GoodsDetailReply) GetIsNew() bool {
+	if x != nil {
+		return x.IsNew
+	}
+	return false
+}
+
+func (x *GoodsDetailReply) GetIsHot() bool {
+	if x != nil {
+		return x.IsHot
+	}
+	return false
+}
+
+func (x *GoodsDetailReply) GetSoldNum() int64 {
+	if x != nil {
+		return x.SoldNum
+	}
+	return 0
+}
+
+func (x *GoodsDetailReply) GetBrandName() string {
+	if x != nil {
+		return x.BrandName
+	}
+	return ""
+}
+
+func (x *GoodsDetailReply) GetCategoryName() string {
+	if x != nil {
+		return x.CategoryName
+	}
+	return ""
+}
+
+func (x *GoodsDetailReply) GetSkus() []*GoodsSkuDetail {
+	if x != nil {
+		return x.Skus
+	}
+	return nil
+}
+
+func (x *GoodsDetailReply) GetImages() []*GoodsImageDetail {
+	if x != nil {
+		return x.Images
+	}
+	return nil
+}
+
+type CategoryItem struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	ParentCategory int64                  `protobuf:"varint,3,opt,name=parentCategory,proto3" json:"parentCategory,omitempty"`
+	Level          int32                  `protobuf:"varint,4,opt,name=level,proto3" json:"level,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *CategoryItem) Reset() {
+	*x = CategoryItem{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[37]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CategoryItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CategoryItem) ProtoMessage() {}
+
+func (x *CategoryItem) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[37]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CategoryItem.ProtoReflect.Descriptor instead.
+func (*CategoryItem) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{37}
+}
+
+func (x *CategoryItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *CategoryItem) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CategoryItem) GetParentCategory() int64 {
+	if x != nil {
+		return x.ParentCategory
+	}
+	return 0
+}
+
+func (x *CategoryItem) GetLevel() int32 {
+	if x != nil {
+		return x.Level
+	}
+	return 0
+}
+
+type CategoryListReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*CategoryItem        `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CategoryListReply) Reset() {
+	*x = CategoryListReply{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[38]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CategoryListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CategoryListReply) ProtoMessage() {}
+
+func (x *CategoryListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[38]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CategoryListReply.ProtoReflect.Descriptor instead.
+func (*CategoryListReply) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{38}
+}
+
+func (x *CategoryListReply) GetList() []*CategoryItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type BrandListRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BrandListRequest) Reset() {
+	*x = BrandListRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[39]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BrandListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BrandListRequest) ProtoMessage() {}
+
+func (x *BrandListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[39]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BrandListRequest.ProtoReflect.Descriptor instead.
+func (*BrandListRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{39}
+}
+
+func (x *BrandListRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *BrandListRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+type BrandItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Logo          string                 `protobuf:"bytes,3,opt,name=logo,proto3" json:"logo,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BrandItem) Reset() {
+	*x = BrandItem{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[40]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BrandItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BrandItem) ProtoMessage() {}
+
+func (x *BrandItem) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[40]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BrandItem.ProtoReflect.Descriptor instead.
+func (*BrandItem) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{40}
+}
+
+func (x *BrandItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *BrandItem) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *BrandItem) GetLogo() string {
+	if x != nil {
+		return x.Logo
+	}
+	return ""
+}
+
+type BrandListReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*BrandItem           `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BrandListReply) Reset() {
+	*x = BrandListReply{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[41]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BrandListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BrandListReply) ProtoMessage() {}
+
+func (x *BrandListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[41]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BrandListReply.ProtoReflect.Descriptor instead.
+func (*BrandListReply) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{41}
+}
+
+func (x *BrandListReply) GetList() []*BrandItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type CategorySaveRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	ParentCategory int64                  `protobuf:"varint,3,opt,name=parentCategory,proto3" json:"parentCategory,omitempty"`
+	Level          int32                  `protobuf:"varint,4,opt,name=level,proto3" json:"level,omitempty"`
+	Sort           int32                  `protobuf:"varint,5,opt,name=sort,proto3" json:"sort,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *CategorySaveRequest) Reset() {
+	*x = CategorySaveRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CategorySaveRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CategorySaveRequest) ProtoMessage() {}
+
+func (x *CategorySaveRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CategorySaveRequest.ProtoReflect.Descriptor instead.
+func (*CategorySaveRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *CategorySaveRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *CategorySaveRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CategorySaveRequest) GetParentCategory() int64 {
+	if x != nil {
+		return x.ParentCategory
+	}
+	return 0
+}
+
+func (x *CategorySaveRequest) GetLevel() int32 {
+	if x != nil {
+		return x.Level
+	}
+	return 0
+}
+
+func (x *CategorySaveRequest) GetSort() int32 {
+	if x != nil {
+		return x.Sort
+	}
+	return 0
+}
+
+type CategoryDeleteRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CategoryDeleteRequest) Reset() {
+	*x = CategoryDeleteRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[43]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CategoryDeleteRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CategoryDeleteRequest) ProtoMessage() {}
+
+func (x *CategoryDeleteRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[43]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CategoryDeleteRequest.ProtoReflect.Descriptor instead.
+func (*CategoryDeleteRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{43}
+}
+
+func (x *CategoryDeleteRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+// 运营看板
+type DashboardStatsReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TotalOrders   int64                  `protobuf:"varint,1,opt,name=totalOrders,proto3" json:"totalOrders,omitempty"`
+	TotalSales    int64                  `protobuf:"varint,2,opt,name=totalSales,proto3" json:"totalSales,omitempty"`
+	TodayOrders   int64                  `protobuf:"varint,3,opt,name=todayOrders,proto3" json:"todayOrders,omitempty"`
+	TodaySales    int64                  `protobuf:"varint,4,opt,name=todaySales,proto3" json:"todaySales,omitempty"`
+	TotalUsers    int64                  `protobuf:"varint,5,opt,name=totalUsers,proto3" json:"totalUsers,omitempty"`
+	StatusCounts  []*StatusCount         `protobuf:"bytes,6,rep,name=statusCounts,proto3" json:"statusCounts,omitempty"`
+	Last30Days    []*DailySales          `protobuf:"bytes,7,rep,name=last30Days,proto3" json:"last30Days,omitempty"`
+	TopGoods      []*TopGoods            `protobuf:"bytes,8,rep,name=topGoods,proto3" json:"topGoods,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DashboardStatsReply) Reset() {
+	*x = DashboardStatsReply{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[44]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DashboardStatsReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DashboardStatsReply) ProtoMessage() {}
+
+func (x *DashboardStatsReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[44]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DashboardStatsReply.ProtoReflect.Descriptor instead.
+func (*DashboardStatsReply) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{44}
+}
+
+func (x *DashboardStatsReply) GetTotalOrders() int64 {
+	if x != nil {
+		return x.TotalOrders
+	}
+	return 0
+}
+
+func (x *DashboardStatsReply) GetTotalSales() int64 {
+	if x != nil {
+		return x.TotalSales
+	}
+	return 0
+}
+
+func (x *DashboardStatsReply) GetTodayOrders() int64 {
+	if x != nil {
+		return x.TodayOrders
+	}
+	return 0
+}
+
+func (x *DashboardStatsReply) GetTodaySales() int64 {
+	if x != nil {
+		return x.TodaySales
+	}
+	return 0
+}
+
+func (x *DashboardStatsReply) GetTotalUsers() int64 {
+	if x != nil {
+		return x.TotalUsers
+	}
+	return 0
+}
+
+func (x *DashboardStatsReply) GetStatusCounts() []*StatusCount {
+	if x != nil {
+		return x.StatusCounts
+	}
+	return nil
+}
+
+func (x *DashboardStatsReply) GetLast30Days() []*DailySales {
+	if x != nil {
+		return x.Last30Days
+	}
+	return nil
+}
+
+func (x *DashboardStatsReply) GetTopGoods() []*TopGoods {
+	if x != nil {
+		return x.TopGoods
+	}
+	return nil
+}
+
+type StatusCount struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        int32                  `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	Count         int64                  `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *StatusCount) Reset() {
+	*x = StatusCount{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[45]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StatusCount) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StatusCount) ProtoMessage() {}
+
+func (x *StatusCount) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[45]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StatusCount.ProtoReflect.Descriptor instead.
+func (*StatusCount) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{45}
+}
+
+func (x *StatusCount) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *StatusCount) GetCount() int64 {
+	if x != nil {
+		return x.Count
+	}
+	return 0
+}
+
+type DailySales struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Date          string                 `protobuf:"bytes,1,opt,name=date,proto3" json:"date,omitempty"`
+	OrderCount    int64                  `protobuf:"varint,2,opt,name=orderCount,proto3" json:"orderCount,omitempty"`
+	Amount        int64                  `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DailySales) Reset() {
+	*x = DailySales{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[46]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DailySales) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DailySales) ProtoMessage() {}
+
+func (x *DailySales) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[46]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DailySales.ProtoReflect.Descriptor instead.
+func (*DailySales) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{46}
+}
+
+func (x *DailySales) GetDate() string {
+	if x != nil {
+		return x.Date
+	}
+	return ""
+}
+
+func (x *DailySales) GetOrderCount() int64 {
+	if x != nil {
+		return x.OrderCount
+	}
+	return 0
+}
+
+func (x *DailySales) GetAmount() int64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+type TopGoods struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SkuId         int64                  `protobuf:"varint,1,opt,name=skuId,proto3" json:"skuId,omitempty"`
+	SkuName       string                 `protobuf:"bytes,2,opt,name=skuName,proto3" json:"skuName,omitempty"`
+	Num           int64                  `protobuf:"varint,3,opt,name=num,proto3" json:"num,omitempty"`
+	Amount        int64                  `protobuf:"varint,4,opt,name=amount,proto3" json:"amount,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TopGoods) Reset() {
+	*x = TopGoods{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[47]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TopGoods) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TopGoods) ProtoMessage() {}
+
+func (x *TopGoods) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[47]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TopGoods.ProtoReflect.Descriptor instead.
+func (*TopGoods) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{47}
+}
+
+func (x *TopGoods) GetSkuId() int64 {
+	if x != nil {
+		return x.SkuId
+	}
+	return 0
+}
+
+func (x *TopGoods) GetSkuName() string {
+	if x != nil {
+		return x.SkuName
+	}
+	return ""
+}
+
+func (x *TopGoods) GetNum() int64 {
+	if x != nil {
+		return x.Num
+	}
+	return 0
+}
+
+func (x *TopGoods) GetAmount() int64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+// 系统权限
+type PermissionItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	GroupName     string                 `protobuf:"bytes,4,opt,name=groupName,proto3" json:"groupName,omitempty"`
+	Sort          int32                  `protobuf:"varint,5,opt,name=sort,proto3" json:"sort,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionItem) Reset() {
+	*x = PermissionItem{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[48]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionItem) ProtoMessage() {}
+
+func (x *PermissionItem) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[48]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionItem.ProtoReflect.Descriptor instead.
+func (*PermissionItem) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{48}
+}
+
+func (x *PermissionItem) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *PermissionItem) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *PermissionItem) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *PermissionItem) GetGroupName() string {
+	if x != nil {
+		return x.GroupName
+	}
+	return ""
+}
+
+func (x *PermissionItem) GetSort() int32 {
+	if x != nil {
+		return x.Sort
+	}
+	return 0
+}
+
+type PermissionListReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*PermissionItem      `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PermissionListReply) Reset() {
+	*x = PermissionListReply{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[49]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PermissionListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PermissionListReply) ProtoMessage() {}
+
+func (x *PermissionListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[49]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PermissionListReply.ProtoReflect.Descriptor instead.
+func (*PermissionListReply) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{49}
+}
+
+func (x *PermissionListReply) GetList() []*PermissionItem {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type RolePermissionListRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Role          int32                  `protobuf:"varint,1,opt,name=role,proto3" json:"role,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RolePermissionListRequest) Reset() {
+	*x = RolePermissionListRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[50]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RolePermissionListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RolePermissionListRequest) ProtoMessage() {}
+
+func (x *RolePermissionListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[50]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RolePermissionListRequest.ProtoReflect.Descriptor instead.
+func (*RolePermissionListRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{50}
+}
+
+func (x *RolePermissionListRequest) GetRole() int32 {
+	if x != nil {
+		return x.Role
+	}
+	return 0
+}
+
+type RolePermissionListReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Codes         []string               `protobuf:"bytes,1,rep,name=codes,proto3" json:"codes,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RolePermissionListReply) Reset() {
+	*x = RolePermissionListReply{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[51]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RolePermissionListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RolePermissionListReply) ProtoMessage() {}
+
+func (x *RolePermissionListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[51]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RolePermissionListReply.ProtoReflect.Descriptor instead.
+func (*RolePermissionListReply) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{51}
+}
+
+func (x *RolePermissionListReply) GetCodes() []string {
+	if x != nil {
+		return x.Codes
+	}
+	return nil
+}
+
+type RolePermissionUpdateRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Role          int32                  `protobuf:"varint,1,opt,name=role,proto3" json:"role,omitempty"`
+	Codes         []string               `protobuf:"bytes,2,rep,name=codes,proto3" json:"codes,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RolePermissionUpdateRequest) Reset() {
+	*x = RolePermissionUpdateRequest{}
+	mi := &file_api_admin_v1_admin_proto_msgTypes[52]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RolePermissionUpdateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RolePermissionUpdateRequest) ProtoMessage() {}
+
+func (x *RolePermissionUpdateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_admin_v1_admin_proto_msgTypes[52]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RolePermissionUpdateRequest.ProtoReflect.Descriptor instead.
+func (*RolePermissionUpdateRequest) Descriptor() ([]byte, []int) {
+	return file_api_admin_v1_admin_proto_rawDescGZIP(), []int{52}
+}
+
+func (x *RolePermissionUpdateRequest) GetRole() int32 {
+	if x != nil {
+		return x.Role
+	}
+	return 0
+}
+
+func (x *RolePermissionUpdateRequest) GetCodes() []string {
+	if x != nil {
+		return x.Codes
+	}
+	return nil
+}
+
 var File_api_admin_v1_admin_proto protoreflect.FileDescriptor
 
 const file_api_admin_v1_admin_proto_rawDesc = "" +
@@ -1396,19 +3785,20 @@ const file_api_admin_v1_admin_proto_rawDesc = "" +
 	"\bpassword\x18\x03 \x01(\tB\a\xfaB\x04r\x02\x10\bR\bpassword\"T\n" +
 	"\bLoginReq\x12#\n" +
 	"\busername\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x03R\busername\x12#\n" +
-	"\bpassword\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\bR\bpassword\"\xa0\x01\n" +
+	"\bpassword\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\bR\bpassword\"\xc2\x01\n" +
 	"\x12UserDetailResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
 	"\x06mobile\x18\x02 \x01(\tR\x06mobile\x12\x1a\n" +
 	"\bnickName\x18\x03 \x01(\tR\bnickName\x12\x1a\n" +
 	"\bbirthday\x18\x04 \x01(\x03R\bbirthday\x12\x16\n" +
 	"\x06gender\x18\x05 \x01(\tR\x06gender\x12\x12\n" +
-	"\x04role\x18\x06 \x01(\x05R\x04role\"F\n" +
+	"\x04role\x18\x06 \x01(\x05R\x04role\x12 \n" +
+	"\vpermissions\x18\a \x03(\tR\vpermissions\"F\n" +
 	"\fCaptchaReply\x12\x1c\n" +
 	"\tcaptchaId\x18\x01 \x01(\tR\tcaptchaId\x12\x18\n" +
 	"\apicPath\x18\x02 \x01(\tR\apicPath\"+\n" +
 	"\x13RefreshTokenRequest\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"\x98\x01\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"\xb2\x01\n" +
 	"\x10GoodsListRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1a\n" +
 	"\bpageSize\x18\x02 \x01(\x05R\bpageSize\x12\x1a\n" +
@@ -1416,7 +3806,8 @@ const file_api_admin_v1_admin_proto_rawDesc = "" +
 	"\n" +
 	"categoryId\x18\x04 \x01(\x03R\n" +
 	"categoryId\x12\x18\n" +
-	"\abrandId\x18\x05 \x01(\x03R\abrandId\"\xaf\x01\n" +
+	"\abrandId\x18\x05 \x01(\x03R\abrandId\x12\x18\n" +
+	"\askuCode\x18\x06 \x01(\tR\askuCode\"\xe1\x02\n" +
 	"\tGoodsItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
@@ -1424,7 +3815,16 @@ const file_api_admin_v1_admin_proto_rawDesc = "" +
 	"\vmarketPrice\x18\x04 \x01(\x03R\vmarketPrice\x12\x16\n" +
 	"\x06onSale\x18\x05 \x01(\bR\x06onSale\x12\x14\n" +
 	"\x05isNew\x18\x06 \x01(\bR\x05isNew\x12\x14\n" +
-	"\x05isHot\x18\a \x01(\bR\x05isHot\"U\n" +
+	"\x05isHot\x18\a \x01(\bR\x05isHot\x12\x1e\n" +
+	"\n" +
+	"categoryId\x18\b \x01(\x03R\n" +
+	"categoryId\x12\x18\n" +
+	"\abrandId\x18\t \x01(\x03R\abrandId\x12\"\n" +
+	"\fcategoryName\x18\n" +
+	" \x01(\tR\fcategoryName\x12\x1c\n" +
+	"\tbrandName\x18\v \x01(\tR\tbrandName\x12\x1a\n" +
+	"\bskuCount\x18\f \x01(\x05R\bskuCount\x12\x18\n" +
+	"\asoldNum\x18\r \x01(\x03R\asoldNum\"U\n" +
 	"\x0eGoodsListReply\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12-\n" +
 	"\x04list\x18\x02 \x03(\v2\x19.admin.admin.v1.GoodsItemR\x04list\"\x93\x02\n" +
@@ -1444,7 +3844,203 @@ const file_api_admin_v1_admin_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02(\x01R\x02id\"K\n" +
 	"\x18UpdateGoodsStatusRequest\x12\x17\n" +
 	"\x02id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02(\x01R\x02id\x12\x16\n" +
-	"\x06onSale\x18\x02 \x01(\bR\x06onSale2\xe6\v\n" +
+	"\x06onSale\x18\x02 \x01(\bR\x06onSale\"Z\n" +
+	"\x10OrderListRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x05R\bpageSize\x12\x16\n" +
+	"\x06status\x18\x03 \x01(\x05R\x06status\"\xa5\x02\n" +
+	"\tOrderInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
+	"\x06userId\x18\x02 \x01(\x03R\x06userId\x12\x18\n" +
+	"\aorderSn\x18\x03 \x01(\tR\aorderSn\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\tR\x06status\x12\x12\n" +
+	"\x04post\x18\x05 \x01(\tR\x04post\x12\x14\n" +
+	"\x05total\x18\x06 \x01(\x03R\x05total\x12\x18\n" +
+	"\aaddress\x18\a \x01(\tR\aaddress\x12\x12\n" +
+	"\x04name\x18\b \x01(\tR\x04name\x12\x16\n" +
+	"\x06mobile\x18\t \x01(\tR\x06mobile\x12\x18\n" +
+	"\aaddTime\x18\n" +
+	" \x01(\tR\aaddTime\x124\n" +
+	"\x05goods\x18\v \x03(\v2\x1e.admin.admin.v1.OrderGoodsInfoR\x05goods\"\x9e\x01\n" +
+	"\x0eOrderGoodsInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
+	"\x05skuId\x18\x02 \x01(\x03R\x05skuId\x12\x18\n" +
+	"\askuName\x18\x03 \x01(\tR\askuName\x12\x1a\n" +
+	"\bskuPrice\x18\x04 \x01(\x03R\bskuPrice\x12\x10\n" +
+	"\x03num\x18\x05 \x01(\x05R\x03num\x12\x1e\n" +
+	"\n" +
+	"totalPrice\x18\x06 \x01(\x03R\n" +
+	"totalPrice\"U\n" +
+	"\x0eOrderListReply\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x05R\x05total\x12-\n" +
+	"\x04list\x18\x02 \x03(\v2\x19.admin.admin.v1.OrderInfoR\x04list\"7\n" +
+	"\x12OrderDetailRequest\x12!\n" +
+	"\aorderSn\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\aorderSn\"R\n" +
+	"\x10ShipOrderRequest\x12!\n" +
+	"\aorderSn\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\aorderSn\x12\x1b\n" +
+	"\x04post\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04post\"7\n" +
+	"\x12RefundOrderRequest\x12!\n" +
+	"\aorderSn\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\aorderSn\"A\n" +
+	"\x0fUserListRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x05R\bpageSize\"\x96\x01\n" +
+	"\bUserInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
+	"\x06mobile\x18\x02 \x01(\tR\x06mobile\x12\x1a\n" +
+	"\bnickName\x18\x03 \x01(\tR\bnickName\x12\x1a\n" +
+	"\bbirthday\x18\x04 \x01(\x03R\bbirthday\x12\x16\n" +
+	"\x06gender\x18\x05 \x01(\tR\x06gender\x12\x12\n" +
+	"\x04role\x18\x06 \x01(\x05R\x04role\"S\n" +
+	"\rUserListReply\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x05R\x05total\x12,\n" +
+	"\x04list\x18\x02 \x03(\v2\x18.admin.admin.v1.UserInfoR\x04list\"3\n" +
+	"\x16UserAddressListRequest\x12\x19\n" +
+	"\x03uid\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x03uid\"G\n" +
+	"\x14UserAddressListReply\x12/\n" +
+	"\x04list\x18\x01 \x03(\v2\x1b.admin.admin.v1.AddressInfoR\x04list\"N\n" +
+	"\x18UserAddressDeleteRequest\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x02id\x12\x19\n" +
+	"\x03uid\x18\x02 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x03uid\"\xaa\x05\n" +
+	"\x12CreateGoodsRequest\x12'\n" +
+	"\n" +
+	"categoryId\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02(\x01R\n" +
+	"categoryId\x12!\n" +
+	"\abrandId\x18\x02 \x01(\x05B\a\xfaB\x04\x1a\x02(\x01R\abrandId\x12\x1f\n" +
+	"\x06typeId\x18\x03 \x01(\x03B\a\xfaB\x04\"\x02(\x01R\x06typeId\x12\x1b\n" +
+	"\x04name\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04name\x12!\n" +
+	"\agoodsSn\x18\x05 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\agoodsSn\x12)\n" +
+	"\vmarketPrice\x18\x06 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\vmarketPrice\x12\x1c\n" +
+	"\tinventory\x18\a \x01(\x03R\tinventory\x12\x1e\n" +
+	"\n" +
+	"goodsBrief\x18\b \x01(\tR\n" +
+	"goodsBrief\x12(\n" +
+	"\x0fgoodsFrontImage\x18\t \x01(\tR\x0fgoodsFrontImage\x12\x1a\n" +
+	"\bshipFree\x18\n" +
+	" \x01(\bR\bshipFree\x12\x14\n" +
+	"\x05isNew\x18\v \x01(\bR\x05isNew\x12\x14\n" +
+	"\x05isHot\x18\f \x01(\bR\x05isHot\x12\x16\n" +
+	"\x06onSale\x18\r \x01(\bR\x06onSale\x12!\n" +
+	"\askuName\x18\x0e \x01(\tB\a\xfaB\x04r\x02\x10\x01R\askuName\x12!\n" +
+	"\askuCode\x18\x0f \x01(\tB\a\xfaB\x04r\x02\x10\x01R\askuCode\x12!\n" +
+	"\abarCode\x18\x10 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\abarCode\x12#\n" +
+	"\bskuPrice\x18\x11 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\bskuPrice\x12&\n" +
+	"\x0epromotionPrice\x18\x12 \x01(\x03R\x0epromotionPrice\x12\"\n" +
+	"\fskuInventory\x18\x13 \x01(\x03R\fskuInventory\x12\x1a\n" +
+	"\bskuImage\x18\x14 \x01(\tR\bskuImage\"-\n" +
+	"\x12GoodsDetailRequest\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02(\x01R\x02id\"\x8e\x02\n" +
+	"\x0eGoodsSkuDetail\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
+	"\agoodsId\x18\x02 \x01(\x03R\agoodsId\x12\x18\n" +
+	"\askuName\x18\x03 \x01(\tR\askuName\x12\x18\n" +
+	"\askuCode\x18\x04 \x01(\tR\askuCode\x12\x18\n" +
+	"\abarCode\x18\x05 \x01(\tR\abarCode\x12\x14\n" +
+	"\x05price\x18\x06 \x01(\x03R\x05price\x12&\n" +
+	"\x0epromotionPrice\x18\a \x01(\x03R\x0epromotionPrice\x12\x1c\n" +
+	"\tinventory\x18\b \x01(\x03R\tinventory\x12\x16\n" +
+	"\x06onSale\x18\t \x01(\bR\x06onSale\x12\x10\n" +
+	"\x03pic\x18\n" +
+	" \x01(\tR\x03pic\"l\n" +
+	"\x10GoodsImageDetail\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x10\n" +
+	"\x03url\x18\x02 \x01(\tR\x03url\x12\x1a\n" +
+	"\bposition\x18\x03 \x01(\x05R\bposition\x12\x1a\n" +
+	"\bisMaster\x18\x04 \x01(\bR\bisMaster\"\xbe\x04\n" +
+	"\x10GoodsDetailReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1e\n" +
+	"\n" +
+	"categoryId\x18\x02 \x01(\x03R\n" +
+	"categoryId\x12\x18\n" +
+	"\abrandId\x18\x03 \x01(\x03R\abrandId\x12\x16\n" +
+	"\x06typeId\x18\x04 \x01(\x03R\x06typeId\x12\x12\n" +
+	"\x04name\x18\x05 \x01(\tR\x04name\x12\x18\n" +
+	"\agoodsSn\x18\x06 \x01(\tR\agoodsSn\x12 \n" +
+	"\vmarketPrice\x18\a \x01(\x03R\vmarketPrice\x12\x1e\n" +
+	"\n" +
+	"goodsBrief\x18\b \x01(\tR\n" +
+	"goodsBrief\x12(\n" +
+	"\x0fgoodsFrontImage\x18\t \x01(\tR\x0fgoodsFrontImage\x12 \n" +
+	"\vgoodsImages\x18\n" +
+	" \x03(\tR\vgoodsImages\x12\x16\n" +
+	"\x06onSale\x18\v \x01(\bR\x06onSale\x12\x14\n" +
+	"\x05isNew\x18\f \x01(\bR\x05isNew\x12\x14\n" +
+	"\x05isHot\x18\r \x01(\bR\x05isHot\x12\x18\n" +
+	"\asoldNum\x18\x0e \x01(\x03R\asoldNum\x12\x1c\n" +
+	"\tbrandName\x18\x0f \x01(\tR\tbrandName\x12\"\n" +
+	"\fcategoryName\x18\x10 \x01(\tR\fcategoryName\x122\n" +
+	"\x04skus\x18\x11 \x03(\v2\x1e.admin.admin.v1.GoodsSkuDetailR\x04skus\x128\n" +
+	"\x06images\x18\x12 \x03(\v2 .admin.admin.v1.GoodsImageDetailR\x06images\"p\n" +
+	"\fCategoryItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12&\n" +
+	"\x0eparentCategory\x18\x03 \x01(\x03R\x0eparentCategory\x12\x14\n" +
+	"\x05level\x18\x04 \x01(\x05R\x05level\"E\n" +
+	"\x11CategoryListReply\x120\n" +
+	"\x04list\x18\x01 \x03(\v2\x1c.admin.admin.v1.CategoryItemR\x04list\"B\n" +
+	"\x10BrandListRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x05R\bpageSize\"C\n" +
+	"\tBrandItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
+	"\x04logo\x18\x03 \x01(\tR\x04logo\"?\n" +
+	"\x0eBrandListReply\x12-\n" +
+	"\x04list\x18\x01 \x03(\v2\x19.admin.admin.v1.BrandItemR\x04list\"\x9d\x01\n" +
+	"\x13CategorySaveRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
+	"\x04name\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04name\x12&\n" +
+	"\x0eparentCategory\x18\x03 \x01(\x03R\x0eparentCategory\x12\x1d\n" +
+	"\x05level\x18\x04 \x01(\x05B\a\xfaB\x04\x1a\x02(\x01R\x05level\x12\x12\n" +
+	"\x04sort\x18\x05 \x01(\x05R\x04sort\"0\n" +
+	"\x15CategoryDeleteRequest\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02(\x01R\x02id\"\xec\x02\n" +
+	"\x13DashboardStatsReply\x12 \n" +
+	"\vtotalOrders\x18\x01 \x01(\x03R\vtotalOrders\x12\x1e\n" +
+	"\n" +
+	"totalSales\x18\x02 \x01(\x03R\n" +
+	"totalSales\x12 \n" +
+	"\vtodayOrders\x18\x03 \x01(\x03R\vtodayOrders\x12\x1e\n" +
+	"\n" +
+	"todaySales\x18\x04 \x01(\x03R\n" +
+	"todaySales\x12\x1e\n" +
+	"\n" +
+	"totalUsers\x18\x05 \x01(\x03R\n" +
+	"totalUsers\x12?\n" +
+	"\fstatusCounts\x18\x06 \x03(\v2\x1b.admin.admin.v1.StatusCountR\fstatusCounts\x12:\n" +
+	"\n" +
+	"last30Days\x18\a \x03(\v2\x1a.admin.admin.v1.DailySalesR\n" +
+	"last30Days\x124\n" +
+	"\btopGoods\x18\b \x03(\v2\x18.admin.admin.v1.TopGoodsR\btopGoods\";\n" +
+	"\vStatusCount\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\x05R\x06status\x12\x14\n" +
+	"\x05count\x18\x02 \x01(\x03R\x05count\"X\n" +
+	"\n" +
+	"DailySales\x12\x12\n" +
+	"\x04date\x18\x01 \x01(\tR\x04date\x12\x1e\n" +
+	"\n" +
+	"orderCount\x18\x02 \x01(\x03R\n" +
+	"orderCount\x12\x16\n" +
+	"\x06amount\x18\x03 \x01(\x03R\x06amount\"d\n" +
+	"\bTopGoods\x12\x14\n" +
+	"\x05skuId\x18\x01 \x01(\x03R\x05skuId\x12\x18\n" +
+	"\askuName\x18\x02 \x01(\tR\askuName\x12\x10\n" +
+	"\x03num\x18\x03 \x01(\x03R\x03num\x12\x16\n" +
+	"\x06amount\x18\x04 \x01(\x03R\x06amount\"z\n" +
+	"\x0ePermissionItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
+	"\x04code\x18\x02 \x01(\tR\x04code\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1c\n" +
+	"\tgroupName\x18\x04 \x01(\tR\tgroupName\x12\x12\n" +
+	"\x04sort\x18\x05 \x01(\x05R\x04sort\"I\n" +
+	"\x13PermissionListReply\x122\n" +
+	"\x04list\x18\x01 \x03(\v2\x1e.admin.admin.v1.PermissionItemR\x04list\"8\n" +
+	"\x19RolePermissionListRequest\x12\x1b\n" +
+	"\x04role\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02(\x01R\x04role\"/\n" +
+	"\x17RolePermissionListReply\x12\x14\n" +
+	"\x05codes\x18\x01 \x03(\tR\x05codes\"P\n" +
+	"\x1bRolePermissionUpdateRequest\x12\x1b\n" +
+	"\x04role\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02(\x01R\x04role\x12\x14\n" +
+	"\x05codes\x18\x02 \x03(\tR\x05codes2\x9b\x1c\n" +
 	"\x05admin\x12f\n" +
 	"\bRegister\x12\x1b.admin.admin.v1.RegisterReq\x1a\x1d.admin.admin.v1.RegisterReply\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/users/register\x12q\n" +
 	"\fRefreshToken\x12#.admin.admin.v1.RefreshTokenRequest\x1a\x1d.admin.admin.v1.RegisterReply\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/users/refresh\x12]\n" +
@@ -1459,7 +4055,25 @@ const file_api_admin_v1_admin_proto_rawDesc = "" +
 	"\tGoodsList\x12 .admin.admin.v1.GoodsListRequest\x1a\x1e.admin.admin.v1.GoodsListReply\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/goods/list\x12n\n" +
 	"\vUpdateGoods\x12\".admin.admin.v1.UpdateGoodsRequest\x1a\x1d.admin.admin.v1.CheckResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\x1a\x11/api/goods/update\x12k\n" +
 	"\vDeleteGoods\x12\".admin.admin.v1.DeleteGoodsRequest\x1a\x1d.admin.admin.v1.CheckResponse\"\x19\x82\xd3\xe4\x93\x02\x13*\x11/api/goods/delete\x12z\n" +
-	"\x11UpdateGoodsStatus\x12(.admin.admin.v1.UpdateGoodsStatusRequest\x1a\x1d.admin.admin.v1.CheckResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\x1a\x11/api/goods/statusB\x17Z\x15admin/api/admin/v1;v1b\x06proto3"
+	"\x11UpdateGoodsStatus\x12(.admin.admin.v1.UpdateGoodsStatusRequest\x1a\x1d.admin.admin.v1.CheckResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\x1a\x11/api/goods/status\x12f\n" +
+	"\tOrderList\x12 .admin.admin.v1.OrderListRequest\x1a\x1e.admin.admin.v1.OrderListReply\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/order/list\x12g\n" +
+	"\vOrderDetail\x12\".admin.admin.v1.OrderDetailRequest\x1a\x19.admin.admin.v1.OrderInfo\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/order/detail\x12h\n" +
+	"\tShipOrder\x12 .admin.admin.v1.ShipOrderRequest\x1a\x1d.admin.admin.v1.CheckResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/api/order/ship\x12n\n" +
+	"\vRefundOrder\x12\".admin.admin.v1.RefundOrderRequest\x1a\x1d.admin.admin.v1.CheckResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/api/order/refund\x12b\n" +
+	"\bUserList\x12\x1f.admin.admin.v1.UserListRequest\x1a\x1d.admin.admin.v1.UserListReply\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/api/user/list\x12\x7f\n" +
+	"\x0fUserAddressList\x12&.admin.admin.v1.UserAddressListRequest\x1a$.admin.admin.v1.UserAddressListReply\"\x1e\x82\xd3\xe4\x93\x02\x18\x12\x16/api/user/address/list\x12~\n" +
+	"\x11UserAddressDelete\x12(.admin.admin.v1.UserAddressDeleteRequest\x1a\x1d.admin.admin.v1.CheckResponse\" \x82\xd3\xe4\x93\x02\x1a*\x18/api/user/address/delete\x12n\n" +
+	"\vCreateGoods\x12\".admin.admin.v1.CreateGoodsRequest\x1a\x1d.admin.admin.v1.CheckResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/api/goods/create\x12n\n" +
+	"\vGoodsDetail\x12\".admin.admin.v1.GoodsDetailRequest\x1a .admin.admin.v1.GoodsDetailReply\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/goods/detail\x12h\n" +
+	"\fCategoryList\x12\x16.google.protobuf.Empty\x1a!.admin.admin.v1.CategoryListReply\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/goods/categories\x12h\n" +
+	"\tBrandList\x12 .admin.admin.v1.BrandListRequest\x1a\x1e.admin.admin.v1.BrandListReply\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/goods/brands\x12z\n" +
+	"\x0eCreateCategory\x12#.admin.admin.v1.CategorySaveRequest\x1a\x1c.admin.admin.v1.CategoryItem\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/goods/category/create\x12{\n" +
+	"\x0eUpdateCategory\x12#.admin.admin.v1.CategorySaveRequest\x1a\x1d.admin.admin.v1.CheckResponse\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\x1a\x1a/api/goods/category/update\x12z\n" +
+	"\x0eDeleteCategory\x12%.admin.admin.v1.CategoryDeleteRequest\x1a\x1d.admin.admin.v1.CheckResponse\"\"\x82\xd3\xe4\x93\x02\x1c*\x1a/api/goods/category/delete\x12k\n" +
+	"\x0eDashboardStats\x12\x16.google.protobuf.Empty\x1a#.admin.admin.v1.DashboardStatsReply\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/api/dashboard/stats\x12n\n" +
+	"\x0ePermissionList\x12\x16.google.protobuf.Empty\x1a#.admin.admin.v1.PermissionListReply\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/api/system/permissions\x12\x8e\x01\n" +
+	"\x12RolePermissionList\x12).admin.admin.v1.RolePermissionListRequest\x1a'.admin.admin.v1.RolePermissionListReply\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/api/system/role-permissions\x12\x8b\x01\n" +
+	"\x14RolePermissionUpdate\x12+.admin.admin.v1.RolePermissionUpdateRequest\x1a\x1d.admin.admin.v1.CheckResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\x1a\x1c/api/system/role-permissionsB\x17Z\x15admin/api/admin/v1;v1b\x06proto3"
 
 var (
 	file_api_admin_v1_admin_proto_rawDescOnce sync.Once
@@ -1473,65 +4087,147 @@ func file_api_admin_v1_admin_proto_rawDescGZIP() []byte {
 	return file_api_admin_v1_admin_proto_rawDescData
 }
 
-var file_api_admin_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
+var file_api_admin_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 53)
 var file_api_admin_v1_admin_proto_goTypes = []any{
-	(*CreateAddressReq)(nil),         // 0: admin.admin.v1.CreateAddressReq
-	(*UpdateAddressReq)(nil),         // 1: admin.admin.v1.UpdateAddressReq
-	(*AddressInfo)(nil),              // 2: admin.admin.v1.AddressInfo
-	(*ListAddressReq)(nil),           // 3: admin.admin.v1.ListAddressReq
-	(*ListAddressReply)(nil),         // 4: admin.admin.v1.ListAddressReply
-	(*AddressReq)(nil),               // 5: admin.admin.v1.AddressReq
-	(*CheckResponse)(nil),            // 6: admin.admin.v1.CheckResponse
-	(*RegisterReply)(nil),            // 7: admin.admin.v1.RegisterReply
-	(*RegisterReq)(nil),              // 8: admin.admin.v1.RegisterReq
-	(*LoginReq)(nil),                 // 9: admin.admin.v1.LoginReq
-	(*UserDetailResponse)(nil),       // 10: admin.admin.v1.UserDetailResponse
-	(*CaptchaReply)(nil),             // 11: admin.admin.v1.CaptchaReply
-	(*RefreshTokenRequest)(nil),      // 12: admin.admin.v1.RefreshTokenRequest
-	(*GoodsListRequest)(nil),         // 13: admin.admin.v1.GoodsListRequest
-	(*GoodsItem)(nil),                // 14: admin.admin.v1.GoodsItem
-	(*GoodsListReply)(nil),           // 15: admin.admin.v1.GoodsListReply
-	(*UpdateGoodsRequest)(nil),       // 16: admin.admin.v1.UpdateGoodsRequest
-	(*DeleteGoodsRequest)(nil),       // 17: admin.admin.v1.DeleteGoodsRequest
-	(*UpdateGoodsStatusRequest)(nil), // 18: admin.admin.v1.UpdateGoodsStatusRequest
-	(*emptypb.Empty)(nil),            // 19: google.protobuf.Empty
+	(*CreateAddressReq)(nil),            // 0: admin.admin.v1.CreateAddressReq
+	(*UpdateAddressReq)(nil),            // 1: admin.admin.v1.UpdateAddressReq
+	(*AddressInfo)(nil),                 // 2: admin.admin.v1.AddressInfo
+	(*ListAddressReq)(nil),              // 3: admin.admin.v1.ListAddressReq
+	(*ListAddressReply)(nil),            // 4: admin.admin.v1.ListAddressReply
+	(*AddressReq)(nil),                  // 5: admin.admin.v1.AddressReq
+	(*CheckResponse)(nil),               // 6: admin.admin.v1.CheckResponse
+	(*RegisterReply)(nil),               // 7: admin.admin.v1.RegisterReply
+	(*RegisterReq)(nil),                 // 8: admin.admin.v1.RegisterReq
+	(*LoginReq)(nil),                    // 9: admin.admin.v1.LoginReq
+	(*UserDetailResponse)(nil),          // 10: admin.admin.v1.UserDetailResponse
+	(*CaptchaReply)(nil),                // 11: admin.admin.v1.CaptchaReply
+	(*RefreshTokenRequest)(nil),         // 12: admin.admin.v1.RefreshTokenRequest
+	(*GoodsListRequest)(nil),            // 13: admin.admin.v1.GoodsListRequest
+	(*GoodsItem)(nil),                   // 14: admin.admin.v1.GoodsItem
+	(*GoodsListReply)(nil),              // 15: admin.admin.v1.GoodsListReply
+	(*UpdateGoodsRequest)(nil),          // 16: admin.admin.v1.UpdateGoodsRequest
+	(*DeleteGoodsRequest)(nil),          // 17: admin.admin.v1.DeleteGoodsRequest
+	(*UpdateGoodsStatusRequest)(nil),    // 18: admin.admin.v1.UpdateGoodsStatusRequest
+	(*OrderListRequest)(nil),            // 19: admin.admin.v1.OrderListRequest
+	(*OrderInfo)(nil),                   // 20: admin.admin.v1.OrderInfo
+	(*OrderGoodsInfo)(nil),              // 21: admin.admin.v1.OrderGoodsInfo
+	(*OrderListReply)(nil),              // 22: admin.admin.v1.OrderListReply
+	(*OrderDetailRequest)(nil),          // 23: admin.admin.v1.OrderDetailRequest
+	(*ShipOrderRequest)(nil),            // 24: admin.admin.v1.ShipOrderRequest
+	(*RefundOrderRequest)(nil),          // 25: admin.admin.v1.RefundOrderRequest
+	(*UserListRequest)(nil),             // 26: admin.admin.v1.UserListRequest
+	(*UserInfo)(nil),                    // 27: admin.admin.v1.UserInfo
+	(*UserListReply)(nil),               // 28: admin.admin.v1.UserListReply
+	(*UserAddressListRequest)(nil),      // 29: admin.admin.v1.UserAddressListRequest
+	(*UserAddressListReply)(nil),        // 30: admin.admin.v1.UserAddressListReply
+	(*UserAddressDeleteRequest)(nil),    // 31: admin.admin.v1.UserAddressDeleteRequest
+	(*CreateGoodsRequest)(nil),          // 32: admin.admin.v1.CreateGoodsRequest
+	(*GoodsDetailRequest)(nil),          // 33: admin.admin.v1.GoodsDetailRequest
+	(*GoodsSkuDetail)(nil),              // 34: admin.admin.v1.GoodsSkuDetail
+	(*GoodsImageDetail)(nil),            // 35: admin.admin.v1.GoodsImageDetail
+	(*GoodsDetailReply)(nil),            // 36: admin.admin.v1.GoodsDetailReply
+	(*CategoryItem)(nil),                // 37: admin.admin.v1.CategoryItem
+	(*CategoryListReply)(nil),           // 38: admin.admin.v1.CategoryListReply
+	(*BrandListRequest)(nil),            // 39: admin.admin.v1.BrandListRequest
+	(*BrandItem)(nil),                   // 40: admin.admin.v1.BrandItem
+	(*BrandListReply)(nil),              // 41: admin.admin.v1.BrandListReply
+	(*CategorySaveRequest)(nil),         // 42: admin.admin.v1.CategorySaveRequest
+	(*CategoryDeleteRequest)(nil),       // 43: admin.admin.v1.CategoryDeleteRequest
+	(*DashboardStatsReply)(nil),         // 44: admin.admin.v1.DashboardStatsReply
+	(*StatusCount)(nil),                 // 45: admin.admin.v1.StatusCount
+	(*DailySales)(nil),                  // 46: admin.admin.v1.DailySales
+	(*TopGoods)(nil),                    // 47: admin.admin.v1.TopGoods
+	(*PermissionItem)(nil),              // 48: admin.admin.v1.PermissionItem
+	(*PermissionListReply)(nil),         // 49: admin.admin.v1.PermissionListReply
+	(*RolePermissionListRequest)(nil),   // 50: admin.admin.v1.RolePermissionListRequest
+	(*RolePermissionListReply)(nil),     // 51: admin.admin.v1.RolePermissionListReply
+	(*RolePermissionUpdateRequest)(nil), // 52: admin.admin.v1.RolePermissionUpdateRequest
+	(*emptypb.Empty)(nil),               // 53: google.protobuf.Empty
 }
 var file_api_admin_v1_admin_proto_depIdxs = []int32{
 	2,  // 0: admin.admin.v1.ListAddressReply.results:type_name -> admin.admin.v1.AddressInfo
 	14, // 1: admin.admin.v1.GoodsListReply.list:type_name -> admin.admin.v1.GoodsItem
-	8,  // 2: admin.admin.v1.admin.Register:input_type -> admin.admin.v1.RegisterReq
-	12, // 3: admin.admin.v1.admin.RefreshToken:input_type -> admin.admin.v1.RefreshTokenRequest
-	9,  // 4: admin.admin.v1.admin.Login:input_type -> admin.admin.v1.LoginReq
-	19, // 5: admin.admin.v1.admin.Captcha:input_type -> google.protobuf.Empty
-	19, // 6: admin.admin.v1.admin.Detail:input_type -> google.protobuf.Empty
-	0,  // 7: admin.admin.v1.admin.CreateAddress:input_type -> admin.admin.v1.CreateAddressReq
-	19, // 8: admin.admin.v1.admin.AddressListByUid:input_type -> google.protobuf.Empty
-	1,  // 9: admin.admin.v1.admin.UpdateAddress:input_type -> admin.admin.v1.UpdateAddressReq
-	5,  // 10: admin.admin.v1.admin.DefaultAddress:input_type -> admin.admin.v1.AddressReq
-	5,  // 11: admin.admin.v1.admin.DeleteAddress:input_type -> admin.admin.v1.AddressReq
-	13, // 12: admin.admin.v1.admin.GoodsList:input_type -> admin.admin.v1.GoodsListRequest
-	16, // 13: admin.admin.v1.admin.UpdateGoods:input_type -> admin.admin.v1.UpdateGoodsRequest
-	17, // 14: admin.admin.v1.admin.DeleteGoods:input_type -> admin.admin.v1.DeleteGoodsRequest
-	18, // 15: admin.admin.v1.admin.UpdateGoodsStatus:input_type -> admin.admin.v1.UpdateGoodsStatusRequest
-	7,  // 16: admin.admin.v1.admin.Register:output_type -> admin.admin.v1.RegisterReply
-	7,  // 17: admin.admin.v1.admin.RefreshToken:output_type -> admin.admin.v1.RegisterReply
-	7,  // 18: admin.admin.v1.admin.Login:output_type -> admin.admin.v1.RegisterReply
-	11, // 19: admin.admin.v1.admin.Captcha:output_type -> admin.admin.v1.CaptchaReply
-	10, // 20: admin.admin.v1.admin.Detail:output_type -> admin.admin.v1.UserDetailResponse
-	2,  // 21: admin.admin.v1.admin.CreateAddress:output_type -> admin.admin.v1.AddressInfo
-	4,  // 22: admin.admin.v1.admin.AddressListByUid:output_type -> admin.admin.v1.ListAddressReply
-	6,  // 23: admin.admin.v1.admin.UpdateAddress:output_type -> admin.admin.v1.CheckResponse
-	6,  // 24: admin.admin.v1.admin.DefaultAddress:output_type -> admin.admin.v1.CheckResponse
-	6,  // 25: admin.admin.v1.admin.DeleteAddress:output_type -> admin.admin.v1.CheckResponse
-	15, // 26: admin.admin.v1.admin.GoodsList:output_type -> admin.admin.v1.GoodsListReply
-	6,  // 27: admin.admin.v1.admin.UpdateGoods:output_type -> admin.admin.v1.CheckResponse
-	6,  // 28: admin.admin.v1.admin.DeleteGoods:output_type -> admin.admin.v1.CheckResponse
-	6,  // 29: admin.admin.v1.admin.UpdateGoodsStatus:output_type -> admin.admin.v1.CheckResponse
-	16, // [16:30] is the sub-list for method output_type
-	2,  // [2:16] is the sub-list for method input_type
-	2,  // [2:2] is the sub-list for extension type_name
-	2,  // [2:2] is the sub-list for extension extendee
-	0,  // [0:2] is the sub-list for field type_name
+	21, // 2: admin.admin.v1.OrderInfo.goods:type_name -> admin.admin.v1.OrderGoodsInfo
+	20, // 3: admin.admin.v1.OrderListReply.list:type_name -> admin.admin.v1.OrderInfo
+	27, // 4: admin.admin.v1.UserListReply.list:type_name -> admin.admin.v1.UserInfo
+	2,  // 5: admin.admin.v1.UserAddressListReply.list:type_name -> admin.admin.v1.AddressInfo
+	34, // 6: admin.admin.v1.GoodsDetailReply.skus:type_name -> admin.admin.v1.GoodsSkuDetail
+	35, // 7: admin.admin.v1.GoodsDetailReply.images:type_name -> admin.admin.v1.GoodsImageDetail
+	37, // 8: admin.admin.v1.CategoryListReply.list:type_name -> admin.admin.v1.CategoryItem
+	40, // 9: admin.admin.v1.BrandListReply.list:type_name -> admin.admin.v1.BrandItem
+	45, // 10: admin.admin.v1.DashboardStatsReply.statusCounts:type_name -> admin.admin.v1.StatusCount
+	46, // 11: admin.admin.v1.DashboardStatsReply.last30Days:type_name -> admin.admin.v1.DailySales
+	47, // 12: admin.admin.v1.DashboardStatsReply.topGoods:type_name -> admin.admin.v1.TopGoods
+	48, // 13: admin.admin.v1.PermissionListReply.list:type_name -> admin.admin.v1.PermissionItem
+	8,  // 14: admin.admin.v1.admin.Register:input_type -> admin.admin.v1.RegisterReq
+	12, // 15: admin.admin.v1.admin.RefreshToken:input_type -> admin.admin.v1.RefreshTokenRequest
+	9,  // 16: admin.admin.v1.admin.Login:input_type -> admin.admin.v1.LoginReq
+	53, // 17: admin.admin.v1.admin.Captcha:input_type -> google.protobuf.Empty
+	53, // 18: admin.admin.v1.admin.Detail:input_type -> google.protobuf.Empty
+	0,  // 19: admin.admin.v1.admin.CreateAddress:input_type -> admin.admin.v1.CreateAddressReq
+	53, // 20: admin.admin.v1.admin.AddressListByUid:input_type -> google.protobuf.Empty
+	1,  // 21: admin.admin.v1.admin.UpdateAddress:input_type -> admin.admin.v1.UpdateAddressReq
+	5,  // 22: admin.admin.v1.admin.DefaultAddress:input_type -> admin.admin.v1.AddressReq
+	5,  // 23: admin.admin.v1.admin.DeleteAddress:input_type -> admin.admin.v1.AddressReq
+	13, // 24: admin.admin.v1.admin.GoodsList:input_type -> admin.admin.v1.GoodsListRequest
+	16, // 25: admin.admin.v1.admin.UpdateGoods:input_type -> admin.admin.v1.UpdateGoodsRequest
+	17, // 26: admin.admin.v1.admin.DeleteGoods:input_type -> admin.admin.v1.DeleteGoodsRequest
+	18, // 27: admin.admin.v1.admin.UpdateGoodsStatus:input_type -> admin.admin.v1.UpdateGoodsStatusRequest
+	19, // 28: admin.admin.v1.admin.OrderList:input_type -> admin.admin.v1.OrderListRequest
+	23, // 29: admin.admin.v1.admin.OrderDetail:input_type -> admin.admin.v1.OrderDetailRequest
+	24, // 30: admin.admin.v1.admin.ShipOrder:input_type -> admin.admin.v1.ShipOrderRequest
+	25, // 31: admin.admin.v1.admin.RefundOrder:input_type -> admin.admin.v1.RefundOrderRequest
+	26, // 32: admin.admin.v1.admin.UserList:input_type -> admin.admin.v1.UserListRequest
+	29, // 33: admin.admin.v1.admin.UserAddressList:input_type -> admin.admin.v1.UserAddressListRequest
+	31, // 34: admin.admin.v1.admin.UserAddressDelete:input_type -> admin.admin.v1.UserAddressDeleteRequest
+	32, // 35: admin.admin.v1.admin.CreateGoods:input_type -> admin.admin.v1.CreateGoodsRequest
+	33, // 36: admin.admin.v1.admin.GoodsDetail:input_type -> admin.admin.v1.GoodsDetailRequest
+	53, // 37: admin.admin.v1.admin.CategoryList:input_type -> google.protobuf.Empty
+	39, // 38: admin.admin.v1.admin.BrandList:input_type -> admin.admin.v1.BrandListRequest
+	42, // 39: admin.admin.v1.admin.CreateCategory:input_type -> admin.admin.v1.CategorySaveRequest
+	42, // 40: admin.admin.v1.admin.UpdateCategory:input_type -> admin.admin.v1.CategorySaveRequest
+	43, // 41: admin.admin.v1.admin.DeleteCategory:input_type -> admin.admin.v1.CategoryDeleteRequest
+	53, // 42: admin.admin.v1.admin.DashboardStats:input_type -> google.protobuf.Empty
+	53, // 43: admin.admin.v1.admin.PermissionList:input_type -> google.protobuf.Empty
+	50, // 44: admin.admin.v1.admin.RolePermissionList:input_type -> admin.admin.v1.RolePermissionListRequest
+	52, // 45: admin.admin.v1.admin.RolePermissionUpdate:input_type -> admin.admin.v1.RolePermissionUpdateRequest
+	7,  // 46: admin.admin.v1.admin.Register:output_type -> admin.admin.v1.RegisterReply
+	7,  // 47: admin.admin.v1.admin.RefreshToken:output_type -> admin.admin.v1.RegisterReply
+	7,  // 48: admin.admin.v1.admin.Login:output_type -> admin.admin.v1.RegisterReply
+	11, // 49: admin.admin.v1.admin.Captcha:output_type -> admin.admin.v1.CaptchaReply
+	10, // 50: admin.admin.v1.admin.Detail:output_type -> admin.admin.v1.UserDetailResponse
+	2,  // 51: admin.admin.v1.admin.CreateAddress:output_type -> admin.admin.v1.AddressInfo
+	4,  // 52: admin.admin.v1.admin.AddressListByUid:output_type -> admin.admin.v1.ListAddressReply
+	6,  // 53: admin.admin.v1.admin.UpdateAddress:output_type -> admin.admin.v1.CheckResponse
+	6,  // 54: admin.admin.v1.admin.DefaultAddress:output_type -> admin.admin.v1.CheckResponse
+	6,  // 55: admin.admin.v1.admin.DeleteAddress:output_type -> admin.admin.v1.CheckResponse
+	15, // 56: admin.admin.v1.admin.GoodsList:output_type -> admin.admin.v1.GoodsListReply
+	6,  // 57: admin.admin.v1.admin.UpdateGoods:output_type -> admin.admin.v1.CheckResponse
+	6,  // 58: admin.admin.v1.admin.DeleteGoods:output_type -> admin.admin.v1.CheckResponse
+	6,  // 59: admin.admin.v1.admin.UpdateGoodsStatus:output_type -> admin.admin.v1.CheckResponse
+	22, // 60: admin.admin.v1.admin.OrderList:output_type -> admin.admin.v1.OrderListReply
+	20, // 61: admin.admin.v1.admin.OrderDetail:output_type -> admin.admin.v1.OrderInfo
+	6,  // 62: admin.admin.v1.admin.ShipOrder:output_type -> admin.admin.v1.CheckResponse
+	6,  // 63: admin.admin.v1.admin.RefundOrder:output_type -> admin.admin.v1.CheckResponse
+	28, // 64: admin.admin.v1.admin.UserList:output_type -> admin.admin.v1.UserListReply
+	30, // 65: admin.admin.v1.admin.UserAddressList:output_type -> admin.admin.v1.UserAddressListReply
+	6,  // 66: admin.admin.v1.admin.UserAddressDelete:output_type -> admin.admin.v1.CheckResponse
+	6,  // 67: admin.admin.v1.admin.CreateGoods:output_type -> admin.admin.v1.CheckResponse
+	36, // 68: admin.admin.v1.admin.GoodsDetail:output_type -> admin.admin.v1.GoodsDetailReply
+	38, // 69: admin.admin.v1.admin.CategoryList:output_type -> admin.admin.v1.CategoryListReply
+	41, // 70: admin.admin.v1.admin.BrandList:output_type -> admin.admin.v1.BrandListReply
+	37, // 71: admin.admin.v1.admin.CreateCategory:output_type -> admin.admin.v1.CategoryItem
+	6,  // 72: admin.admin.v1.admin.UpdateCategory:output_type -> admin.admin.v1.CheckResponse
+	6,  // 73: admin.admin.v1.admin.DeleteCategory:output_type -> admin.admin.v1.CheckResponse
+	44, // 74: admin.admin.v1.admin.DashboardStats:output_type -> admin.admin.v1.DashboardStatsReply
+	49, // 75: admin.admin.v1.admin.PermissionList:output_type -> admin.admin.v1.PermissionListReply
+	51, // 76: admin.admin.v1.admin.RolePermissionList:output_type -> admin.admin.v1.RolePermissionListReply
+	6,  // 77: admin.admin.v1.admin.RolePermissionUpdate:output_type -> admin.admin.v1.CheckResponse
+	46, // [46:78] is the sub-list for method output_type
+	14, // [14:46] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_api_admin_v1_admin_proto_init() }
@@ -1545,7 +4241,7 @@ func file_api_admin_v1_admin_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_admin_v1_admin_proto_rawDesc), len(file_api_admin_v1_admin_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   19,
+			NumMessages:   53,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

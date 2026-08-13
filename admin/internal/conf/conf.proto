@@ -44,8 +44,12 @@ message Service {
   message Goods {
     string endpoint = 1;
   }
+  message Order {
+    string endpoint = 1;
+  }
   User user = 1;
   Goods goods = 2;
+  Order order = 3;
 }
 
 message Trace {

@@ -1,4 +1,4 @@
-.PHONY: help build test vet test-cover tidy db-init migrate-up migrate-down up down ps logs e2e infra-up infra-down build-image site-openapi
+.PHONY: help build test vet test-cover tidy db-init seed-demo migrate-up migrate-down up down ps logs e2e infra-up infra-down build-image site-openapi
 
 MODULES := admin service/user service/goods service/cart service/order service/inventory service/payment shop
 VERSION ?= $(shell git describe --tags --always 2>/dev/null || echo unknown)
@@ -13,6 +13,7 @@ help:
 	@echo "  make test-cover 运行全部测试并输出覆盖率"
 	@echo "  make tidy     整理全部模块依赖"
 	@echo "  make db-init  初始化 PostgreSQL 数据库与 Mock 数据"
+	@echo "  make seed-demo 生成演示数据（100 用户 / 50 商品 / 模拟订单）"
 	@echo "  make migrate-up  执行全部数据库迁移（golang-migrate）"
 	@echo "  make migrate-down 回滚全部数据库迁移"
 	@echo "  make up       一键启动整套环境（deploy/docker-compose.yml）"
@@ -72,6 +73,9 @@ site-openapi:
 
 db-init:
 	./scripts/init-db.sh
+
+seed-demo:
+	./scripts/seed-demo.sh
 
 migrate-up:
 	./scripts/migrate.sh up

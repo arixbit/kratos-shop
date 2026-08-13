@@ -186,6 +186,24 @@ GOOS=linux GOARCH=amd64 make build
 
 更详细的多服务器部署说明见 [docs/development.md](docs/development.md)。
 
+### 运营后台前端（可选）
+
+`web/admin` 是基于 **Ant Design Pro v6**（Umi Max 4 + React 19 + Ant Design 6）的运营后台，菜单顺序为首页 → 用户管理 → 订单管理 → 商品管理 → 商品分类 → 权限管理，登录后默认进入首页看板。当前支持首页数据看板（用户数 / 订单量 / 成交额 / 近 30 天趋势 / 状态分布 / 热销商品）、用户管理（用户列表 / 收货地址管理）、订单管理（列表 / 详情 / 发货 / 退款）、商品管理（分类 / 品牌 / SKU 编码搜索、商品详情含 SKU 与图片、新增 / 上下架 / 删除）、商品分类管理（新增 / 编辑 / 删除）和权限管理（角色权限点配置，前端按钮级隐藏）：
+
+```bash
+cd web/admin
+npm install
+npm run dev
+```
+
+开发环境访问 `http://localhost:8000`，`/api/*` 自动代理到 admin BFF（`127.0.0.1:9099`）。
+
+需要演示数据时执行（100 个用户、50 个商品、每人 3~5 笔模拟订单）：
+
+```bash
+make seed-demo
+```
+
 ## 可观测性与辅助组件
 
 `make up` 启动的整套环境里，除了 8 个应用服务，还包含以下组件：

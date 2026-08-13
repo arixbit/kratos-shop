@@ -25,6 +25,9 @@ run_sql postgres "$ROOT_DIR/sql/01_init_databases.sql"
 echo "==> 初始化 user 库"
 run_sql shop_user "$ROOT_DIR/sql/02_user.sql"
 
+echo "==> 初始化权限表"
+run_sql shop_user "$ROOT_DIR/sql/09_permissions.sql"
+
 echo "==> 初始化 goods 库"
 run_sql shop_goods "$ROOT_DIR/sql/03_goods.sql"
 

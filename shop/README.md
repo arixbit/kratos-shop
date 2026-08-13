@@ -2,6 +2,8 @@
 
 面向 C 端的商城 HTTP 聚合服务（Backend For Frontend），通过 gRPC 服务发现调用 user、goods 等服务，并负责签发 JWT。
 
+已暴露购物车（`/api/cart/*`）、订单（`/api/order/*`）、模拟支付（`/api/payment/*`）HTTP 接口，前端可走 BFF 完成 加购 → 下单 → 模拟支付 → 订单查询 的完整链路。
+
 - HTTP 端口：`8097`
 - gRPC 端口：`9001`
 - 数据库：`shop_user`（复用用户库）

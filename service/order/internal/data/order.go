@@ -273,6 +273,11 @@ func (o *orderRepo) GetDetail(ctx context.Context, userId int64, orderSn string)
 		dom.SignerName = addr.RecipientName
 		dom.SingerMobile = addr.RecipientMobile
 	}
+	items, err := o.ListItemsByOrderSn(ctx, orderSn)
+	if err != nil {
+		return nil, err
+	}
+	dom.Items = items
 	return dom, nil
 }
 
@@ -301,6 +306,199 @@ func (o *orderRepo) ListByUser(ctx context.Context, userId int64, page, pageSize
 		res = append(res, list[i].ToDomain())
 	}
 	return res, total, nil
+}
+
+func (o *orderRepo) AdminList(ctx context.Context, page, pageSize, status int) ([]*domain.Order, int64, error) {
+	query := o.data.db.WithContext(ctx).Model(&Order{})
+	if status > 0 {
+		query = query.Where("order_status = ?", status)
+	}
+	var total int64
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+	if page <= 0 {
+		page = 1
+	}
+	if pageSize <= 0 || pageSize > 100 {
+		pageSize = 10
+	}
+	var list []Order
+	if err := query.Order("id DESC").
+		Offset((page - 1) * pageSize).
+		Limit(pageSize).
+		Find(&list).Error; err != nil {
+		return nil, 0, err
+	}
+	res := make([]*domain.Order, 0, len(list))
+	for i := range list {
+		dom := list[i].ToDomain()
+		var addr OrderAddress
+		if err := o.data.db.WithContext(ctx).Where("order_sn = ?", dom.OrderSn).First(&addr).Error; err == nil {
+			dom.Address = addr.Address
+			dom.SignerName = addr.RecipientName
+			dom.SingerMobile = addr.RecipientMobile
+		}
+		if items, err := o.ListItemsByOrderSn(ctx, dom.OrderSn); err == nil {
+			dom.Items = items
+		}
+		res = append(res, dom)
+	}
+	return res, total, nil
+}
+
+func (o *orderRepo) GetByOrderSn(ctx context.Context, orderSn string) (*domain.Order, error) {
+	var od Order
+	if err := o.data.db.WithContext(ctx).
+		Where("order_sn = ?", orderSn).
+		First(&od).Error; err != nil {
+		if serrors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, kerrors.New(400, "ORDER_NOT_FOUND", "订单不存在")
+		}
+		return nil, err
+	}
+	dom := od.ToDomain()
+	var addr OrderAddress
+	if err := o.data.db.WithContext(ctx).Where("order_sn = ?", orderSn).First(&addr).Error; err == nil {
+		dom.Address = addr.Address
+		dom.SignerName = addr.RecipientName
+		dom.SingerMobile = addr.RecipientMobile
+	}
+	items, err := o.ListItemsByOrderSn(ctx, orderSn)
+	if err != nil {
+		return nil, err
+	}
+	dom.Items = items
+	return dom, nil
+}
+
+func (o *orderRepo) Ship(ctx context.Context, orderSn, post string) (bool, error) {
+	result := o.data.db.WithContext(ctx).Model(&Order{}).
+		Where("order_sn = ? AND order_status = 2", orderSn).
+		Updates(map[string]interface{}{
+			"order_status": 3,
+			"post":         post,
+			"delivery_at":  time.Now(),
+			"updated_at":   time.Now(),
+		})
+	if result.Error != nil {
+		return false, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return false, nil
+	}
+	return true, nil
+}
+
+func (o *orderRepo) Refund(ctx context.Context, orderSn string) (bool, error) {
+	result := o.data.db.WithContext(ctx).Model(&Order{}).
+		Where("order_sn = ? AND order_status IN (2,3,4)", orderSn).
+		Updates(map[string]interface{}{
+			"order_status": 7,
+			"refund_time":  time.Now(),
+			"updated_at":   time.Now(),
+		})
+	if result.Error != nil {
+		return false, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return false, nil
+	}
+	return true, nil
+}
+
+func (o *orderRepo) DashboardStats(ctx context.Context) (*domain.DashboardStats, error) {
+	stats := &domain.DashboardStats{}
+
+	if err := o.data.db.WithContext(ctx).Model(&Order{}).Count(&stats.TotalOrders).Error; err != nil {
+		return nil, err
+	}
+	if err := o.data.db.WithContext(ctx).Model(&Order{}).
+		Where("order_status IN (2,3,4,6)").
+		Select("COALESCE(SUM(order_amount),0)").
+		Row().Scan(&stats.TotalSales); err != nil {
+		return nil, err
+	}
+	if err := o.data.db.WithContext(ctx).Model(&Order{}).
+		Where("created_at >= date_trunc('day', now())").
+		Count(&stats.TodayOrders).Error; err != nil {
+		return nil, err
+	}
+	if err := o.data.db.WithContext(ctx).Model(&Order{}).
+		Where("created_at >= date_trunc('day', now()) AND order_status IN (2,3,4,6)").
+		Select("COALESCE(SUM(order_amount),0)").
+		Row().Scan(&stats.TodaySales); err != nil {
+		return nil, err
+	}
+
+	var statusRows []struct {
+		Status int32
+		Count  int64
+	}
+	if err := o.data.db.WithContext(ctx).Model(&Order{}).
+		Select("order_status AS status, COUNT(*) AS count").
+		Group("order_status").
+		Scan(&statusRows).Error; err != nil {
+		return nil, err
+	}
+	for _, row := range statusRows {
+		stats.StatusCounts = append(stats.StatusCounts, &domain.StatusCount{
+			Status: row.Status,
+			Count:  row.Count,
+		})
+	}
+
+	var dailyRows []struct {
+		Date       string
+		OrderCount int64
+		Amount     int64
+	}
+	if err := o.data.db.WithContext(ctx).Raw(`
+		SELECT to_char(created_at, 'YYYY-MM-DD') AS date,
+		       COUNT(*) AS order_count,
+		       COALESCE(SUM(CASE WHEN order_status IN (2,3,4,6) THEN order_amount ELSE 0 END), 0) AS amount
+		FROM orders
+		WHERE created_at >= date_trunc('day', now()) - interval '29 days'
+		GROUP BY date
+		ORDER BY date
+	`).Scan(&dailyRows).Error; err != nil {
+		return nil, err
+	}
+	for _, row := range dailyRows {
+		stats.Last30Days = append(stats.Last30Days, &domain.DailySales{
+			Date:       row.Date,
+			OrderCount: row.OrderCount,
+			Amount:     row.Amount,
+		})
+	}
+
+	var topRows []struct {
+		SkuID   int64
+		SkuName string
+		Num     int64
+		Amount  int64
+	}
+	if err := o.data.db.WithContext(ctx).Raw(`
+		SELECT og.sku_id, og.sku_name, SUM(og.num) AS num, SUM(og.total_price) AS amount
+		FROM order_goods og
+		JOIN orders o ON o.order_sn = og.order_sn
+		WHERE o.order_status IN (2,3,4,6)
+		GROUP BY og.sku_id, og.sku_name
+		ORDER BY num DESC
+		LIMIT 5
+	`).Scan(&topRows).Error; err != nil {
+		return nil, err
+	}
+	for _, row := range topRows {
+		stats.TopGoods = append(stats.TopGoods, &domain.TopGoods{
+			SkuID:   row.SkuID,
+			SkuName: row.SkuName,
+			Num:     row.Num,
+			Amount:  row.Amount,
+		})
+	}
+
+	return stats, nil
 }
 
 func (o *orderRepo) IncrementOutboxRetry(ctx context.Context, id int64) error {

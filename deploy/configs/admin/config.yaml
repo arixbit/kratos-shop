@@ -21,3 +21,5 @@ service:
     endpoint: discovery:///shop.user.service
   goods:
     endpoint: discovery:///shop.goods.service
+  order:
+    endpoint: discovery:///shop.order.service

@@ -13,6 +13,13 @@
 #   jwt_key: CHANGE_ME
 # trace:
 #   endpoint: http://jaeger:14268/api/traces
+# service:
+#   cart:
+#     endpoint: discovery:///shop.cart.service
+#   order:
+#     endpoint: discovery:///shop.order.service
+#   payment:
+#     endpoint: discovery:///shop.payment.service
 # consul:
 #   address: consul:8500
 #   scheme: http

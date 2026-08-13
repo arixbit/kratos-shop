@@ -20,20 +20,38 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Admin_Register_FullMethodName          = "/admin.admin.v1.admin/Register"
-	Admin_RefreshToken_FullMethodName      = "/admin.admin.v1.admin/RefreshToken"
-	Admin_Login_FullMethodName             = "/admin.admin.v1.admin/Login"
-	Admin_Captcha_FullMethodName           = "/admin.admin.v1.admin/Captcha"
-	Admin_Detail_FullMethodName            = "/admin.admin.v1.admin/Detail"
-	Admin_CreateAddress_FullMethodName     = "/admin.admin.v1.admin/CreateAddress"
-	Admin_AddressListByUid_FullMethodName  = "/admin.admin.v1.admin/AddressListByUid"
-	Admin_UpdateAddress_FullMethodName     = "/admin.admin.v1.admin/UpdateAddress"
-	Admin_DefaultAddress_FullMethodName    = "/admin.admin.v1.admin/DefaultAddress"
-	Admin_DeleteAddress_FullMethodName     = "/admin.admin.v1.admin/DeleteAddress"
-	Admin_GoodsList_FullMethodName         = "/admin.admin.v1.admin/GoodsList"
-	Admin_UpdateGoods_FullMethodName       = "/admin.admin.v1.admin/UpdateGoods"
-	Admin_DeleteGoods_FullMethodName       = "/admin.admin.v1.admin/DeleteGoods"
-	Admin_UpdateGoodsStatus_FullMethodName = "/admin.admin.v1.admin/UpdateGoodsStatus"
+	Admin_Register_FullMethodName             = "/admin.admin.v1.admin/Register"
+	Admin_RefreshToken_FullMethodName         = "/admin.admin.v1.admin/RefreshToken"
+	Admin_Login_FullMethodName                = "/admin.admin.v1.admin/Login"
+	Admin_Captcha_FullMethodName              = "/admin.admin.v1.admin/Captcha"
+	Admin_Detail_FullMethodName               = "/admin.admin.v1.admin/Detail"
+	Admin_CreateAddress_FullMethodName        = "/admin.admin.v1.admin/CreateAddress"
+	Admin_AddressListByUid_FullMethodName     = "/admin.admin.v1.admin/AddressListByUid"
+	Admin_UpdateAddress_FullMethodName        = "/admin.admin.v1.admin/UpdateAddress"
+	Admin_DefaultAddress_FullMethodName       = "/admin.admin.v1.admin/DefaultAddress"
+	Admin_DeleteAddress_FullMethodName        = "/admin.admin.v1.admin/DeleteAddress"
+	Admin_GoodsList_FullMethodName            = "/admin.admin.v1.admin/GoodsList"
+	Admin_UpdateGoods_FullMethodName          = "/admin.admin.v1.admin/UpdateGoods"
+	Admin_DeleteGoods_FullMethodName          = "/admin.admin.v1.admin/DeleteGoods"
+	Admin_UpdateGoodsStatus_FullMethodName    = "/admin.admin.v1.admin/UpdateGoodsStatus"
+	Admin_OrderList_FullMethodName            = "/admin.admin.v1.admin/OrderList"
+	Admin_OrderDetail_FullMethodName          = "/admin.admin.v1.admin/OrderDetail"
+	Admin_ShipOrder_FullMethodName            = "/admin.admin.v1.admin/ShipOrder"
+	Admin_RefundOrder_FullMethodName          = "/admin.admin.v1.admin/RefundOrder"
+	Admin_UserList_FullMethodName             = "/admin.admin.v1.admin/UserList"
+	Admin_UserAddressList_FullMethodName      = "/admin.admin.v1.admin/UserAddressList"
+	Admin_UserAddressDelete_FullMethodName    = "/admin.admin.v1.admin/UserAddressDelete"
+	Admin_CreateGoods_FullMethodName          = "/admin.admin.v1.admin/CreateGoods"
+	Admin_GoodsDetail_FullMethodName          = "/admin.admin.v1.admin/GoodsDetail"
+	Admin_CategoryList_FullMethodName         = "/admin.admin.v1.admin/CategoryList"
+	Admin_BrandList_FullMethodName            = "/admin.admin.v1.admin/BrandList"
+	Admin_CreateCategory_FullMethodName       = "/admin.admin.v1.admin/CreateCategory"
+	Admin_UpdateCategory_FullMethodName       = "/admin.admin.v1.admin/UpdateCategory"
+	Admin_DeleteCategory_FullMethodName       = "/admin.admin.v1.admin/DeleteCategory"
+	Admin_DashboardStats_FullMethodName       = "/admin.admin.v1.admin/DashboardStats"
+	Admin_PermissionList_FullMethodName       = "/admin.admin.v1.admin/PermissionList"
+	Admin_RolePermissionList_FullMethodName   = "/admin.admin.v1.admin/RolePermissionList"
+	Admin_RolePermissionUpdate_FullMethodName = "/admin.admin.v1.admin/RolePermissionUpdate"
 )
 
 // AdminClient is the client API for Admin service.
@@ -56,6 +74,29 @@ type AdminClient interface {
 	UpdateGoods(ctx context.Context, in *UpdateGoodsRequest, opts ...grpc.CallOption) (*CheckResponse, error)
 	DeleteGoods(ctx context.Context, in *DeleteGoodsRequest, opts ...grpc.CallOption) (*CheckResponse, error)
 	UpdateGoodsStatus(ctx context.Context, in *UpdateGoodsStatusRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	// 订单管理
+	OrderList(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListReply, error)
+	OrderDetail(ctx context.Context, in *OrderDetailRequest, opts ...grpc.CallOption) (*OrderInfo, error)
+	ShipOrder(ctx context.Context, in *ShipOrderRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	RefundOrder(ctx context.Context, in *RefundOrderRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	// 用户管理
+	UserList(ctx context.Context, in *UserListRequest, opts ...grpc.CallOption) (*UserListReply, error)
+	UserAddressList(ctx context.Context, in *UserAddressListRequest, opts ...grpc.CallOption) (*UserAddressListReply, error)
+	UserAddressDelete(ctx context.Context, in *UserAddressDeleteRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	// 商品新增
+	CreateGoods(ctx context.Context, in *CreateGoodsRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	GoodsDetail(ctx context.Context, in *GoodsDetailRequest, opts ...grpc.CallOption) (*GoodsDetailReply, error)
+	CategoryList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CategoryListReply, error)
+	BrandList(ctx context.Context, in *BrandListRequest, opts ...grpc.CallOption) (*BrandListReply, error)
+	CreateCategory(ctx context.Context, in *CategorySaveRequest, opts ...grpc.CallOption) (*CategoryItem, error)
+	UpdateCategory(ctx context.Context, in *CategorySaveRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	DeleteCategory(ctx context.Context, in *CategoryDeleteRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	// 运营看板
+	DashboardStats(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DashboardStatsReply, error)
+	// 系统权限
+	PermissionList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PermissionListReply, error)
+	RolePermissionList(ctx context.Context, in *RolePermissionListRequest, opts ...grpc.CallOption) (*RolePermissionListReply, error)
+	RolePermissionUpdate(ctx context.Context, in *RolePermissionUpdateRequest, opts ...grpc.CallOption) (*CheckResponse, error)
 }
 
 type adminClient struct {
@@ -206,6 +247,186 @@ func (c *adminClient) UpdateGoodsStatus(ctx context.Context, in *UpdateGoodsStat
 	return out, nil
 }
 
+func (c *adminClient) OrderList(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrderListReply)
+	err := c.cc.Invoke(ctx, Admin_OrderList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) OrderDetail(ctx context.Context, in *OrderDetailRequest, opts ...grpc.CallOption) (*OrderInfo, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrderInfo)
+	err := c.cc.Invoke(ctx, Admin_OrderDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) ShipOrder(ctx context.Context, in *ShipOrderRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Admin_ShipOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) RefundOrder(ctx context.Context, in *RefundOrderRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Admin_RefundOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) UserList(ctx context.Context, in *UserListRequest, opts ...grpc.CallOption) (*UserListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserListReply)
+	err := c.cc.Invoke(ctx, Admin_UserList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) UserAddressList(ctx context.Context, in *UserAddressListRequest, opts ...grpc.CallOption) (*UserAddressListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserAddressListReply)
+	err := c.cc.Invoke(ctx, Admin_UserAddressList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) UserAddressDelete(ctx context.Context, in *UserAddressDeleteRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Admin_UserAddressDelete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) CreateGoods(ctx context.Context, in *CreateGoodsRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Admin_CreateGoods_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) GoodsDetail(ctx context.Context, in *GoodsDetailRequest, opts ...grpc.CallOption) (*GoodsDetailReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GoodsDetailReply)
+	err := c.cc.Invoke(ctx, Admin_GoodsDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) CategoryList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CategoryListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CategoryListReply)
+	err := c.cc.Invoke(ctx, Admin_CategoryList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) BrandList(ctx context.Context, in *BrandListRequest, opts ...grpc.CallOption) (*BrandListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BrandListReply)
+	err := c.cc.Invoke(ctx, Admin_BrandList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) CreateCategory(ctx context.Context, in *CategorySaveRequest, opts ...grpc.CallOption) (*CategoryItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CategoryItem)
+	err := c.cc.Invoke(ctx, Admin_CreateCategory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) UpdateCategory(ctx context.Context, in *CategorySaveRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Admin_UpdateCategory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) DeleteCategory(ctx context.Context, in *CategoryDeleteRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Admin_DeleteCategory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) DashboardStats(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DashboardStatsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DashboardStatsReply)
+	err := c.cc.Invoke(ctx, Admin_DashboardStats_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) PermissionList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PermissionListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PermissionListReply)
+	err := c.cc.Invoke(ctx, Admin_PermissionList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) RolePermissionList(ctx context.Context, in *RolePermissionListRequest, opts ...grpc.CallOption) (*RolePermissionListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RolePermissionListReply)
+	err := c.cc.Invoke(ctx, Admin_RolePermissionList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) RolePermissionUpdate(ctx context.Context, in *RolePermissionUpdateRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Admin_RolePermissionUpdate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminServer is the server API for Admin service.
 // All implementations must embed UnimplementedAdminServer
 // for forward compatibility.
@@ -226,6 +447,29 @@ type AdminServer interface {
 	UpdateGoods(context.Context, *UpdateGoodsRequest) (*CheckResponse, error)
 	DeleteGoods(context.Context, *DeleteGoodsRequest) (*CheckResponse, error)
 	UpdateGoodsStatus(context.Context, *UpdateGoodsStatusRequest) (*CheckResponse, error)
+	// 订单管理
+	OrderList(context.Context, *OrderListRequest) (*OrderListReply, error)
+	OrderDetail(context.Context, *OrderDetailRequest) (*OrderInfo, error)
+	ShipOrder(context.Context, *ShipOrderRequest) (*CheckResponse, error)
+	RefundOrder(context.Context, *RefundOrderRequest) (*CheckResponse, error)
+	// 用户管理
+	UserList(context.Context, *UserListRequest) (*UserListReply, error)
+	UserAddressList(context.Context, *UserAddressListRequest) (*UserAddressListReply, error)
+	UserAddressDelete(context.Context, *UserAddressDeleteRequest) (*CheckResponse, error)
+	// 商品新增
+	CreateGoods(context.Context, *CreateGoodsRequest) (*CheckResponse, error)
+	GoodsDetail(context.Context, *GoodsDetailRequest) (*GoodsDetailReply, error)
+	CategoryList(context.Context, *emptypb.Empty) (*CategoryListReply, error)
+	BrandList(context.Context, *BrandListRequest) (*BrandListReply, error)
+	CreateCategory(context.Context, *CategorySaveRequest) (*CategoryItem, error)
+	UpdateCategory(context.Context, *CategorySaveRequest) (*CheckResponse, error)
+	DeleteCategory(context.Context, *CategoryDeleteRequest) (*CheckResponse, error)
+	// 运营看板
+	DashboardStats(context.Context, *emptypb.Empty) (*DashboardStatsReply, error)
+	// 系统权限
+	PermissionList(context.Context, *emptypb.Empty) (*PermissionListReply, error)
+	RolePermissionList(context.Context, *RolePermissionListRequest) (*RolePermissionListReply, error)
+	RolePermissionUpdate(context.Context, *RolePermissionUpdateRequest) (*CheckResponse, error)
 	mustEmbedUnimplementedAdminServer()
 }
 
@@ -277,6 +521,60 @@ func (UnimplementedAdminServer) DeleteGoods(context.Context, *DeleteGoodsRequest
 }
 func (UnimplementedAdminServer) UpdateGoodsStatus(context.Context, *UpdateGoodsStatusRequest) (*CheckResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateGoodsStatus not implemented")
+}
+func (UnimplementedAdminServer) OrderList(context.Context, *OrderListRequest) (*OrderListReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method OrderList not implemented")
+}
+func (UnimplementedAdminServer) OrderDetail(context.Context, *OrderDetailRequest) (*OrderInfo, error) {
+	return nil, status.Error(codes.Unimplemented, "method OrderDetail not implemented")
+}
+func (UnimplementedAdminServer) ShipOrder(context.Context, *ShipOrderRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ShipOrder not implemented")
+}
+func (UnimplementedAdminServer) RefundOrder(context.Context, *RefundOrderRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RefundOrder not implemented")
+}
+func (UnimplementedAdminServer) UserList(context.Context, *UserListRequest) (*UserListReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method UserList not implemented")
+}
+func (UnimplementedAdminServer) UserAddressList(context.Context, *UserAddressListRequest) (*UserAddressListReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method UserAddressList not implemented")
+}
+func (UnimplementedAdminServer) UserAddressDelete(context.Context, *UserAddressDeleteRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UserAddressDelete not implemented")
+}
+func (UnimplementedAdminServer) CreateGoods(context.Context, *CreateGoodsRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateGoods not implemented")
+}
+func (UnimplementedAdminServer) GoodsDetail(context.Context, *GoodsDetailRequest) (*GoodsDetailReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method GoodsDetail not implemented")
+}
+func (UnimplementedAdminServer) CategoryList(context.Context, *emptypb.Empty) (*CategoryListReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method CategoryList not implemented")
+}
+func (UnimplementedAdminServer) BrandList(context.Context, *BrandListRequest) (*BrandListReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method BrandList not implemented")
+}
+func (UnimplementedAdminServer) CreateCategory(context.Context, *CategorySaveRequest) (*CategoryItem, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateCategory not implemented")
+}
+func (UnimplementedAdminServer) UpdateCategory(context.Context, *CategorySaveRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateCategory not implemented")
+}
+func (UnimplementedAdminServer) DeleteCategory(context.Context, *CategoryDeleteRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteCategory not implemented")
+}
+func (UnimplementedAdminServer) DashboardStats(context.Context, *emptypb.Empty) (*DashboardStatsReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method DashboardStats not implemented")
+}
+func (UnimplementedAdminServer) PermissionList(context.Context, *emptypb.Empty) (*PermissionListReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method PermissionList not implemented")
+}
+func (UnimplementedAdminServer) RolePermissionList(context.Context, *RolePermissionListRequest) (*RolePermissionListReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method RolePermissionList not implemented")
+}
+func (UnimplementedAdminServer) RolePermissionUpdate(context.Context, *RolePermissionUpdateRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RolePermissionUpdate not implemented")
 }
 func (UnimplementedAdminServer) mustEmbedUnimplementedAdminServer() {}
 func (UnimplementedAdminServer) testEmbeddedByValue()               {}
@@ -551,6 +849,330 @@ func _Admin_UpdateGoodsStatus_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Admin_OrderList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).OrderList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_OrderList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).OrderList(ctx, req.(*OrderListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_OrderDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderDetailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).OrderDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_OrderDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).OrderDetail(ctx, req.(*OrderDetailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_ShipOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ShipOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).ShipOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_ShipOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).ShipOrder(ctx, req.(*ShipOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_RefundOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefundOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).RefundOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_RefundOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).RefundOrder(ctx, req.(*RefundOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_UserList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UserList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_UserList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UserList(ctx, req.(*UserListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_UserAddressList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserAddressListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UserAddressList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_UserAddressList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UserAddressList(ctx, req.(*UserAddressListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_UserAddressDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserAddressDeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UserAddressDelete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_UserAddressDelete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UserAddressDelete(ctx, req.(*UserAddressDeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_CreateGoods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateGoodsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).CreateGoods(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_CreateGoods_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).CreateGoods(ctx, req.(*CreateGoodsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_GoodsDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GoodsDetailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GoodsDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_GoodsDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GoodsDetail(ctx, req.(*GoodsDetailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_CategoryList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).CategoryList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_CategoryList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).CategoryList(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_BrandList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BrandListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).BrandList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_BrandList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).BrandList(ctx, req.(*BrandListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_CreateCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CategorySaveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).CreateCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_CreateCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).CreateCategory(ctx, req.(*CategorySaveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_UpdateCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CategorySaveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).UpdateCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_UpdateCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).UpdateCategory(ctx, req.(*CategorySaveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_DeleteCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CategoryDeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).DeleteCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_DeleteCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).DeleteCategory(ctx, req.(*CategoryDeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_DashboardStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).DashboardStats(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_DashboardStats_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).DashboardStats(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_PermissionList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).PermissionList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_PermissionList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).PermissionList(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_RolePermissionList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RolePermissionListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).RolePermissionList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_RolePermissionList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).RolePermissionList(ctx, req.(*RolePermissionListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_RolePermissionUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RolePermissionUpdateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).RolePermissionUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_RolePermissionUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).RolePermissionUpdate(ctx, req.(*RolePermissionUpdateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Admin_ServiceDesc is the grpc.ServiceDesc for Admin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -613,6 +1235,78 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateGoodsStatus",
 			Handler:    _Admin_UpdateGoodsStatus_Handler,
+		},
+		{
+			MethodName: "OrderList",
+			Handler:    _Admin_OrderList_Handler,
+		},
+		{
+			MethodName: "OrderDetail",
+			Handler:    _Admin_OrderDetail_Handler,
+		},
+		{
+			MethodName: "ShipOrder",
+			Handler:    _Admin_ShipOrder_Handler,
+		},
+		{
+			MethodName: "RefundOrder",
+			Handler:    _Admin_RefundOrder_Handler,
+		},
+		{
+			MethodName: "UserList",
+			Handler:    _Admin_UserList_Handler,
+		},
+		{
+			MethodName: "UserAddressList",
+			Handler:    _Admin_UserAddressList_Handler,
+		},
+		{
+			MethodName: "UserAddressDelete",
+			Handler:    _Admin_UserAddressDelete_Handler,
+		},
+		{
+			MethodName: "CreateGoods",
+			Handler:    _Admin_CreateGoods_Handler,
+		},
+		{
+			MethodName: "GoodsDetail",
+			Handler:    _Admin_GoodsDetail_Handler,
+		},
+		{
+			MethodName: "CategoryList",
+			Handler:    _Admin_CategoryList_Handler,
+		},
+		{
+			MethodName: "BrandList",
+			Handler:    _Admin_BrandList_Handler,
+		},
+		{
+			MethodName: "CreateCategory",
+			Handler:    _Admin_CreateCategory_Handler,
+		},
+		{
+			MethodName: "UpdateCategory",
+			Handler:    _Admin_UpdateCategory_Handler,
+		},
+		{
+			MethodName: "DeleteCategory",
+			Handler:    _Admin_DeleteCategory_Handler,
+		},
+		{
+			MethodName: "DashboardStats",
+			Handler:    _Admin_DashboardStats_Handler,
+		},
+		{
+			MethodName: "PermissionList",
+			Handler:    _Admin_PermissionList_Handler,
+		},
+		{
+			MethodName: "RolePermissionList",
+			Handler:    _Admin_RolePermissionList_Handler,
+		},
+		{
+			MethodName: "RolePermissionUpdate",
+			Handler:    _Admin_RolePermissionUpdate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

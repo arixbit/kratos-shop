@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package order.v1;
+
+import "validate/validate.proto";
+
+option go_package = "order/api/order/v1;v1";
+
+service Order {
+  rpc CreateOrder(OrderRequest) returns (OrderInfoResponse); // 创建订单
+  rpc CancelOrder(CancelOrderRequest) returns (CheckResponse); // 取消订单
+  rpc GetOrder(GetOrderRequest) returns (OrderInfoResponse);   // 查询订单详情
+  rpc ListOrders(ListOrderRequest) returns (ListOrderReply);   // 查询订单列表
+}
+
+
+message CartItem {
+  int64 cartId = 1;
+  int64 skuId = 2;
+  int64 skuPrice = 3;
+  int32 skuNum = 4;
+}
+
+message OrderRequest {
+  int64 id = 1;
+  int64 userId = 2 [(validate.rules).int64 = {gt:0}];
+  int64 address = 3 [(validate.rules).int64 = {gt:0}];
+  repeated CartItem cartItem = 4; //  购物车购买
+}
+
+message OrderInfoResponse {
+  int64 id = 1;
+  int64 userId = 2;
+  string orderSn = 3;
+  string payType = 4;
+  string status = 5;
+  string post = 6;
+  int64 total = 7;
+  string address = 8;
+  string name = 9;
+  string mobile = 10;
+  string addTime = 11;
+  repeated OrderGoodsInfo goods = 12;
+}
+
+message OrderGoodsInfo {
+  int64 id = 1;
+  int64 skuId = 2;
+  string skuName = 3;
+  int64 skuPrice = 4;
+  int32 num = 5;
+  int64 totalPrice = 6;
+}
+
+message CancelOrderRequest {
+  int64 userId = 1;
+  string orderSn = 2;
+}
+
+message CheckResponse {
+  bool success = 1;
+}
+
+message GetOrderRequest {
+  int64 userId = 1;
+  string orderSn = 2;
+}
+
+message ListOrderRequest {
+  int64 userId = 1;
+  int32 page = 2;
+  int32 pageSize = 3;
+}
+
+message ListOrderReply {
+  int32 total = 1;
+  repeated OrderInfoResponse list = 2;
+}

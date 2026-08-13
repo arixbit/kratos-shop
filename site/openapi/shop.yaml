@@ -96,6 +96,73 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/CheckResponse'
+    /api/cart/add:
+        post:
+            tags:
+                - Shop
+            operationId: Shop_CartAdd
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CartAddRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CartItemReply'
+    /api/cart/delete:
+        delete:
+            tags:
+                - Shop
+            operationId: Shop_CartDelete
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/cart/list:
+        get:
+            tags:
+                - Shop
+            description: 购物车
+            operationId: Shop_CartList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CartListReply'
+    /api/cart/update:
+        put:
+            tags:
+                - Shop
+            operationId: Shop_CartUpdate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CartUpdateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
     /api/goods/detail:
         get:
             tags:
@@ -151,6 +218,120 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GoodsListReply'
+    /api/order/cancel:
+        post:
+            tags:
+                - Shop
+            operationId: Shop_OrderCancel
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/OrderCancelRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
+    /api/order/create:
+        post:
+            tags:
+                - Shop
+            description: 订单
+            operationId: Shop_OrderCreate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/OrderCreateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OrderInfoReply'
+    /api/order/detail:
+        get:
+            tags:
+                - Shop
+            operationId: Shop_OrderDetail
+            parameters:
+                - name: orderSn
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OrderInfoReply'
+    /api/order/list:
+        get:
+            tags:
+                - Shop
+            operationId: Shop_OrderList
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OrderListReply'
+    /api/payment/create:
+        post:
+            tags:
+                - Shop
+            description: 支付（本地模拟，不接真实支付渠道）
+            operationId: Shop_PaymentCreate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PaymentCreateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PaymentInfoReply'
+    /api/payment/mock-pay:
+        post:
+            tags:
+                - Shop
+            operationId: Shop_PaymentMockPay
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PaymentMockPayRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CheckResponse'
     /api/users/captcha:
         get:
             tags:
@@ -270,6 +451,70 @@ components:
                     type: string
                 picPath:
                     type: string
+        CartAddRequest:
+            type: object
+            properties:
+                goodsId:
+                    type: integer
+                    format: int64
+                goodsSn:
+                    type: string
+                goodsName:
+                    type: string
+                skuId:
+                    type: integer
+                    format: int64
+                goodsPrice:
+                    type: integer
+                    format: int64
+                goodsNum:
+                    type: integer
+                    format: int32
+                isSelect:
+                    type: boolean
+        CartItemReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                userId:
+                    type: integer
+                    format: int64
+                goodsId:
+                    type: integer
+                    format: int64
+                goodsSn:
+                    type: string
+                goodsName:
+                    type: string
+                skuId:
+                    type: integer
+                    format: int64
+                goodsPrice:
+                    type: integer
+                    format: int64
+                goodsNum:
+                    type: integer
+                    format: int32
+                isSelect:
+                    type: boolean
+        CartListReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CartItemReply'
+        CartUpdateRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                goodsNum:
+                    type: integer
+                    format: int32
         CheckResponse:
             type: object
             properties:
@@ -429,6 +674,128 @@ components:
                 captcha:
                     type: string
                 captchaId:
+                    type: string
+        OrderCancelRequest:
+            type: object
+            properties:
+                orderSn:
+                    type: string
+        OrderCartItem:
+            type: object
+            properties:
+                cartId:
+                    type: integer
+                    format: int64
+                skuId:
+                    type: integer
+                    format: int64
+                skuNum:
+                    type: integer
+                    format: int32
+        OrderCreateRequest:
+            type: object
+            properties:
+                address:
+                    type: integer
+                    format: int64
+                cartItem:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/OrderCartItem'
+            description: 订单
+        OrderGoodsReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                skuId:
+                    type: integer
+                    format: int64
+                skuName:
+                    type: string
+                skuPrice:
+                    type: integer
+                    format: int64
+                num:
+                    type: integer
+                    format: int32
+                totalPrice:
+                    type: integer
+                    format: int64
+        OrderInfoReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                userId:
+                    type: integer
+                    format: int64
+                orderSn:
+                    type: string
+                status:
+                    type: string
+                post:
+                    type: string
+                total:
+                    type: integer
+                    format: int64
+                address:
+                    type: string
+                name:
+                    type: string
+                mobile:
+                    type: string
+                addTime:
+                    type: string
+                goods:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/OrderGoodsReply'
+        OrderListReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/OrderInfoReply'
+        PaymentCreateRequest:
+            type: object
+            properties:
+                orderSn:
+                    type: string
+                amount:
+                    type: integer
+                    format: int64
+                channel:
+                    type: string
+            description: 支付（本地模拟）
+        PaymentInfoReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                paymentNo:
+                    type: string
+                orderSn:
+                    type: string
+                amount:
+                    type: integer
+                    format: int64
+                channel:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+        PaymentMockPayRequest:
+            type: object
+            properties:
+                paymentNo:
                     type: string
         RefreshTokenRequest:
             type: object

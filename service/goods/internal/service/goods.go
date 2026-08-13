@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"time"
 
-	inventoryV1 "goods/api/service/inventory/v1"
 	v1 "goods/api/goods/v1"
+	inventoryV1 "goods/api/service/inventory/v1"
 	"goods/internal/domain"
 	"goods/internal/pkg/mq"
 )
@@ -129,24 +129,24 @@ func (g *GoodsService) GoodsList(ctx context.Context, r *v1.GoodsFilterRequest) 
 
 	for _, goods := range result.List {
 		res := v1.GoodsInfoResponse{
-			Id:          goods.ID,
-			CategoryId:  goods.CategoryID,
-			BrandId:     goods.BrandsID,
-			Name:        goods.Name,
-			GoodsSn:     goods.GoodsSn,
-			ClickNum:    goods.ClickNum,
-			SoldNum:     goods.SoldNum,
-			FavNum:      goods.FavNum,
-			MarketPrice: goods.MarketPrice,
-			GoodsBrief:  goods.GoodsBrief,
-			GoodsDesc:   goods.GoodsBrief,
-			ShipFree:    goods.ShipFree,
-			Images:      goods.GoodsFrontImage,
-			GoodsImages: goods.GoodsImages,
-			IsNew:       goods.IsNew,
-			IsHot:       goods.IsHot,
-			OnSale:      goods.OnSale,
-			BrandName:   brandMap[goods.BrandsID],
+			Id:           goods.ID,
+			CategoryId:   goods.CategoryID,
+			BrandId:      goods.BrandsID,
+			Name:         goods.Name,
+			GoodsSn:      goods.GoodsSn,
+			ClickNum:     goods.ClickNum,
+			SoldNum:      goods.SoldNum,
+			FavNum:       goods.FavNum,
+			MarketPrice:  goods.MarketPrice,
+			GoodsBrief:   goods.GoodsBrief,
+			GoodsDesc:    goods.GoodsBrief,
+			ShipFree:     goods.ShipFree,
+			Images:       goods.GoodsFrontImage,
+			GoodsImages:  goods.GoodsImages,
+			IsNew:        goods.IsNew,
+			IsHot:        goods.IsHot,
+			OnSale:       goods.OnSale,
+			BrandName:    brandMap[goods.BrandsID],
 			CategoryName: categoryMap[goods.CategoryID],
 		}
 		if skus, err := g.g.GetSkusByGoodsID(ctx, goods.ID); err == nil {
@@ -236,13 +236,13 @@ func (g *GoodsService) UpdateGoodsStatus(ctx context.Context, r *v1.UpdateGoodsS
 }
 
 func (g *GoodsService) AdminGoodsList(ctx context.Context, r *v1.GoodsFilterRequest) (*v1.GoodsListResponse, error) {
-	list, total, err := g.g.AdminGoodsList(ctx, r.Keywords, r.CategoryId, r.BrandId, int(r.Pages), int(r.PagePerNums))
+	list, total, err := g.g.AdminGoodsList(ctx, r.Keywords, r.SkuCode, r.CategoryId, r.BrandId, int(r.Pages), int(r.PagePerNums))
 	if err != nil {
 		return nil, err
 	}
 	response := &v1.GoodsListResponse{Total: total}
 	for _, goods := range list {
-		response.List = append(response.List, &v1.GoodsInfoResponse{
+		item := &v1.GoodsInfoResponse{
 			Id:          goods.ID,
 			CategoryId:  goods.CategoryID,
 			BrandId:     goods.BrandsID,
@@ -254,7 +254,17 @@ func (g *GoodsService) AdminGoodsList(ctx context.Context, r *v1.GoodsFilterRequ
 			IsNew:       goods.IsNew,
 			IsHot:       goods.IsHot,
 			OnSale:      goods.OnSale,
-		})
+		}
+		if brandList, err := g.bc.ListByIds(ctx, goods.BrandsID); err == nil && len(brandList) > 0 {
+			item.BrandName = brandList[0].Name
+		}
+		if cate, err := g.cac.GetCategoryByID(ctx, goods.CategoryID); err == nil {
+			item.CategoryName = cate.Name
+		}
+		if skus, err := g.g.GetSkusByGoodsID(ctx, goods.ID); err == nil {
+			item.SkuCount = int32(len(skus))
+		}
+		response.List = append(response.List, item)
 	}
 	return response, nil
 }
@@ -283,15 +293,15 @@ func (g *GoodsService) GoodsDetail(ctx context.Context, r *v1.GoodsDetailRequest
 	}
 	for _, sku := range skus {
 		resp.Skus = append(resp.Skus, &v1.SkuDetail{
-			Id:              sku.ID,
-			GoodsId:         sku.GoodsID,
-			SkuName:         sku.SkuName,
-			SkuCode:         sku.SkuCode,
-			Price:           sku.Price,
-			PromotionPrice:  sku.PromotionPrice,
-			Pic:             sku.Pic,
-			Inventory:       sku.Inventory,
-			OnSale:          sku.OnSale,
+			Id:             sku.ID,
+			GoodsId:        sku.GoodsID,
+			SkuName:        sku.SkuName,
+			SkuCode:        sku.SkuCode,
+			Price:          sku.Price,
+			PromotionPrice: sku.PromotionPrice,
+			Pic:            sku.Pic,
+			Inventory:      sku.Inventory,
+			OnSale:         sku.OnSale,
 		})
 	}
 	g.applyStockDetail(ctx, resp.Skus)

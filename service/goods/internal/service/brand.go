@@ -35,8 +35,8 @@ func (g *GoodsService) UpdateBrand(ctx context.Context, r *v1.BrandRequest) (*em
 
 func (g *GoodsService) BrandList(ctx context.Context, r *v1.BrandListRequest) (*v1.BrandListResponse, error) {
 	list, total, err := g.bc.BrandList(ctx, &biz.Pagination{
-		PageNum:  int(r.PagePerNums),
-		PageSize: int(r.Pages),
+		PageNum:  int(r.Pages),
+		PageSize: int(r.PagePerNums),
 	})
 	if err != nil {
 		return nil, err

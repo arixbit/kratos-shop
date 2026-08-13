@@ -12,6 +12,7 @@ type Order struct {
 	GoodsAmount   int64
 	OrderStatus   int
 	ExpressAmount int64
+	Items         []*OrderGoods
 	DeliveryAt    time.Time
 	RefundTime    time.Time
 	Post          string
@@ -54,6 +55,34 @@ type OutboxEvent struct {
 	Payload    []byte
 	Status     int
 	RetryCount int
+}
+
+type DashboardStats struct {
+	TotalOrders  int64
+	TotalSales   int64
+	TodayOrders  int64
+	TodaySales   int64
+	StatusCounts []*StatusCount
+	Last30Days   []*DailySales
+	TopGoods     []*TopGoods
+}
+
+type StatusCount struct {
+	Status int32
+	Count  int64
+}
+
+type DailySales struct {
+	Date       string
+	OrderCount int64
+	Amount     int64
+}
+
+type TopGoods struct {
+	SkuID   int64
+	SkuName string
+	Num     int64
+	Amount  int64
 }
 
 type CreateOrder struct {

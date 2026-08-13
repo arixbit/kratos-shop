@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package cart.v1;
+
+import "validate/validate.proto";
+
+option go_package = "cart/api/cart/v1;v1";
+
+// 购物车
+service Cart {
+  rpc CreateCart (CreateCartRequest) returns (CartInfoReply); // 添加商品进购物车
+  rpc UpdateCart (UpdateCartRequest) returns (CheckResponse); // 修改购物车商品数量
+  rpc DeleteCart (DeleteCartRequest) returns (CheckResponse); // 删除购物车商品
+  rpc GetCart (GetCartRequest) returns (GetCartReply); // 查询购物车单条记录
+  rpc ListCart (ListCartRequest) returns (CartListReply); // 购物车商品列表
+}
+
+message CartInfoReply {
+  int64 id = 1;
+  int64 userId = 2;
+  int64 goodsId = 3;
+  string goodsSn = 4;
+  string goodsName = 5;
+  int64 skuId = 6;
+  int64 goodsPrice = 7;
+  int32 goodsNum = 8;
+  bool isSelect = 9;
+}
+message CreateCartRequest {
+  int64 id = 1;
+  int64 userId = 2 [(validate.rules).int64 = {gt:0}];
+  int64 goodsId = 3 [(validate.rules).int64 = {gt:0}];
+  string goodsSn = 4 [(validate.rules).string.min_len = 1];
+  string goodsName = 5 [(validate.rules).string.min_len = 1];
+  int64 skuId = 6 [(validate.rules).int64 = {gt:0}];
+  int64 goodsPrice = 7 [(validate.rules).int64 = {gt:0}];
+  int32 goodsNum = 8 [(validate.rules).int32 = {gt:0}];
+  bool isSelect = 9 [(validate.rules).bool.const = true];
+}
+
+message UpdateCartRequest {
+  int64 id = 1;
+  int64 userId = 2;
+  int32 goodsNum = 3;
+}
+message UpdateCartReply {}
+
+message CheckResponse{
+  bool success = 1;
+}
+
+message DeleteCartRequest {
+  int64 id = 1;
+  int64 userId = 2;
+}
+message DeleteCartReply {}
+
+message GetCartRequest {
+  int64 id = 1;
+  int64 userId = 2;
+}
+message GetCartReply {
+  CartInfoReply info = 1;
+}
+
+message ListCartRequest {
+  int64 userId = 1;
+}
+message CartListReply {
+  repeated CartInfoReply results = 1;
+}

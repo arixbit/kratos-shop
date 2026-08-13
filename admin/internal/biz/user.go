@@ -39,6 +39,7 @@ type UserRepo interface {
 	CreateUser(c context.Context, u *User) (*User, error)
 	UserByMobile(ctx context.Context, mobile string) (*User, error)
 	UserById(ctx context.Context, Id int64) (*User, error)
+	ListUser(ctx context.Context, pageNum, pageSize int) ([]*User, int, error)
 	CheckPassword(ctx context.Context, password, encryptedPassword string) (bool, error)
 	//ListUser(ctx context.Context, pageNum, pageSize int) ([]*User, int, error)
 	//UpdateUser(context.Context, *User) (bool, error)
@@ -88,7 +89,34 @@ func (uc *UserUsecase) UserDetailByID(ctx context.Context) (*v1.UserDetailRespon
 		Id:       user.ID,
 		NickName: user.NickName,
 		Mobile:   user.Mobile,
+		Birthday: user.Birthday,
+		Gender:   user.Gender,
+		Role:     int32(user.Role),
 	}, nil
+}
+
+func (uc *UserUsecase) UserList(ctx context.Context, req *v1.UserListRequest) (*v1.UserListReply, error) {
+	list, total, err := uc.uRepo.ListUser(ctx, int(req.Page), int(req.PageSize))
+	if err != nil {
+		return nil, err
+	}
+	reply := &v1.UserListReply{Total: int32(total)}
+	for _, user := range list {
+		reply.List = append(reply.List, &v1.UserInfo{
+			Id:       user.ID,
+			Mobile:   user.Mobile,
+			NickName: user.NickName,
+			Birthday: user.Birthday,
+			Gender:   user.Gender,
+			Role:     int32(user.Role),
+		})
+	}
+	return reply, nil
+}
+
+func (uc *UserUsecase) CountUser(ctx context.Context) (int64, error) {
+	_, total, err := uc.uRepo.ListUser(ctx, 1, 1)
+	return int64(total), err
 }
 
 func (uc *UserUsecase) PassWordLogin(ctx context.Context, req *v1.LoginReq) (*v1.RegisterReply, error) {
@@ -117,8 +145,8 @@ func (uc *UserUsecase) PassWordLogin(ctx context.Context, req *v1.LoginReq) (*v1
 					NickName:    user.NickName,
 					AuthorityId: user.Role,
 					RegisteredClaims: jwt2.RegisteredClaims{
-						NotBefore: jwt2.NewNumericDate(time.Now()),                            // 签名的生效时间
-						ExpiresAt: jwt2.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)),   // 30天过期
+						NotBefore: jwt2.NewNumericDate(time.Now()),                          // 签名的生效时间
+						ExpiresAt: jwt2.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)), // 30天过期
 						Issuer:    "Gyl",
 					},
 				}

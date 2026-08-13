@@ -75,6 +75,65 @@ service Shop {
       get: "/api/goods/detail",
     };
   }
+  // 购物车
+  rpc CartList (CartListRequest) returns (CartListReply) {
+    option (google.api.http) = {
+      get: "/api/cart/list",
+    };
+  }
+  rpc CartAdd (CartAddRequest) returns (CartItemReply) {
+    option (google.api.http) = {
+      post: "/api/cart/add",
+      body: "*",
+    };
+  }
+  rpc CartUpdate (CartUpdateRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      put: "/api/cart/update",
+      body: "*",
+    };
+  }
+  rpc CartDelete (CartDeleteRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      delete: "/api/cart/delete",
+    };
+  }
+  // 订单
+  rpc OrderCreate (OrderCreateRequest) returns (OrderInfoReply) {
+    option (google.api.http) = {
+      post: "/api/order/create",
+      body: "*",
+    };
+  }
+  rpc OrderCancel (OrderCancelRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      post: "/api/order/cancel",
+      body: "*",
+    };
+  }
+  rpc OrderList (OrderListRequest) returns (OrderListReply) {
+    option (google.api.http) = {
+      get: "/api/order/list",
+    };
+  }
+  rpc OrderDetail (OrderDetailRequest) returns (OrderInfoReply) {
+    option (google.api.http) = {
+      get: "/api/order/detail",
+    };
+  }
+  // 支付（本地模拟，不接真实支付渠道）
+  rpc PaymentCreate (PaymentCreateRequest) returns (PaymentInfoReply) {
+    option (google.api.http) = {
+      post: "/api/payment/create",
+      body: "*",
+    };
+  }
+  rpc PaymentMockPay (PaymentMockPayRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      post: "/api/payment/mock-pay",
+      body: "*",
+    };
+  }
 }
 
 message CreateAddressReq {
@@ -235,4 +294,115 @@ message GoodsDetailReply {
   int64 soldNum = 15;
   repeated GoodsSkuDetail skus = 16;
   repeated GoodsImageDetail images = 17;
+}
+
+// 购物车
+message CartListRequest {}
+
+message CartItemReply {
+  int64 id = 1;
+  int64 userId = 2;
+  int64 goodsId = 3;
+  string goodsSn = 4;
+  string goodsName = 5;
+  int64 skuId = 6;
+  int64 goodsPrice = 7;
+  int32 goodsNum = 8;
+  bool isSelect = 9;
+}
+
+message CartListReply {
+  repeated CartItemReply list = 1;
+}
+
+message CartAddRequest {
+  int64 goodsId = 1 [(validate.rules).int64 = {gt:0}];
+  string goodsSn = 2 [(validate.rules).string.min_len = 1];
+  string goodsName = 3 [(validate.rules).string.min_len = 1];
+  int64 skuId = 4 [(validate.rules).int64 = {gt:0}];
+  int64 goodsPrice = 5 [(validate.rules).int64 = {gt:0}];
+  int32 goodsNum = 6 [(validate.rules).int32 = {gt:0}];
+  bool isSelect = 7;
+}
+
+message CartUpdateRequest {
+  int64 id = 1 [(validate.rules).int64.gte = 1];
+  int32 goodsNum = 2 [(validate.rules).int32.gt = 0];
+}
+
+message CartDeleteRequest {
+  int64 id = 1 [(validate.rules).int64.gte = 1];
+}
+
+// 订单
+message OrderCreateRequest {
+  int64 address = 1 [(validate.rules).int64 = {gt:0}];
+  repeated OrderCartItem cartItem = 2;
+}
+
+message OrderCartItem {
+  int64 cartId = 1 [(validate.rules).int64.gte = 1];
+  int64 skuId = 2 [(validate.rules).int64.gte = 1];
+  int32 skuNum = 3 [(validate.rules).int32.gt = 0];
+}
+
+message OrderInfoReply {
+  int64 id = 1;
+  int64 userId = 2;
+  string orderSn = 3;
+  string status = 4;
+  string post = 5;
+  int64 total = 6;
+  string address = 7;
+  string name = 8;
+  string mobile = 9;
+  string addTime = 10;
+  repeated OrderGoodsReply goods = 11;
+}
+
+message OrderGoodsReply {
+  int64 id = 1;
+  int64 skuId = 2;
+  string skuName = 3;
+  int64 skuPrice = 4;
+  int32 num = 5;
+  int64 totalPrice = 6;
+}
+
+message OrderListRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+}
+
+message OrderListReply {
+  int32 total = 1;
+  repeated OrderInfoReply list = 2;
+}
+
+message OrderCancelRequest {
+  string orderSn = 1 [(validate.rules).string.min_len = 1];
+}
+
+message OrderDetailRequest {
+  string orderSn = 1 [(validate.rules).string.min_len = 1];
+}
+
+// 支付（本地模拟）
+message PaymentCreateRequest {
+  string orderSn = 1 [(validate.rules).string.min_len = 1];
+  int64 amount = 2 [(validate.rules).int64.gt = 0];
+  string channel = 3;
+}
+
+message PaymentInfoReply {
+  int64 id = 1;
+  string paymentNo = 2;
+  string orderSn = 3;
+  int64 amount = 4;
+  string channel = 5;
+  int32 status = 6;
+}
+
+message PaymentMockPayRequest {
+  string paymentNo = 1 [(validate.rules).string.min_len = 1];
 }

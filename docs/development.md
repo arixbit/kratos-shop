@@ -288,6 +288,26 @@ e2e 脚本默认通过 `ks-postgres` 容器执行数据库校验，请使用本�
 
 注意：shop 登录需要先调用 `GET /api/users/captcha` 获取验证码，再携带 `captcha` 与 `captchaId` 登录；admin 登录使用 `username` 字段。
 
+shop BFF 已包含购物车（`/api/cart/*`）、订单（`/api/order/*`）和模拟支付（`/api/payment/*`）接口，可从前端完成加购 → 下单 → 模拟支付 → 订单查询的完整交易链路。
+
+运营后台前端在 `web/admin`（Ant Design Pro v6，Umi Max 4 + React 19 + Ant Design 6），菜单顺序为首页 → 用户管理 → 订单管理 → 商品管理 → 商品分类 → 权限管理，登录后默认进入首页看板。支持首页数据看板（用户数 / 订单量 / 成交额 / 近 30 天趋势 / 状态分布 / 热销商品）、用户管理（用户列表 / 收货地址管理）、订单管理（列表 / 详情 / 发货 / 退款）、商品管理（分类 / 品牌 / SKU 编码搜索、商品详情含 SKU 与图片、新增 / 上下架 / 删除）、商品分类管理（新增 / 编辑 / 删除）和权限管理（角色权限点配置，前端按钮级隐藏）。
+
+```bash
+cd web/admin
+npm install
+npm run dev
+```
+
+开发环境访问 `http://localhost:8000`，`/api/*` 会自动代理到 admin BFF（`127.0.0.1:9099`）。
+
+需要演示数据时执行：
+
+```bash
+make seed-demo
+```
+
+该脚本会生成 100 个演示用户、50 个演示商品（数码/家电/服装/鞋包/家具），并为每个用户生成 3~5 笔分布在 2026-01 ~ 2026-08 的模拟订单。
+
 ### gRPC 服务（user / goods / cart / order / inventory / payment）
 
 推荐 `grpcui`（grpcurl 的浏览器 UI）：

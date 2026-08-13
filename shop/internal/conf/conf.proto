@@ -50,8 +50,20 @@ message Service {
   message Goods {
     string endpoint = 1;
   }
+  message Cart {
+    string endpoint = 1;
+  }
+  message Order {
+    string endpoint = 1;
+  }
+  message Payment {
+    string endpoint = 1;
+  }
   User user = 1;
   Goods goods = 2;
+  Cart cart = 3;
+  Order order = 4;
+  Payment payment = 5;
 }
 
 message Trace {

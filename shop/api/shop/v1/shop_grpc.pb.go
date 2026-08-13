@@ -32,6 +32,16 @@ const (
 	Shop_DeleteAddress_FullMethodName    = "/shop.shop.v1.Shop/DeleteAddress"
 	Shop_GoodsList_FullMethodName        = "/shop.shop.v1.Shop/GoodsList"
 	Shop_GoodsDetail_FullMethodName      = "/shop.shop.v1.Shop/GoodsDetail"
+	Shop_CartList_FullMethodName         = "/shop.shop.v1.Shop/CartList"
+	Shop_CartAdd_FullMethodName          = "/shop.shop.v1.Shop/CartAdd"
+	Shop_CartUpdate_FullMethodName       = "/shop.shop.v1.Shop/CartUpdate"
+	Shop_CartDelete_FullMethodName       = "/shop.shop.v1.Shop/CartDelete"
+	Shop_OrderCreate_FullMethodName      = "/shop.shop.v1.Shop/OrderCreate"
+	Shop_OrderCancel_FullMethodName      = "/shop.shop.v1.Shop/OrderCancel"
+	Shop_OrderList_FullMethodName        = "/shop.shop.v1.Shop/OrderList"
+	Shop_OrderDetail_FullMethodName      = "/shop.shop.v1.Shop/OrderDetail"
+	Shop_PaymentCreate_FullMethodName    = "/shop.shop.v1.Shop/PaymentCreate"
+	Shop_PaymentMockPay_FullMethodName   = "/shop.shop.v1.Shop/PaymentMockPay"
 )
 
 // ShopClient is the client API for Shop service.
@@ -52,6 +62,19 @@ type ShopClient interface {
 	DeleteAddress(ctx context.Context, in *AddressReq, opts ...grpc.CallOption) (*CheckResponse, error)
 	GoodsList(ctx context.Context, in *GoodsListRequest, opts ...grpc.CallOption) (*GoodsListReply, error)
 	GoodsDetail(ctx context.Context, in *GoodsDetailRequest, opts ...grpc.CallOption) (*GoodsDetailReply, error)
+	// 购物车
+	CartList(ctx context.Context, in *CartListRequest, opts ...grpc.CallOption) (*CartListReply, error)
+	CartAdd(ctx context.Context, in *CartAddRequest, opts ...grpc.CallOption) (*CartItemReply, error)
+	CartUpdate(ctx context.Context, in *CartUpdateRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	CartDelete(ctx context.Context, in *CartDeleteRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	// 订单
+	OrderCreate(ctx context.Context, in *OrderCreateRequest, opts ...grpc.CallOption) (*OrderInfoReply, error)
+	OrderCancel(ctx context.Context, in *OrderCancelRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	OrderList(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListReply, error)
+	OrderDetail(ctx context.Context, in *OrderDetailRequest, opts ...grpc.CallOption) (*OrderInfoReply, error)
+	// 支付（本地模拟，不接真实支付渠道）
+	PaymentCreate(ctx context.Context, in *PaymentCreateRequest, opts ...grpc.CallOption) (*PaymentInfoReply, error)
+	PaymentMockPay(ctx context.Context, in *PaymentMockPayRequest, opts ...grpc.CallOption) (*CheckResponse, error)
 }
 
 type shopClient struct {
@@ -182,6 +205,106 @@ func (c *shopClient) GoodsDetail(ctx context.Context, in *GoodsDetailRequest, op
 	return out, nil
 }
 
+func (c *shopClient) CartList(ctx context.Context, in *CartListRequest, opts ...grpc.CallOption) (*CartListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CartListReply)
+	err := c.cc.Invoke(ctx, Shop_CartList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopClient) CartAdd(ctx context.Context, in *CartAddRequest, opts ...grpc.CallOption) (*CartItemReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CartItemReply)
+	err := c.cc.Invoke(ctx, Shop_CartAdd_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopClient) CartUpdate(ctx context.Context, in *CartUpdateRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Shop_CartUpdate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopClient) CartDelete(ctx context.Context, in *CartDeleteRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Shop_CartDelete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopClient) OrderCreate(ctx context.Context, in *OrderCreateRequest, opts ...grpc.CallOption) (*OrderInfoReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrderInfoReply)
+	err := c.cc.Invoke(ctx, Shop_OrderCreate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopClient) OrderCancel(ctx context.Context, in *OrderCancelRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Shop_OrderCancel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopClient) OrderList(ctx context.Context, in *OrderListRequest, opts ...grpc.CallOption) (*OrderListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrderListReply)
+	err := c.cc.Invoke(ctx, Shop_OrderList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopClient) OrderDetail(ctx context.Context, in *OrderDetailRequest, opts ...grpc.CallOption) (*OrderInfoReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrderInfoReply)
+	err := c.cc.Invoke(ctx, Shop_OrderDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopClient) PaymentCreate(ctx context.Context, in *PaymentCreateRequest, opts ...grpc.CallOption) (*PaymentInfoReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PaymentInfoReply)
+	err := c.cc.Invoke(ctx, Shop_PaymentCreate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopClient) PaymentMockPay(ctx context.Context, in *PaymentMockPayRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, Shop_PaymentMockPay_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ShopServer is the server API for Shop service.
 // All implementations must embed UnimplementedShopServer
 // for forward compatibility.
@@ -200,6 +323,19 @@ type ShopServer interface {
 	DeleteAddress(context.Context, *AddressReq) (*CheckResponse, error)
 	GoodsList(context.Context, *GoodsListRequest) (*GoodsListReply, error)
 	GoodsDetail(context.Context, *GoodsDetailRequest) (*GoodsDetailReply, error)
+	// 购物车
+	CartList(context.Context, *CartListRequest) (*CartListReply, error)
+	CartAdd(context.Context, *CartAddRequest) (*CartItemReply, error)
+	CartUpdate(context.Context, *CartUpdateRequest) (*CheckResponse, error)
+	CartDelete(context.Context, *CartDeleteRequest) (*CheckResponse, error)
+	// 订单
+	OrderCreate(context.Context, *OrderCreateRequest) (*OrderInfoReply, error)
+	OrderCancel(context.Context, *OrderCancelRequest) (*CheckResponse, error)
+	OrderList(context.Context, *OrderListRequest) (*OrderListReply, error)
+	OrderDetail(context.Context, *OrderDetailRequest) (*OrderInfoReply, error)
+	// 支付（本地模拟，不接真实支付渠道）
+	PaymentCreate(context.Context, *PaymentCreateRequest) (*PaymentInfoReply, error)
+	PaymentMockPay(context.Context, *PaymentMockPayRequest) (*CheckResponse, error)
 	mustEmbedUnimplementedShopServer()
 }
 
@@ -245,6 +381,36 @@ func (UnimplementedShopServer) GoodsList(context.Context, *GoodsListRequest) (*G
 }
 func (UnimplementedShopServer) GoodsDetail(context.Context, *GoodsDetailRequest) (*GoodsDetailReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method GoodsDetail not implemented")
+}
+func (UnimplementedShopServer) CartList(context.Context, *CartListRequest) (*CartListReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method CartList not implemented")
+}
+func (UnimplementedShopServer) CartAdd(context.Context, *CartAddRequest) (*CartItemReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method CartAdd not implemented")
+}
+func (UnimplementedShopServer) CartUpdate(context.Context, *CartUpdateRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CartUpdate not implemented")
+}
+func (UnimplementedShopServer) CartDelete(context.Context, *CartDeleteRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CartDelete not implemented")
+}
+func (UnimplementedShopServer) OrderCreate(context.Context, *OrderCreateRequest) (*OrderInfoReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method OrderCreate not implemented")
+}
+func (UnimplementedShopServer) OrderCancel(context.Context, *OrderCancelRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method OrderCancel not implemented")
+}
+func (UnimplementedShopServer) OrderList(context.Context, *OrderListRequest) (*OrderListReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method OrderList not implemented")
+}
+func (UnimplementedShopServer) OrderDetail(context.Context, *OrderDetailRequest) (*OrderInfoReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method OrderDetail not implemented")
+}
+func (UnimplementedShopServer) PaymentCreate(context.Context, *PaymentCreateRequest) (*PaymentInfoReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method PaymentCreate not implemented")
+}
+func (UnimplementedShopServer) PaymentMockPay(context.Context, *PaymentMockPayRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method PaymentMockPay not implemented")
 }
 func (UnimplementedShopServer) mustEmbedUnimplementedShopServer() {}
 func (UnimplementedShopServer) testEmbeddedByValue()              {}
@@ -483,6 +649,186 @@ func _Shop_GoodsDetail_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Shop_CartList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CartListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServer).CartList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Shop_CartList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServer).CartList(ctx, req.(*CartListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Shop_CartAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CartAddRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServer).CartAdd(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Shop_CartAdd_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServer).CartAdd(ctx, req.(*CartAddRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Shop_CartUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CartUpdateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServer).CartUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Shop_CartUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServer).CartUpdate(ctx, req.(*CartUpdateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Shop_CartDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CartDeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServer).CartDelete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Shop_CartDelete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServer).CartDelete(ctx, req.(*CartDeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Shop_OrderCreate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderCreateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServer).OrderCreate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Shop_OrderCreate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServer).OrderCreate(ctx, req.(*OrderCreateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Shop_OrderCancel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderCancelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServer).OrderCancel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Shop_OrderCancel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServer).OrderCancel(ctx, req.(*OrderCancelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Shop_OrderList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServer).OrderList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Shop_OrderList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServer).OrderList(ctx, req.(*OrderListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Shop_OrderDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderDetailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServer).OrderDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Shop_OrderDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServer).OrderDetail(ctx, req.(*OrderDetailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Shop_PaymentCreate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PaymentCreateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServer).PaymentCreate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Shop_PaymentCreate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServer).PaymentCreate(ctx, req.(*PaymentCreateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Shop_PaymentMockPay_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PaymentMockPayRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServer).PaymentMockPay(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Shop_PaymentMockPay_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServer).PaymentMockPay(ctx, req.(*PaymentMockPayRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Shop_ServiceDesc is the grpc.ServiceDesc for Shop service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -537,6 +883,46 @@ var Shop_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GoodsDetail",
 			Handler:    _Shop_GoodsDetail_Handler,
+		},
+		{
+			MethodName: "CartList",
+			Handler:    _Shop_CartList_Handler,
+		},
+		{
+			MethodName: "CartAdd",
+			Handler:    _Shop_CartAdd_Handler,
+		},
+		{
+			MethodName: "CartUpdate",
+			Handler:    _Shop_CartUpdate_Handler,
+		},
+		{
+			MethodName: "CartDelete",
+			Handler:    _Shop_CartDelete_Handler,
+		},
+		{
+			MethodName: "OrderCreate",
+			Handler:    _Shop_OrderCreate_Handler,
+		},
+		{
+			MethodName: "OrderCancel",
+			Handler:    _Shop_OrderCancel_Handler,
+		},
+		{
+			MethodName: "OrderList",
+			Handler:    _Shop_OrderList_Handler,
+		},
+		{
+			MethodName: "OrderDetail",
+			Handler:    _Shop_OrderDetail_Handler,
+		},
+		{
+			MethodName: "PaymentCreate",
+			Handler:    _Shop_PaymentCreate_Handler,
+		},
+		{
+			MethodName: "PaymentMockPay",
+			Handler:    _Shop_PaymentMockPay_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1530,6 +1530,1085 @@ func (x *GoodsDetailReply) GetImages() []*GoodsImageDetail {
 	return nil
 }
 
+// 购物车
+type CartListRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CartListRequest) Reset() {
+	*x = CartListRequest{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CartListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CartListRequest) ProtoMessage() {}
+
+func (x *CartListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CartListRequest.ProtoReflect.Descriptor instead.
+func (*CartListRequest) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{20}
+}
+
+type CartItemReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        int64                  `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`
+	GoodsId       int64                  `protobuf:"varint,3,opt,name=goodsId,proto3" json:"goodsId,omitempty"`
+	GoodsSn       string                 `protobuf:"bytes,4,opt,name=goodsSn,proto3" json:"goodsSn,omitempty"`
+	GoodsName     string                 `protobuf:"bytes,5,opt,name=goodsName,proto3" json:"goodsName,omitempty"`
+	SkuId         int64                  `protobuf:"varint,6,opt,name=skuId,proto3" json:"skuId,omitempty"`
+	GoodsPrice    int64                  `protobuf:"varint,7,opt,name=goodsPrice,proto3" json:"goodsPrice,omitempty"`
+	GoodsNum      int32                  `protobuf:"varint,8,opt,name=goodsNum,proto3" json:"goodsNum,omitempty"`
+	IsSelect      bool                   `protobuf:"varint,9,opt,name=isSelect,proto3" json:"isSelect,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CartItemReply) Reset() {
+	*x = CartItemReply{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CartItemReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CartItemReply) ProtoMessage() {}
+
+func (x *CartItemReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CartItemReply.ProtoReflect.Descriptor instead.
+func (*CartItemReply) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *CartItemReply) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *CartItemReply) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *CartItemReply) GetGoodsId() int64 {
+	if x != nil {
+		return x.GoodsId
+	}
+	return 0
+}
+
+func (x *CartItemReply) GetGoodsSn() string {
+	if x != nil {
+		return x.GoodsSn
+	}
+	return ""
+}
+
+func (x *CartItemReply) GetGoodsName() string {
+	if x != nil {
+		return x.GoodsName
+	}
+	return ""
+}
+
+func (x *CartItemReply) GetSkuId() int64 {
+	if x != nil {
+		return x.SkuId
+	}
+	return 0
+}
+
+func (x *CartItemReply) GetGoodsPrice() int64 {
+	if x != nil {
+		return x.GoodsPrice
+	}
+	return 0
+}
+
+func (x *CartItemReply) GetGoodsNum() int32 {
+	if x != nil {
+		return x.GoodsNum
+	}
+	return 0
+}
+
+func (x *CartItemReply) GetIsSelect() bool {
+	if x != nil {
+		return x.IsSelect
+	}
+	return false
+}
+
+type CartListReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*CartItemReply       `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CartListReply) Reset() {
+	*x = CartListReply{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CartListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CartListReply) ProtoMessage() {}
+
+func (x *CartListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CartListReply.ProtoReflect.Descriptor instead.
+func (*CartListReply) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *CartListReply) GetList() []*CartItemReply {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type CartAddRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GoodsId       int64                  `protobuf:"varint,1,opt,name=goodsId,proto3" json:"goodsId,omitempty"`
+	GoodsSn       string                 `protobuf:"bytes,2,opt,name=goodsSn,proto3" json:"goodsSn,omitempty"`
+	GoodsName     string                 `protobuf:"bytes,3,opt,name=goodsName,proto3" json:"goodsName,omitempty"`
+	SkuId         int64                  `protobuf:"varint,4,opt,name=skuId,proto3" json:"skuId,omitempty"`
+	GoodsPrice    int64                  `protobuf:"varint,5,opt,name=goodsPrice,proto3" json:"goodsPrice,omitempty"`
+	GoodsNum      int32                  `protobuf:"varint,6,opt,name=goodsNum,proto3" json:"goodsNum,omitempty"`
+	IsSelect      bool                   `protobuf:"varint,7,opt,name=isSelect,proto3" json:"isSelect,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CartAddRequest) Reset() {
+	*x = CartAddRequest{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CartAddRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CartAddRequest) ProtoMessage() {}
+
+func (x *CartAddRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CartAddRequest.ProtoReflect.Descriptor instead.
+func (*CartAddRequest) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *CartAddRequest) GetGoodsId() int64 {
+	if x != nil {
+		return x.GoodsId
+	}
+	return 0
+}
+
+func (x *CartAddRequest) GetGoodsSn() string {
+	if x != nil {
+		return x.GoodsSn
+	}
+	return ""
+}
+
+func (x *CartAddRequest) GetGoodsName() string {
+	if x != nil {
+		return x.GoodsName
+	}
+	return ""
+}
+
+func (x *CartAddRequest) GetSkuId() int64 {
+	if x != nil {
+		return x.SkuId
+	}
+	return 0
+}
+
+func (x *CartAddRequest) GetGoodsPrice() int64 {
+	if x != nil {
+		return x.GoodsPrice
+	}
+	return 0
+}
+
+func (x *CartAddRequest) GetGoodsNum() int32 {
+	if x != nil {
+		return x.GoodsNum
+	}
+	return 0
+}
+
+func (x *CartAddRequest) GetIsSelect() bool {
+	if x != nil {
+		return x.IsSelect
+	}
+	return false
+}
+
+type CartUpdateRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	GoodsNum      int32                  `protobuf:"varint,2,opt,name=goodsNum,proto3" json:"goodsNum,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CartUpdateRequest) Reset() {
+	*x = CartUpdateRequest{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CartUpdateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CartUpdateRequest) ProtoMessage() {}
+
+func (x *CartUpdateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CartUpdateRequest.ProtoReflect.Descriptor instead.
+func (*CartUpdateRequest) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *CartUpdateRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *CartUpdateRequest) GetGoodsNum() int32 {
+	if x != nil {
+		return x.GoodsNum
+	}
+	return 0
+}
+
+type CartDeleteRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CartDeleteRequest) Reset() {
+	*x = CartDeleteRequest{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CartDeleteRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CartDeleteRequest) ProtoMessage() {}
+
+func (x *CartDeleteRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CartDeleteRequest.ProtoReflect.Descriptor instead.
+func (*CartDeleteRequest) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *CartDeleteRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+// 订单
+type OrderCreateRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Address       int64                  `protobuf:"varint,1,opt,name=address,proto3" json:"address,omitempty"`
+	CartItem      []*OrderCartItem       `protobuf:"bytes,2,rep,name=cartItem,proto3" json:"cartItem,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderCreateRequest) Reset() {
+	*x = OrderCreateRequest{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderCreateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderCreateRequest) ProtoMessage() {}
+
+func (x *OrderCreateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderCreateRequest.ProtoReflect.Descriptor instead.
+func (*OrderCreateRequest) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *OrderCreateRequest) GetAddress() int64 {
+	if x != nil {
+		return x.Address
+	}
+	return 0
+}
+
+func (x *OrderCreateRequest) GetCartItem() []*OrderCartItem {
+	if x != nil {
+		return x.CartItem
+	}
+	return nil
+}
+
+type OrderCartItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CartId        int64                  `protobuf:"varint,1,opt,name=cartId,proto3" json:"cartId,omitempty"`
+	SkuId         int64                  `protobuf:"varint,2,opt,name=skuId,proto3" json:"skuId,omitempty"`
+	SkuNum        int32                  `protobuf:"varint,3,opt,name=skuNum,proto3" json:"skuNum,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderCartItem) Reset() {
+	*x = OrderCartItem{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderCartItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderCartItem) ProtoMessage() {}
+
+func (x *OrderCartItem) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderCartItem.ProtoReflect.Descriptor instead.
+func (*OrderCartItem) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *OrderCartItem) GetCartId() int64 {
+	if x != nil {
+		return x.CartId
+	}
+	return 0
+}
+
+func (x *OrderCartItem) GetSkuId() int64 {
+	if x != nil {
+		return x.SkuId
+	}
+	return 0
+}
+
+func (x *OrderCartItem) GetSkuNum() int32 {
+	if x != nil {
+		return x.SkuNum
+	}
+	return 0
+}
+
+type OrderInfoReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        int64                  `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`
+	OrderSn       string                 `protobuf:"bytes,3,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
+	Status        string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	Post          string                 `protobuf:"bytes,5,opt,name=post,proto3" json:"post,omitempty"`
+	Total         int64                  `protobuf:"varint,6,opt,name=total,proto3" json:"total,omitempty"`
+	Address       string                 `protobuf:"bytes,7,opt,name=address,proto3" json:"address,omitempty"`
+	Name          string                 `protobuf:"bytes,8,opt,name=name,proto3" json:"name,omitempty"`
+	Mobile        string                 `protobuf:"bytes,9,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	AddTime       string                 `protobuf:"bytes,10,opt,name=addTime,proto3" json:"addTime,omitempty"`
+	Goods         []*OrderGoodsReply     `protobuf:"bytes,11,rep,name=goods,proto3" json:"goods,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderInfoReply) Reset() {
+	*x = OrderInfoReply{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderInfoReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderInfoReply) ProtoMessage() {}
+
+func (x *OrderInfoReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderInfoReply.ProtoReflect.Descriptor instead.
+func (*OrderInfoReply) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *OrderInfoReply) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *OrderInfoReply) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *OrderInfoReply) GetOrderSn() string {
+	if x != nil {
+		return x.OrderSn
+	}
+	return ""
+}
+
+func (x *OrderInfoReply) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *OrderInfoReply) GetPost() string {
+	if x != nil {
+		return x.Post
+	}
+	return ""
+}
+
+func (x *OrderInfoReply) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *OrderInfoReply) GetAddress() string {
+	if x != nil {
+		return x.Address
+	}
+	return ""
+}
+
+func (x *OrderInfoReply) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *OrderInfoReply) GetMobile() string {
+	if x != nil {
+		return x.Mobile
+	}
+	return ""
+}
+
+func (x *OrderInfoReply) GetAddTime() string {
+	if x != nil {
+		return x.AddTime
+	}
+	return ""
+}
+
+func (x *OrderInfoReply) GetGoods() []*OrderGoodsReply {
+	if x != nil {
+		return x.Goods
+	}
+	return nil
+}
+
+type OrderGoodsReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	SkuId         int64                  `protobuf:"varint,2,opt,name=skuId,proto3" json:"skuId,omitempty"`
+	SkuName       string                 `protobuf:"bytes,3,opt,name=skuName,proto3" json:"skuName,omitempty"`
+	SkuPrice      int64                  `protobuf:"varint,4,opt,name=skuPrice,proto3" json:"skuPrice,omitempty"`
+	Num           int32                  `protobuf:"varint,5,opt,name=num,proto3" json:"num,omitempty"`
+	TotalPrice    int64                  `protobuf:"varint,6,opt,name=totalPrice,proto3" json:"totalPrice,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderGoodsReply) Reset() {
+	*x = OrderGoodsReply{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderGoodsReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderGoodsReply) ProtoMessage() {}
+
+func (x *OrderGoodsReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderGoodsReply.ProtoReflect.Descriptor instead.
+func (*OrderGoodsReply) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *OrderGoodsReply) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *OrderGoodsReply) GetSkuId() int64 {
+	if x != nil {
+		return x.SkuId
+	}
+	return 0
+}
+
+func (x *OrderGoodsReply) GetSkuName() string {
+	if x != nil {
+		return x.SkuName
+	}
+	return ""
+}
+
+func (x *OrderGoodsReply) GetSkuPrice() int64 {
+	if x != nil {
+		return x.SkuPrice
+	}
+	return 0
+}
+
+func (x *OrderGoodsReply) GetNum() int32 {
+	if x != nil {
+		return x.Num
+	}
+	return 0
+}
+
+func (x *OrderGoodsReply) GetTotalPrice() int64 {
+	if x != nil {
+		return x.TotalPrice
+	}
+	return 0
+}
+
+type OrderListRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderListRequest) Reset() {
+	*x = OrderListRequest{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderListRequest) ProtoMessage() {}
+
+func (x *OrderListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderListRequest.ProtoReflect.Descriptor instead.
+func (*OrderListRequest) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *OrderListRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *OrderListRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+type OrderListReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	List          []*OrderInfoReply      `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderListReply) Reset() {
+	*x = OrderListReply{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderListReply) ProtoMessage() {}
+
+func (x *OrderListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderListReply.ProtoReflect.Descriptor instead.
+func (*OrderListReply) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *OrderListReply) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *OrderListReply) GetList() []*OrderInfoReply {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
+type OrderCancelRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderCancelRequest) Reset() {
+	*x = OrderCancelRequest{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderCancelRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderCancelRequest) ProtoMessage() {}
+
+func (x *OrderCancelRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderCancelRequest.ProtoReflect.Descriptor instead.
+func (*OrderCancelRequest) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{32}
+}
+
+func (x *OrderCancelRequest) GetOrderSn() string {
+	if x != nil {
+		return x.OrderSn
+	}
+	return ""
+}
+
+type OrderDetailRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderDetailRequest) Reset() {
+	*x = OrderDetailRequest{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderDetailRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderDetailRequest) ProtoMessage() {}
+
+func (x *OrderDetailRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderDetailRequest.ProtoReflect.Descriptor instead.
+func (*OrderDetailRequest) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *OrderDetailRequest) GetOrderSn() string {
+	if x != nil {
+		return x.OrderSn
+	}
+	return ""
+}
+
+// 支付（本地模拟）
+type PaymentCreateRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderSn       string                 `protobuf:"bytes,1,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
+	Amount        int64                  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`
+	Channel       string                 `protobuf:"bytes,3,opt,name=channel,proto3" json:"channel,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PaymentCreateRequest) Reset() {
+	*x = PaymentCreateRequest{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PaymentCreateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PaymentCreateRequest) ProtoMessage() {}
+
+func (x *PaymentCreateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PaymentCreateRequest.ProtoReflect.Descriptor instead.
+func (*PaymentCreateRequest) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *PaymentCreateRequest) GetOrderSn() string {
+	if x != nil {
+		return x.OrderSn
+	}
+	return ""
+}
+
+func (x *PaymentCreateRequest) GetAmount() int64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *PaymentCreateRequest) GetChannel() string {
+	if x != nil {
+		return x.Channel
+	}
+	return ""
+}
+
+type PaymentInfoReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	PaymentNo     string                 `protobuf:"bytes,2,opt,name=paymentNo,proto3" json:"paymentNo,omitempty"`
+	OrderSn       string                 `protobuf:"bytes,3,opt,name=orderSn,proto3" json:"orderSn,omitempty"`
+	Amount        int64                  `protobuf:"varint,4,opt,name=amount,proto3" json:"amount,omitempty"`
+	Channel       string                 `protobuf:"bytes,5,opt,name=channel,proto3" json:"channel,omitempty"`
+	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PaymentInfoReply) Reset() {
+	*x = PaymentInfoReply{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PaymentInfoReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PaymentInfoReply) ProtoMessage() {}
+
+func (x *PaymentInfoReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PaymentInfoReply.ProtoReflect.Descriptor instead.
+func (*PaymentInfoReply) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *PaymentInfoReply) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *PaymentInfoReply) GetPaymentNo() string {
+	if x != nil {
+		return x.PaymentNo
+	}
+	return ""
+}
+
+func (x *PaymentInfoReply) GetOrderSn() string {
+	if x != nil {
+		return x.OrderSn
+	}
+	return ""
+}
+
+func (x *PaymentInfoReply) GetAmount() int64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *PaymentInfoReply) GetChannel() string {
+	if x != nil {
+		return x.Channel
+	}
+	return ""
+}
+
+func (x *PaymentInfoReply) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+type PaymentMockPayRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PaymentNo     string                 `protobuf:"bytes,1,opt,name=paymentNo,proto3" json:"paymentNo,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PaymentMockPayRequest) Reset() {
+	*x = PaymentMockPayRequest{}
+	mi := &file_api_shop_v1_shop_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PaymentMockPayRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PaymentMockPayRequest) ProtoMessage() {}
+
+func (x *PaymentMockPayRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_shop_v1_shop_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PaymentMockPayRequest.ProtoReflect.Descriptor instead.
+func (*PaymentMockPayRequest) Descriptor() ([]byte, []int) {
+	return file_api_shop_v1_shop_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *PaymentMockPayRequest) GetPaymentNo() string {
+	if x != nil {
+		return x.PaymentNo
+	}
+	return ""
+}
+
 var File_api_shop_v1_shop_proto protoreflect.FileDescriptor
 
 const file_api_shop_v1_shop_proto_rawDesc = "" +
@@ -1664,7 +2743,89 @@ const file_api_shop_v1_shop_proto_rawDesc = "" +
 	"\x05isHot\x18\x0e \x01(\bR\x05isHot\x12\x18\n" +
 	"\asoldNum\x18\x0f \x01(\x03R\asoldNum\x120\n" +
 	"\x04skus\x18\x10 \x03(\v2\x1c.shop.shop.v1.GoodsSkuDetailR\x04skus\x126\n" +
-	"\x06images\x18\x11 \x03(\v2\x1e.shop.shop.v1.GoodsImageDetailR\x06images2\xd2\t\n" +
+	"\x06images\x18\x11 \x03(\v2\x1e.shop.shop.v1.GoodsImageDetailR\x06images\"\x11\n" +
+	"\x0fCartListRequest\"\xf7\x01\n" +
+	"\rCartItemReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
+	"\x06userId\x18\x02 \x01(\x03R\x06userId\x12\x18\n" +
+	"\agoodsId\x18\x03 \x01(\x03R\agoodsId\x12\x18\n" +
+	"\agoodsSn\x18\x04 \x01(\tR\agoodsSn\x12\x1c\n" +
+	"\tgoodsName\x18\x05 \x01(\tR\tgoodsName\x12\x14\n" +
+	"\x05skuId\x18\x06 \x01(\x03R\x05skuId\x12\x1e\n" +
+	"\n" +
+	"goodsPrice\x18\a \x01(\x03R\n" +
+	"goodsPrice\x12\x1a\n" +
+	"\bgoodsNum\x18\b \x01(\x05R\bgoodsNum\x12\x1a\n" +
+	"\bisSelect\x18\t \x01(\bR\bisSelect\"@\n" +
+	"\rCartListReply\x12/\n" +
+	"\x04list\x18\x01 \x03(\v2\x1b.shop.shop.v1.CartItemReplyR\x04list\"\x86\x02\n" +
+	"\x0eCartAddRequest\x12!\n" +
+	"\agoodsId\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\agoodsId\x12!\n" +
+	"\agoodsSn\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\agoodsSn\x12%\n" +
+	"\tgoodsName\x18\x03 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\tgoodsName\x12\x1d\n" +
+	"\x05skuId\x18\x04 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x05skuId\x12'\n" +
+	"\n" +
+	"goodsPrice\x18\x05 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\n" +
+	"goodsPrice\x12#\n" +
+	"\bgoodsNum\x18\x06 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\bgoodsNum\x12\x1a\n" +
+	"\bisSelect\x18\a \x01(\bR\bisSelect\"Q\n" +
+	"\x11CartUpdateRequest\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02(\x01R\x02id\x12#\n" +
+	"\bgoodsNum\x18\x02 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\bgoodsNum\",\n" +
+	"\x11CartDeleteRequest\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02(\x01R\x02id\"p\n" +
+	"\x12OrderCreateRequest\x12!\n" +
+	"\aaddress\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\aaddress\x127\n" +
+	"\bcartItem\x18\x02 \x03(\v2\x1b.shop.shop.v1.OrderCartItemR\bcartItem\"p\n" +
+	"\rOrderCartItem\x12\x1f\n" +
+	"\x06cartId\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02(\x01R\x06cartId\x12\x1d\n" +
+	"\x05skuId\x18\x02 \x01(\x03B\a\xfaB\x04\"\x02(\x01R\x05skuId\x12\x1f\n" +
+	"\x06skuNum\x18\x03 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x06skuNum\"\xa9\x02\n" +
+	"\x0eOrderInfoReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
+	"\x06userId\x18\x02 \x01(\x03R\x06userId\x12\x18\n" +
+	"\aorderSn\x18\x03 \x01(\tR\aorderSn\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\tR\x06status\x12\x12\n" +
+	"\x04post\x18\x05 \x01(\tR\x04post\x12\x14\n" +
+	"\x05total\x18\x06 \x01(\x03R\x05total\x12\x18\n" +
+	"\aaddress\x18\a \x01(\tR\aaddress\x12\x12\n" +
+	"\x04name\x18\b \x01(\tR\x04name\x12\x16\n" +
+	"\x06mobile\x18\t \x01(\tR\x06mobile\x12\x18\n" +
+	"\aaddTime\x18\n" +
+	" \x01(\tR\aaddTime\x123\n" +
+	"\x05goods\x18\v \x03(\v2\x1d.shop.shop.v1.OrderGoodsReplyR\x05goods\"\x9f\x01\n" +
+	"\x0fOrderGoodsReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
+	"\x05skuId\x18\x02 \x01(\x03R\x05skuId\x12\x18\n" +
+	"\askuName\x18\x03 \x01(\tR\askuName\x12\x1a\n" +
+	"\bskuPrice\x18\x04 \x01(\x03R\bskuPrice\x12\x10\n" +
+	"\x03num\x18\x05 \x01(\x05R\x03num\x12\x1e\n" +
+	"\n" +
+	"totalPrice\x18\x06 \x01(\x03R\n" +
+	"totalPrice\"B\n" +
+	"\x10OrderListRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x05R\bpageSize\"X\n" +
+	"\x0eOrderListReply\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x05R\x05total\x120\n" +
+	"\x04list\x18\x02 \x03(\v2\x1c.shop.shop.v1.OrderInfoReplyR\x04list\"7\n" +
+	"\x12OrderCancelRequest\x12!\n" +
+	"\aorderSn\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\aorderSn\"7\n" +
+	"\x12OrderDetailRequest\x12!\n" +
+	"\aorderSn\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\aorderSn\"t\n" +
+	"\x14PaymentCreateRequest\x12!\n" +
+	"\aorderSn\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\aorderSn\x12\x1f\n" +
+	"\x06amount\x18\x02 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06amount\x12\x18\n" +
+	"\achannel\x18\x03 \x01(\tR\achannel\"\xa4\x01\n" +
+	"\x10PaymentInfoReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
+	"\tpaymentNo\x18\x02 \x01(\tR\tpaymentNo\x12\x18\n" +
+	"\aorderSn\x18\x03 \x01(\tR\aorderSn\x12\x16\n" +
+	"\x06amount\x18\x04 \x01(\x03R\x06amount\x12\x18\n" +
+	"\achannel\x18\x05 \x01(\tR\achannel\x12\x16\n" +
+	"\x06status\x18\x06 \x01(\x05R\x06status\">\n" +
+	"\x15PaymentMockPayRequest\x12%\n" +
+	"\tpaymentNo\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\tpaymentNo2\xf3\x11\n" +
 	"\x04Shop\x12b\n" +
 	"\bRegister\x12\x19.shop.shop.v1.RegisterReq\x1a\x1b.shop.shop.v1.RegisterReply\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/users/register\x12m\n" +
 	"\fRefreshToken\x12!.shop.shop.v1.RefreshTokenRequest\x1a\x1b.shop.shop.v1.RegisterReply\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/users/refresh\x12Y\n" +
@@ -1677,7 +2838,19 @@ const file_api_shop_v1_shop_proto_rawDesc = "" +
 	"\x0eDefaultAddress\x12\x18.shop.shop.v1.AddressReq\x1a\x1b.shop.shop.v1.CheckResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\x1a\x14/api/address/default\x12c\n" +
 	"\rDeleteAddress\x12\x18.shop.shop.v1.AddressReq\x1a\x1b.shop.shop.v1.CheckResponse\"\x1b\x82\xd3\xe4\x93\x02\x15*\x13/api/address/delete\x12b\n" +
 	"\tGoodsList\x12\x1e.shop.shop.v1.GoodsListRequest\x1a\x1c.shop.shop.v1.GoodsListReply\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/goods/list\x12j\n" +
-	"\vGoodsDetail\x12 .shop.shop.v1.GoodsDetailRequest\x1a\x1e.shop.shop.v1.GoodsDetailReply\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/goods/detailB\x15Z\x13shop/api/shop/v1;v1b\x06proto3"
+	"\vGoodsDetail\x12 .shop.shop.v1.GoodsDetailRequest\x1a\x1e.shop.shop.v1.GoodsDetailReply\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/goods/detail\x12^\n" +
+	"\bCartList\x12\x1d.shop.shop.v1.CartListRequest\x1a\x1b.shop.shop.v1.CartListReply\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/api/cart/list\x12^\n" +
+	"\aCartAdd\x12\x1c.shop.shop.v1.CartAddRequest\x1a\x1b.shop.shop.v1.CartItemReply\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/api/cart/add\x12g\n" +
+	"\n" +
+	"CartUpdate\x12\x1f.shop.shop.v1.CartUpdateRequest\x1a\x1b.shop.shop.v1.CheckResponse\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\x1a\x10/api/cart/update\x12d\n" +
+	"\n" +
+	"CartDelete\x12\x1f.shop.shop.v1.CartDeleteRequest\x1a\x1b.shop.shop.v1.CheckResponse\"\x18\x82\xd3\xe4\x93\x02\x12*\x10/api/cart/delete\x12k\n" +
+	"\vOrderCreate\x12 .shop.shop.v1.OrderCreateRequest\x1a\x1c.shop.shop.v1.OrderInfoReply\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/api/order/create\x12j\n" +
+	"\vOrderCancel\x12 .shop.shop.v1.OrderCancelRequest\x1a\x1b.shop.shop.v1.CheckResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/api/order/cancel\x12b\n" +
+	"\tOrderList\x12\x1e.shop.shop.v1.OrderListRequest\x1a\x1c.shop.shop.v1.OrderListReply\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/order/list\x12h\n" +
+	"\vOrderDetail\x12 .shop.shop.v1.OrderDetailRequest\x1a\x1c.shop.shop.v1.OrderInfoReply\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/order/detail\x12s\n" +
+	"\rPaymentCreate\x12\".shop.shop.v1.PaymentCreateRequest\x1a\x1e.shop.shop.v1.PaymentInfoReply\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/payment/create\x12t\n" +
+	"\x0ePaymentMockPay\x12#.shop.shop.v1.PaymentMockPayRequest\x1a\x1b.shop.shop.v1.CheckResponse\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/payment/mock-payB\x15Z\x13shop/api/shop/v1;v1b\x06proto3"
 
 var (
 	file_api_shop_v1_shop_proto_rawDescOnce sync.Once
@@ -1691,64 +2864,105 @@ func file_api_shop_v1_shop_proto_rawDescGZIP() []byte {
 	return file_api_shop_v1_shop_proto_rawDescData
 }
 
-var file_api_shop_v1_shop_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
+var file_api_shop_v1_shop_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
 var file_api_shop_v1_shop_proto_goTypes = []any{
-	(*CreateAddressReq)(nil),    // 0: shop.shop.v1.CreateAddressReq
-	(*UpdateAddressReq)(nil),    // 1: shop.shop.v1.UpdateAddressReq
-	(*AddressInfo)(nil),         // 2: shop.shop.v1.AddressInfo
-	(*ListAddressReq)(nil),      // 3: shop.shop.v1.ListAddressReq
-	(*ListAddressReply)(nil),    // 4: shop.shop.v1.ListAddressReply
-	(*AddressReq)(nil),          // 5: shop.shop.v1.AddressReq
-	(*CheckResponse)(nil),       // 6: shop.shop.v1.CheckResponse
-	(*RegisterReply)(nil),       // 7: shop.shop.v1.RegisterReply
-	(*RegisterReq)(nil),         // 8: shop.shop.v1.RegisterReq
-	(*LoginReq)(nil),            // 9: shop.shop.v1.LoginReq
-	(*UserDetailResponse)(nil),  // 10: shop.shop.v1.UserDetailResponse
-	(*CaptchaReply)(nil),        // 11: shop.shop.v1.CaptchaReply
-	(*RefreshTokenRequest)(nil), // 12: shop.shop.v1.RefreshTokenRequest
-	(*GoodsListRequest)(nil),    // 13: shop.shop.v1.GoodsListRequest
-	(*GoodsItem)(nil),           // 14: shop.shop.v1.GoodsItem
-	(*GoodsListReply)(nil),      // 15: shop.shop.v1.GoodsListReply
-	(*GoodsDetailRequest)(nil),  // 16: shop.shop.v1.GoodsDetailRequest
-	(*GoodsSkuDetail)(nil),      // 17: shop.shop.v1.GoodsSkuDetail
-	(*GoodsImageDetail)(nil),    // 18: shop.shop.v1.GoodsImageDetail
-	(*GoodsDetailReply)(nil),    // 19: shop.shop.v1.GoodsDetailReply
-	(*emptypb.Empty)(nil),       // 20: google.protobuf.Empty
+	(*CreateAddressReq)(nil),      // 0: shop.shop.v1.CreateAddressReq
+	(*UpdateAddressReq)(nil),      // 1: shop.shop.v1.UpdateAddressReq
+	(*AddressInfo)(nil),           // 2: shop.shop.v1.AddressInfo
+	(*ListAddressReq)(nil),        // 3: shop.shop.v1.ListAddressReq
+	(*ListAddressReply)(nil),      // 4: shop.shop.v1.ListAddressReply
+	(*AddressReq)(nil),            // 5: shop.shop.v1.AddressReq
+	(*CheckResponse)(nil),         // 6: shop.shop.v1.CheckResponse
+	(*RegisterReply)(nil),         // 7: shop.shop.v1.RegisterReply
+	(*RegisterReq)(nil),           // 8: shop.shop.v1.RegisterReq
+	(*LoginReq)(nil),              // 9: shop.shop.v1.LoginReq
+	(*UserDetailResponse)(nil),    // 10: shop.shop.v1.UserDetailResponse
+	(*CaptchaReply)(nil),          // 11: shop.shop.v1.CaptchaReply
+	(*RefreshTokenRequest)(nil),   // 12: shop.shop.v1.RefreshTokenRequest
+	(*GoodsListRequest)(nil),      // 13: shop.shop.v1.GoodsListRequest
+	(*GoodsItem)(nil),             // 14: shop.shop.v1.GoodsItem
+	(*GoodsListReply)(nil),        // 15: shop.shop.v1.GoodsListReply
+	(*GoodsDetailRequest)(nil),    // 16: shop.shop.v1.GoodsDetailRequest
+	(*GoodsSkuDetail)(nil),        // 17: shop.shop.v1.GoodsSkuDetail
+	(*GoodsImageDetail)(nil),      // 18: shop.shop.v1.GoodsImageDetail
+	(*GoodsDetailReply)(nil),      // 19: shop.shop.v1.GoodsDetailReply
+	(*CartListRequest)(nil),       // 20: shop.shop.v1.CartListRequest
+	(*CartItemReply)(nil),         // 21: shop.shop.v1.CartItemReply
+	(*CartListReply)(nil),         // 22: shop.shop.v1.CartListReply
+	(*CartAddRequest)(nil),        // 23: shop.shop.v1.CartAddRequest
+	(*CartUpdateRequest)(nil),     // 24: shop.shop.v1.CartUpdateRequest
+	(*CartDeleteRequest)(nil),     // 25: shop.shop.v1.CartDeleteRequest
+	(*OrderCreateRequest)(nil),    // 26: shop.shop.v1.OrderCreateRequest
+	(*OrderCartItem)(nil),         // 27: shop.shop.v1.OrderCartItem
+	(*OrderInfoReply)(nil),        // 28: shop.shop.v1.OrderInfoReply
+	(*OrderGoodsReply)(nil),       // 29: shop.shop.v1.OrderGoodsReply
+	(*OrderListRequest)(nil),      // 30: shop.shop.v1.OrderListRequest
+	(*OrderListReply)(nil),        // 31: shop.shop.v1.OrderListReply
+	(*OrderCancelRequest)(nil),    // 32: shop.shop.v1.OrderCancelRequest
+	(*OrderDetailRequest)(nil),    // 33: shop.shop.v1.OrderDetailRequest
+	(*PaymentCreateRequest)(nil),  // 34: shop.shop.v1.PaymentCreateRequest
+	(*PaymentInfoReply)(nil),      // 35: shop.shop.v1.PaymentInfoReply
+	(*PaymentMockPayRequest)(nil), // 36: shop.shop.v1.PaymentMockPayRequest
+	(*emptypb.Empty)(nil),         // 37: google.protobuf.Empty
 }
 var file_api_shop_v1_shop_proto_depIdxs = []int32{
 	2,  // 0: shop.shop.v1.ListAddressReply.results:type_name -> shop.shop.v1.AddressInfo
 	14, // 1: shop.shop.v1.GoodsListReply.list:type_name -> shop.shop.v1.GoodsItem
 	17, // 2: shop.shop.v1.GoodsDetailReply.skus:type_name -> shop.shop.v1.GoodsSkuDetail
 	18, // 3: shop.shop.v1.GoodsDetailReply.images:type_name -> shop.shop.v1.GoodsImageDetail
-	8,  // 4: shop.shop.v1.Shop.Register:input_type -> shop.shop.v1.RegisterReq
-	12, // 5: shop.shop.v1.Shop.RefreshToken:input_type -> shop.shop.v1.RefreshTokenRequest
-	9,  // 6: shop.shop.v1.Shop.Login:input_type -> shop.shop.v1.LoginReq
-	20, // 7: shop.shop.v1.Shop.Captcha:input_type -> google.protobuf.Empty
-	20, // 8: shop.shop.v1.Shop.Detail:input_type -> google.protobuf.Empty
-	0,  // 9: shop.shop.v1.Shop.CreateAddress:input_type -> shop.shop.v1.CreateAddressReq
-	20, // 10: shop.shop.v1.Shop.AddressListByUid:input_type -> google.protobuf.Empty
-	1,  // 11: shop.shop.v1.Shop.UpdateAddress:input_type -> shop.shop.v1.UpdateAddressReq
-	5,  // 12: shop.shop.v1.Shop.DefaultAddress:input_type -> shop.shop.v1.AddressReq
-	5,  // 13: shop.shop.v1.Shop.DeleteAddress:input_type -> shop.shop.v1.AddressReq
-	13, // 14: shop.shop.v1.Shop.GoodsList:input_type -> shop.shop.v1.GoodsListRequest
-	16, // 15: shop.shop.v1.Shop.GoodsDetail:input_type -> shop.shop.v1.GoodsDetailRequest
-	7,  // 16: shop.shop.v1.Shop.Register:output_type -> shop.shop.v1.RegisterReply
-	7,  // 17: shop.shop.v1.Shop.RefreshToken:output_type -> shop.shop.v1.RegisterReply
-	7,  // 18: shop.shop.v1.Shop.Login:output_type -> shop.shop.v1.RegisterReply
-	11, // 19: shop.shop.v1.Shop.Captcha:output_type -> shop.shop.v1.CaptchaReply
-	10, // 20: shop.shop.v1.Shop.Detail:output_type -> shop.shop.v1.UserDetailResponse
-	2,  // 21: shop.shop.v1.Shop.CreateAddress:output_type -> shop.shop.v1.AddressInfo
-	4,  // 22: shop.shop.v1.Shop.AddressListByUid:output_type -> shop.shop.v1.ListAddressReply
-	6,  // 23: shop.shop.v1.Shop.UpdateAddress:output_type -> shop.shop.v1.CheckResponse
-	6,  // 24: shop.shop.v1.Shop.DefaultAddress:output_type -> shop.shop.v1.CheckResponse
-	6,  // 25: shop.shop.v1.Shop.DeleteAddress:output_type -> shop.shop.v1.CheckResponse
-	15, // 26: shop.shop.v1.Shop.GoodsList:output_type -> shop.shop.v1.GoodsListReply
-	19, // 27: shop.shop.v1.Shop.GoodsDetail:output_type -> shop.shop.v1.GoodsDetailReply
-	16, // [16:28] is the sub-list for method output_type
-	4,  // [4:16] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	21, // 4: shop.shop.v1.CartListReply.list:type_name -> shop.shop.v1.CartItemReply
+	27, // 5: shop.shop.v1.OrderCreateRequest.cartItem:type_name -> shop.shop.v1.OrderCartItem
+	29, // 6: shop.shop.v1.OrderInfoReply.goods:type_name -> shop.shop.v1.OrderGoodsReply
+	28, // 7: shop.shop.v1.OrderListReply.list:type_name -> shop.shop.v1.OrderInfoReply
+	8,  // 8: shop.shop.v1.Shop.Register:input_type -> shop.shop.v1.RegisterReq
+	12, // 9: shop.shop.v1.Shop.RefreshToken:input_type -> shop.shop.v1.RefreshTokenRequest
+	9,  // 10: shop.shop.v1.Shop.Login:input_type -> shop.shop.v1.LoginReq
+	37, // 11: shop.shop.v1.Shop.Captcha:input_type -> google.protobuf.Empty
+	37, // 12: shop.shop.v1.Shop.Detail:input_type -> google.protobuf.Empty
+	0,  // 13: shop.shop.v1.Shop.CreateAddress:input_type -> shop.shop.v1.CreateAddressReq
+	37, // 14: shop.shop.v1.Shop.AddressListByUid:input_type -> google.protobuf.Empty
+	1,  // 15: shop.shop.v1.Shop.UpdateAddress:input_type -> shop.shop.v1.UpdateAddressReq
+	5,  // 16: shop.shop.v1.Shop.DefaultAddress:input_type -> shop.shop.v1.AddressReq
+	5,  // 17: shop.shop.v1.Shop.DeleteAddress:input_type -> shop.shop.v1.AddressReq
+	13, // 18: shop.shop.v1.Shop.GoodsList:input_type -> shop.shop.v1.GoodsListRequest
+	16, // 19: shop.shop.v1.Shop.GoodsDetail:input_type -> shop.shop.v1.GoodsDetailRequest
+	20, // 20: shop.shop.v1.Shop.CartList:input_type -> shop.shop.v1.CartListRequest
+	23, // 21: shop.shop.v1.Shop.CartAdd:input_type -> shop.shop.v1.CartAddRequest
+	24, // 22: shop.shop.v1.Shop.CartUpdate:input_type -> shop.shop.v1.CartUpdateRequest
+	25, // 23: shop.shop.v1.Shop.CartDelete:input_type -> shop.shop.v1.CartDeleteRequest
+	26, // 24: shop.shop.v1.Shop.OrderCreate:input_type -> shop.shop.v1.OrderCreateRequest
+	32, // 25: shop.shop.v1.Shop.OrderCancel:input_type -> shop.shop.v1.OrderCancelRequest
+	30, // 26: shop.shop.v1.Shop.OrderList:input_type -> shop.shop.v1.OrderListRequest
+	33, // 27: shop.shop.v1.Shop.OrderDetail:input_type -> shop.shop.v1.OrderDetailRequest
+	34, // 28: shop.shop.v1.Shop.PaymentCreate:input_type -> shop.shop.v1.PaymentCreateRequest
+	36, // 29: shop.shop.v1.Shop.PaymentMockPay:input_type -> shop.shop.v1.PaymentMockPayRequest
+	7,  // 30: shop.shop.v1.Shop.Register:output_type -> shop.shop.v1.RegisterReply
+	7,  // 31: shop.shop.v1.Shop.RefreshToken:output_type -> shop.shop.v1.RegisterReply
+	7,  // 32: shop.shop.v1.Shop.Login:output_type -> shop.shop.v1.RegisterReply
+	11, // 33: shop.shop.v1.Shop.Captcha:output_type -> shop.shop.v1.CaptchaReply
+	10, // 34: shop.shop.v1.Shop.Detail:output_type -> shop.shop.v1.UserDetailResponse
+	2,  // 35: shop.shop.v1.Shop.CreateAddress:output_type -> shop.shop.v1.AddressInfo
+	4,  // 36: shop.shop.v1.Shop.AddressListByUid:output_type -> shop.shop.v1.ListAddressReply
+	6,  // 37: shop.shop.v1.Shop.UpdateAddress:output_type -> shop.shop.v1.CheckResponse
+	6,  // 38: shop.shop.v1.Shop.DefaultAddress:output_type -> shop.shop.v1.CheckResponse
+	6,  // 39: shop.shop.v1.Shop.DeleteAddress:output_type -> shop.shop.v1.CheckResponse
+	15, // 40: shop.shop.v1.Shop.GoodsList:output_type -> shop.shop.v1.GoodsListReply
+	19, // 41: shop.shop.v1.Shop.GoodsDetail:output_type -> shop.shop.v1.GoodsDetailReply
+	22, // 42: shop.shop.v1.Shop.CartList:output_type -> shop.shop.v1.CartListReply
+	21, // 43: shop.shop.v1.Shop.CartAdd:output_type -> shop.shop.v1.CartItemReply
+	6,  // 44: shop.shop.v1.Shop.CartUpdate:output_type -> shop.shop.v1.CheckResponse
+	6,  // 45: shop.shop.v1.Shop.CartDelete:output_type -> shop.shop.v1.CheckResponse
+	28, // 46: shop.shop.v1.Shop.OrderCreate:output_type -> shop.shop.v1.OrderInfoReply
+	6,  // 47: shop.shop.v1.Shop.OrderCancel:output_type -> shop.shop.v1.CheckResponse
+	31, // 48: shop.shop.v1.Shop.OrderList:output_type -> shop.shop.v1.OrderListReply
+	28, // 49: shop.shop.v1.Shop.OrderDetail:output_type -> shop.shop.v1.OrderInfoReply
+	35, // 50: shop.shop.v1.Shop.PaymentCreate:output_type -> shop.shop.v1.PaymentInfoReply
+	6,  // 51: shop.shop.v1.Shop.PaymentMockPay:output_type -> shop.shop.v1.CheckResponse
+	30, // [30:52] is the sub-list for method output_type
+	8,  // [8:30] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_api_shop_v1_shop_proto_init() }
@@ -1762,7 +2976,7 @@ func file_api_shop_v1_shop_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_shop_v1_shop_proto_rawDesc), len(file_api_shop_v1_shop_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   20,
+			NumMessages:   37,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

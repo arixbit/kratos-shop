@@ -19,7 +19,7 @@ type GoodsRepo interface {
 	Update(context.Context, *domain.Goods) error
 	Delete(context.Context, int64) error
 	UpdateStatus(context.Context, int64, bool) error
-	ListPage(context.Context, string, int32, int32, int, int) ([]*domain.Goods, int64, error)
+	ListPage(context.Context, string, string, int32, int32, int, int) ([]*domain.Goods, int64, error)
 	GetByID(context.Context, int64) (*domain.Goods, error)
 	ListAll(context.Context) ([]*domain.Goods, error)
 	ListImagesByGoodsID(context.Context, int64) ([]*domain.GoodsImage, error)
@@ -85,8 +85,8 @@ func (g GoodsUsecase) UpdateGoodsStatus(ctx context.Context, id int64, onSale bo
 	return g.repo.UpdateStatus(ctx, id, onSale)
 }
 
-func (g GoodsUsecase) AdminGoodsList(ctx context.Context, keywords string, categoryID, brandID int32, page, pageSize int) ([]*domain.Goods, int64, error) {
-	return g.repo.ListPage(ctx, keywords, categoryID, brandID, page, pageSize)
+func (g GoodsUsecase) AdminGoodsList(ctx context.Context, keywords, skuCode string, categoryID, brandID int32, page, pageSize int) ([]*domain.Goods, int64, error) {
+	return g.repo.ListPage(ctx, keywords, skuCode, categoryID, brandID, page, pageSize)
 }
 
 func (g GoodsUsecase) GetDetail(ctx context.Context, id int64) (*domain.Goods, []*domain.GoodsSku, []*domain.GoodsImage, error) {
@@ -116,21 +116,21 @@ func (g GoodsUsecase) ReindexAll(ctx context.Context) error {
 	}
 	for _, goods := range goodsList {
 		es := domain.ESGoods{
-			ID:              goods.ID,
-			CategoryID:      goods.CategoryID,
-			BrandsID:        goods.BrandsID,
-			TypeID:          goods.TypeID,
-			Name:            goods.Name,
-			GoodsTags:       goods.GoodsTags,
-			ClickNum:        goods.ClickNum,
-			SoldNum:         goods.SoldNum,
-			FavNum:          goods.FavNum,
-			MarketPrice:     goods.MarketPrice,
-			GoodsBrief:      goods.GoodsBrief,
-			OnSale:          goods.OnSale,
-			ShipFree:        goods.ShipFree,
-			IsNew:           goods.IsNew,
-			IsHot:           goods.IsHot,
+			ID:          goods.ID,
+			CategoryID:  goods.CategoryID,
+			BrandsID:    goods.BrandsID,
+			TypeID:      goods.TypeID,
+			Name:        goods.Name,
+			GoodsTags:   goods.GoodsTags,
+			ClickNum:    goods.ClickNum,
+			SoldNum:     goods.SoldNum,
+			FavNum:      goods.FavNum,
+			MarketPrice: goods.MarketPrice,
+			GoodsBrief:  goods.GoodsBrief,
+			OnSale:      goods.OnSale,
+			ShipFree:    goods.ShipFree,
+			IsNew:       goods.IsNew,
+			IsHot:       goods.IsHot,
 		}
 		if brand, err := g.brandRepo.IsBrandByID(ctx, goods.BrandsID); err == nil {
 			es.BrandName = brand.Name
@@ -294,10 +294,12 @@ func (g GoodsUsecase) CreateGoods(ctx context.Context, r *domain.Goods) (*domain
 				})
 			}
 
-			// 插入商品规格关联关系表
-			err = g.skuRepo.CreateSkuRelation(ctx, skuRelation)
-			if err != nil {
-				return err
+			// 插入商品规格关联关系表（无规格时跳过）
+			if len(skuRelation) > 0 {
+				err = g.skuRepo.CreateSkuRelation(ctx, skuRelation)
+				if err != nil {
+					return err
+				}
 			}
 
 			// esModel

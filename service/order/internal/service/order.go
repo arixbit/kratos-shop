@@ -81,8 +81,77 @@ func (o *OrderService) ListOrders(ctx context.Context, r *v1.ListOrderRequest) (
 	return reply, nil
 }
 
+func (o *OrderService) AdminListOrders(ctx context.Context, r *v1.AdminListOrderRequest) (*v1.ListOrderReply, error) {
+	list, total, err := o.oc.AdminListOrders(ctx, int(r.Page), int(r.PageSize), int(r.Status))
+	if err != nil {
+		return nil, err
+	}
+	reply := &v1.ListOrderReply{Total: int32(total)}
+	for _, order := range list {
+		reply.List = append(reply.List, toOrderInfo(order))
+	}
+	return reply, nil
+}
+
+func (o *OrderService) AdminGetOrder(ctx context.Context, r *v1.AdminGetOrderRequest) (*v1.OrderInfoResponse, error) {
+	order, err := o.oc.AdminGetOrder(ctx, r.OrderSn)
+	if err != nil {
+		return nil, err
+	}
+	return toOrderInfo(order), nil
+}
+
+func (o *OrderService) ShipOrder(ctx context.Context, r *v1.ShipOrderRequest) (*v1.CheckResponse, error) {
+	if err := o.oc.ShipOrder(ctx, r.OrderSn, r.Post); err != nil {
+		return nil, err
+	}
+	return &v1.CheckResponse{Success: true}, nil
+}
+
+func (o *OrderService) RefundOrder(ctx context.Context, r *v1.RefundOrderRequest) (*v1.CheckResponse, error) {
+	if err := o.oc.RefundOrder(ctx, r.OrderSn); err != nil {
+		return nil, err
+	}
+	return &v1.CheckResponse{Success: true}, nil
+}
+
+func (o *OrderService) DashboardStats(ctx context.Context, r *v1.DashboardStatsRequest) (*v1.DashboardStatsReply, error) {
+	stats, err := o.oc.DashboardStats(ctx)
+	if err != nil {
+		return nil, err
+	}
+	reply := &v1.DashboardStatsReply{
+		TotalOrders: stats.TotalOrders,
+		TotalSales:  stats.TotalSales,
+		TodayOrders: stats.TodayOrders,
+		TodaySales:  stats.TodaySales,
+	}
+	for _, item := range stats.StatusCounts {
+		reply.StatusCounts = append(reply.StatusCounts, &v1.StatusCount{
+			Status: item.Status,
+			Count:  item.Count,
+		})
+	}
+	for _, item := range stats.Last30Days {
+		reply.Last30Days = append(reply.Last30Days, &v1.DailySales{
+			Date:       item.Date,
+			OrderCount: item.OrderCount,
+			Amount:     item.Amount,
+		})
+	}
+	for _, item := range stats.TopGoods {
+		reply.TopGoods = append(reply.TopGoods, &v1.TopGoods{
+			SkuId:   item.SkuID,
+			SkuName: item.SkuName,
+			Num:     item.Num,
+			Amount:  item.Amount,
+		})
+	}
+	return reply, nil
+}
+
 func toOrderInfo(order *domain.Order) *v1.OrderInfoResponse {
-	return &v1.OrderInfoResponse{
+	resp := &v1.OrderInfoResponse{
 		Id:      order.ID,
 		UserId:  order.User,
 		OrderSn: order.OrderSn,
@@ -94,6 +163,17 @@ func toOrderInfo(order *domain.Order) *v1.OrderInfoResponse {
 		Mobile:  order.SingerMobile,
 		AddTime: order.CreatedAt.Format("2006-01-02 15:04:05"),
 	}
+	for _, item := range order.Items {
+		resp.Goods = append(resp.Goods, &v1.OrderGoodsInfo{
+			Id:         item.ID,
+			SkuId:      item.SkuId,
+			SkuName:    item.SkuName,
+			SkuPrice:   item.SkuPrice,
+			Num:        item.Num,
+			TotalPrice: item.TotalPrice,
+		})
+	}
+	return resp
 }
 
 func orderStatusText(status int) string {
@@ -110,6 +190,8 @@ func orderStatusText(status int) string {
 		return "已取消"
 	case 6:
 		return "交易完成"
+	case 7:
+		return "已退款"
 	default:
 		return "未知"
 	}
