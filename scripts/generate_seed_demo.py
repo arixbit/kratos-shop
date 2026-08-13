@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Generate demo data for kratos-shop dashboard.
+"""Generate demo data SQL for kratos-shop dashboard on stdout.
 
-Outputs sql/08_seed_demo.sql with:
+Contents:
 - 100 demo users (each with 3~5 paid orders between 2026-01 and 2026-08)
 - 50 goods across digital / home appliance / clothing / shoes & bags / furniture
 - order_goods / order_address / order_pays rows for dashboard statistics
@@ -10,13 +10,10 @@ Outputs sql/08_seed_demo.sql with:
 from __future__ import annotations
 
 import random
+import sys
 from datetime import datetime, timedelta
-from pathlib import Path
 
 random.seed(20260813)
-
-ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "sql" / "08_seed_demo.sql"
 
 PASSWORD = (
     "$pbkdf2-sha512$781f496fd9233c152837110ac2ce8a79"
@@ -326,8 +323,7 @@ def main() -> None:
     for sku, num in sold_by_sku.items():
         add(f"UPDATE goods SET sold_num = {num} WHERE id = {sku};")
 
-    OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(f"generated {OUT} ({len(lines)} lines)")
+    sys.stdout.write("\n".join(lines) + "\n")
 
 
 if __name__ == "__main__":
