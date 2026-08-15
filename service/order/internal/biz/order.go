@@ -110,6 +110,13 @@ func (oc *OrderUsecase) CreateOrder(ctx context.Context, order *domain.CreateOrd
 		if sku.PromotionPrice > 0 {
 			price = sku.PromotionPrice
 		}
+		cart := cartMap[item.CartId]
+		if cart != nil && cart.GoodsPrice > 0 && cart.GoodsPrice != price {
+			return nil, kerrors.New(400, "PRICE_CHANGED", "商品价格已发生变化，请刷新购物车后再下单")
+		}
+		if item.SkuPrice > 0 && item.SkuPrice != price {
+			return nil, kerrors.New(400, "PRICE_CHANGED", "商品价格已发生变化，请刷新购物车后再下单")
+		}
 		amount := price * int64(item.SkuNum)
 		goodsAmount += amount
 		orderGoods = append(orderGoods, &domain.OrderGoods{
@@ -138,7 +145,7 @@ func (oc *OrderUsecase) CreateOrder(ctx context.Context, order *domain.CreateOrd
 		GoodsAmount:   goodsAmount,
 		OrderAmount:   goodsAmount,
 		ExpressAmount: 0,
-		OrderStatus:   1, // 待支付
+		OrderStatus:   domain.OrderStatusInventoryPending,
 		Address:       address.Address,
 		SignerName:    address.Name,
 		SingerMobile:  address.Mobile,
@@ -158,11 +165,12 @@ func (oc *OrderUsecase) CreateOrder(ctx context.Context, order *domain.CreateOrd
 		item.OrderSn = orderSn
 	}
 
+	eventID := generateEventID()
 	outbox := &domain.OutboxEvent{
-		EventID:   generateEventID(),
+		EventID:   eventID,
 		EventType: "order.created",
 		OrderSn:   orderSn,
-		Payload:   buildOrderEventPayload("order.created", orderSn, order.UserId, orderGoods),
+		Payload:   buildOrderEventPayload(eventID, "order.created", orderSn, order.UserId, orderGoods),
 	}
 	if err := oc.repo.Create(ctx, od, orderAddress, orderGoods, outbox); err != nil {
 		return nil, err
@@ -185,7 +193,7 @@ func generateEventID() string {
 	return fmt.Sprintf("evt-%d-%d", time.Now().UnixNano(), rand.Intn(1000000))
 }
 
-func buildOrderEventPayload(eventType, orderSn string, userId int64, items []*domain.OrderGoods) []byte {
+func buildOrderEventPayload(eventID, eventType, orderSn string, userId int64, items []*domain.OrderGoods) []byte {
 	type skuItem struct {
 		SkuID int64 `json:"sku_id"`
 		Num   int32 `json:"num"`
@@ -201,7 +209,7 @@ func buildOrderEventPayload(eventType, orderSn string, userId int64, items []*do
 		Payload   payload `json:"payload"`
 	}
 	e := event{
-		EventID:   generateEventID(),
+		EventID:   eventID,
 		EventType: eventType,
 		OrderSn:   orderSn,
 		UserID:    userId,
@@ -222,20 +230,34 @@ func (oc *OrderUsecase) CancelOrder(ctx context.Context, userId int64, orderSn s
 	if len(items) == 0 {
 		return kerrors.New(400, "ORDER_NOT_FOUND", "订单不存在")
 	}
-	changed, err := oc.repo.UpdateStatusIf(ctx, orderSn, 1, 5)
+	changed, err := oc.repo.UpdateStatusIf(ctx, orderSn, domain.OrderStatusInventoryPending, domain.OrderStatusCancelled)
+	if err != nil && kerrors.FromError(err).Reason == "ORDER_STATUS_INVALID" {
+		changed, err = oc.repo.UpdateStatusIf(ctx, orderSn, domain.OrderStatusPendingPayment, domain.OrderStatusCancelled)
+	}
 	if err != nil {
 		return err
 	}
 	if !changed {
 		return nil // 已经是取消状态，幂等
 	}
+	eventID := generateEventID()
 	outbox := &domain.OutboxEvent{
-		EventID:   generateEventID(),
+		EventID:   eventID,
 		EventType: "order.cancelled",
 		OrderSn:   orderSn,
-		Payload:   buildOrderEventPayload("order.cancelled", orderSn, userId, items),
+		Payload:   buildOrderEventPayload(eventID, "order.cancelled", orderSn, userId, items),
 	}
 	return oc.repo.CreateOutbox(ctx, outbox)
+}
+
+func (oc *OrderUsecase) MarkInventoryLocked(ctx context.Context, orderSn string) error {
+	_, err := oc.repo.UpdateStatusIf(ctx, orderSn, domain.OrderStatusInventoryPending, domain.OrderStatusPendingPayment)
+	return err
+}
+
+func (oc *OrderUsecase) MarkInventoryFailed(ctx context.Context, orderSn string) error {
+	_, err := oc.repo.UpdateStatusIf(ctx, orderSn, domain.OrderStatusInventoryPending, domain.OrderStatusCancelled)
+	return err
 }
 
 func (oc *OrderUsecase) MarkPaid(ctx context.Context, orderSn string) error {
@@ -246,18 +268,19 @@ func (oc *OrderUsecase) MarkPaid(ctx context.Context, orderSn string) error {
 	if len(items) == 0 {
 		return kerrors.New(400, "ORDER_NOT_FOUND", "订单不存在")
 	}
-	changed, err := oc.repo.UpdateStatusIf(ctx, orderSn, 1, 2)
+	changed, err := oc.repo.UpdateStatusIf(ctx, orderSn, domain.OrderStatusPendingPayment, domain.OrderStatusPaid)
 	if err != nil {
 		return err
 	}
 	if !changed {
 		return nil // 已经是已支付状态，幂等
 	}
+	eventID := generateEventID()
 	outbox := &domain.OutboxEvent{
-		EventID:   generateEventID(),
+		EventID:   eventID,
 		EventType: "order.paid",
 		OrderSn:   orderSn,
-		Payload:   buildOrderEventPayload("order.paid", orderSn, items[0].UserId, items),
+		Payload:   buildOrderEventPayload(eventID, "order.paid", orderSn, items[0].UserId, items),
 	}
 	return oc.repo.CreateOutbox(ctx, outbox)
 }

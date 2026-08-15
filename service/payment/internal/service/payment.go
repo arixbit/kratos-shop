@@ -7,8 +7,8 @@ import (
 	"math/rand"
 	"time"
 
-	orderV1 "payment/api/service/order/v1"
 	v1 "payment/api/payment/v1"
+	orderV1 "payment/api/service/order/v1"
 	"payment/internal/biz"
 	"payment/internal/conf"
 	"payment/internal/domain"
@@ -52,6 +52,9 @@ func (s *PaymentService) CreatePayment(ctx context.Context, req *v1.CreatePaymen
 	}
 	if order.Total != req.Amount {
 		return nil, kerrors.New(400, "PAYMENT_AMOUNT_MISMATCH", "支付金额与订单金额不一致")
+	}
+	if order.Status != "待支付" {
+		return nil, kerrors.New(400, "ORDER_STATUS_INVALID", "订单状态不允许支付")
 	}
 	pay, err := s.uc.Create(ctx, &domain.Payment{
 		PaymentNo: generatePaymentNo(),

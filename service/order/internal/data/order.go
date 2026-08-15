@@ -18,7 +18,7 @@ type Order struct {
 	OrderSn       string    `gorm:"type:varchar(30);not null;default:'';index"` // 订单号，我们平台自己生成的订单号
 	OrderAmount   int64     `gorm:"type:bigint;not null;default:0;comment:订单金额"`
 	GoodsAmount   int64     `gorm:"type:bigint;not null;default:0;comment:商品总金额"`
-	OrderStatus   int       `gorm:"type:int;not null;default:0;comment:1待支付,2已支付,3已发货,4已签收,5已取消,6交易完成"`
+	OrderStatus   int       `gorm:"type:int;not null;default:0;comment:0库存处理中,1待支付,2已支付,3已发货,4已签收,5已取消,6交易完成,7已退款"`
 	ExpressAmount int64     `gorm:"type:bigint;not null;default:0;comment:运费"`
 	DeliveryAt    time.Time `gorm:"column:delivery_at;type:timestamptz;comment:发货时间"`
 	RefundTime    time.Time `gorm:"type:timestamptz;comment:退款时间"`
@@ -245,7 +245,7 @@ func (o *orderRepo) ListPendingTimeout(ctx context.Context, minutes int) ([]*dom
 	var list []Order
 	cutoff := time.Now().Add(-time.Duration(minutes) * time.Minute)
 	if err := o.data.db.WithContext(ctx).
-		Where("order_status = 1 AND created_at < ?", cutoff).
+		Where("order_status = ? AND created_at < ?", domain.OrderStatusPendingPayment, cutoff).
 		Find(&list).Error; err != nil {
 		return nil, err
 	}

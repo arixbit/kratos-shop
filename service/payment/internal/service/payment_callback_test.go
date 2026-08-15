@@ -7,8 +7,8 @@ import (
 
 	"google.golang.org/grpc"
 
-	orderV1 "payment/api/service/order/v1"
 	v1 "payment/api/payment/v1"
+	orderV1 "payment/api/service/order/v1"
 	"payment/internal/biz"
 	"payment/internal/domain"
 
@@ -29,12 +29,12 @@ func (f *fakeOrderClient) GetOrder(_ context.Context, _ *orderV1.GetOrderRequest
 type fakePaymentRepo struct {
 	biz.PaymentRepo
 
-	payment    *domain.Payment
-	getErr     error
-	createErr  error
-	changed    bool
-	markErr    error
-	created    *domain.Payment
+	payment   *domain.Payment
+	getErr    error
+	createErr error
+	changed   bool
+	markErr   error
+	created   *domain.Payment
 }
 
 func (f *fakePaymentRepo) Create(_ context.Context, p *domain.Payment) (*domain.Payment, error) {
@@ -106,6 +106,24 @@ func TestCreatePaymentSuccess(t *testing.T) {
 	}
 	if repo.created == nil || repo.created.PaymentNo == "" {
 		t.Fatal("repo.Create should persist payment with generated no")
+	}
+}
+
+func TestCreatePaymentOrderNotReady(t *testing.T) {
+	repo := &fakePaymentRepo{}
+	order := &fakeOrderClient{order: &orderV1.OrderInfoResponse{Total: 100, Status: "库存处理中"}}
+	s := newTestPaymentService(repo, order)
+
+	_, err := s.CreatePayment(context.Background(), &v1.CreatePaymentRequest{
+		UserId:  1,
+		OrderSn: "SN-001",
+		Amount:  100,
+	})
+	if reason := paymentReason(t, err); reason != "ORDER_STATUS_INVALID" {
+		t.Fatalf("reason = %q, want ORDER_STATUS_INVALID", reason)
+	}
+	if repo.created != nil {
+		t.Fatal("repo.Create should not be called before inventory is locked")
 	}
 }
 

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"time"
 
+	kerrors "github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	v1 "order/api/order/v1"
 	"order/internal/biz"
@@ -26,6 +27,7 @@ func NewOrderService(o *biz.OrderUsecase, mqConf *conf.Mq, logger log.Logger) *O
 	s := &OrderService{oc: o, log: log.NewHelper(logger)}
 	if mqConf != nil && mqConf.Addr != "" {
 		s.mqAddr = mqConf.Addr
+		go s.startInventoryConsumer()
 		go s.startPaymentConsumer()
 	}
 	return s
@@ -178,19 +180,21 @@ func toOrderInfo(order *domain.Order) *v1.OrderInfoResponse {
 
 func orderStatusText(status int) string {
 	switch status {
-	case 1:
+	case domain.OrderStatusInventoryPending:
+		return "库存处理中"
+	case domain.OrderStatusPendingPayment:
 		return "待支付"
-	case 2:
+	case domain.OrderStatusPaid:
 		return "已支付"
-	case 3:
+	case domain.OrderStatusShipped:
 		return "已发货"
-	case 4:
+	case domain.OrderStatusSigned:
 		return "已签收"
-	case 5:
+	case domain.OrderStatusCancelled:
 		return "已取消"
-	case 6:
+	case domain.OrderStatusCompleted:
 		return "交易完成"
-	case 7:
+	case domain.OrderStatusRefunded:
 		return "已退款"
 	default:
 		return "未知"
@@ -203,6 +207,56 @@ type paymentSuccessEvent struct {
 	UserID    int64  `json:"user_id"`
 	Amount    int64  `json:"amount"`
 	TradeNo   string `json:"trade_no"`
+}
+
+type inventoryResultEvent struct {
+	OrderSn string `json:"order_sn"`
+	Success bool   `json:"success"`
+	Reason  string `json:"reason"`
+}
+
+func (o *OrderService) startInventoryConsumer() {
+	for {
+		consumer, err := mq.NewConsumer(
+			o.mqAddr,
+			"inventory.exchange",
+			"q.inventory.result",
+			[]string{"inventory.locked", "inventory.lock.failed"},
+			o.handleInventoryResult,
+		)
+		if err != nil {
+			o.log.Errorf("inventory consumer init failed: %v", err)
+			time.Sleep(5 * time.Second)
+			continue
+		}
+		if err := consumer.Run(context.Background()); err != nil {
+			o.log.Errorf("inventory consumer stopped: %v", err)
+		}
+		consumer.Close()
+		time.Sleep(5 * time.Second)
+	}
+}
+
+func (o *OrderService) handleInventoryResult(ctx context.Context, body []byte) error {
+	var evt inventoryResultEvent
+	if err := json.Unmarshal(body, &evt); err != nil {
+		return err
+	}
+	if evt.OrderSn == "" {
+		return kerrors.New(400, "INVENTORY_RESULT_INVALID", "库存结果缺少订单号")
+	}
+	if evt.Success {
+		if err := o.oc.MarkInventoryLocked(ctx, evt.OrderSn); err != nil {
+			return err
+		}
+		o.log.Infof("inventory locked: order=%s", evt.OrderSn)
+		return nil
+	}
+	if err := o.oc.MarkInventoryFailed(ctx, evt.OrderSn); err != nil {
+		return err
+	}
+	o.log.Warnf("inventory lock failed: order=%s reason=%s", evt.OrderSn, evt.Reason)
+	return nil
 }
 
 func (o *OrderService) startPaymentConsumer() {

@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS orders (
 CREATE INDEX IF NOT EXISTS idx_orders_user ON orders ("user");
 CREATE UNIQUE INDEX IF NOT EXISTS uk_orders_sn ON orders (order_sn);
 
-COMMENT ON COLUMN orders.order_status IS '0: 默认, 1: 待支付, 2: 已支付, 3: 已发货, 4: 已签收, 5: 已取消, 6: 交易完成';
+COMMENT ON COLUMN orders.order_status IS '0: 库存处理中, 1: 待支付, 2: 已支付, 3: 已发货, 4: 已签收, 5: 已取消, 6: 交易完成, 7: 已退款';
 
 -- =====================================================================
 -- 订单收货地址表

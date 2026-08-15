@@ -4,6 +4,17 @@ import (
 	"time"
 )
 
+const (
+	OrderStatusInventoryPending = iota
+	OrderStatusPendingPayment
+	OrderStatusPaid
+	OrderStatusShipped
+	OrderStatusSigned
+	OrderStatusCancelled
+	OrderStatusCompleted
+	OrderStatusRefunded
+)
+
 type Order struct {
 	ID            int64
 	User          int64

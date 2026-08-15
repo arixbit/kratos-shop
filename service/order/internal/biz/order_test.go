@@ -20,8 +20,8 @@ import (
 
 type fakeCartClient struct {
 	cartV1.CartClient
-	list       *cartV1.CartListReply
-	listErr    error
+	list        *cartV1.CartListReply
+	listErr     error
 	deleteCalls int
 }
 
@@ -123,7 +123,7 @@ func TestGenerateOrderSn(t *testing.T) {
 }
 
 func TestBuildOrderEventPayload(t *testing.T) {
-	payload := buildOrderEventPayload("order.created", "SN-001", 7, []*domain.OrderGoods{
+	payload := buildOrderEventPayload("evt-001", "order.created", "SN-001", 7, []*domain.OrderGoods{
 		{SkuId: 11, Num: 2},
 		{SkuId: 12, Num: 1},
 	})
@@ -142,7 +142,7 @@ func TestBuildOrderEventPayload(t *testing.T) {
 	if err := json.Unmarshal(payload, &evt); err != nil {
 		t.Fatalf("unmarshal payload: %v", err)
 	}
-	if evt.EventID == "" || evt.EventType != "order.created" || evt.OrderSn != "SN-001" || evt.UserID != 7 {
+	if evt.EventID != "evt-001" || evt.EventType != "order.created" || evt.OrderSn != "SN-001" || evt.UserID != 7 {
 		t.Fatalf("unexpected event: %+v", evt)
 	}
 	if len(evt.Payload.Skus) != 2 || evt.Payload.Skus[0].SkuID != 11 || evt.Payload.Skus[0].Num != 2 {
@@ -170,7 +170,7 @@ func TestCreateOrderValidation(t *testing.T) {
 	})
 
 	cart := &fakeCartClient{list: &cartV1.CartListReply{
-		Results: []*cartV1.CartInfoReply{{Id: 1, SkuId: 11}},
+		Results: []*cartV1.CartInfoReply{{Id: 1, SkuId: 11, GoodsPrice: 100}},
 	}}
 	goods := &fakeGoodsClient{list: &goodsV1.SkuListResponse{
 		List: []*goodsV1.SkuInfo{{Id: 11, Price: 100, OnSale: true}},
@@ -227,13 +227,28 @@ func TestCreateOrderValidation(t *testing.T) {
 			t.Fatalf("reason = %q, want SKU_NOT_FOUND", reason)
 		}
 	})
+
+	t.Run("price changed", func(t *testing.T) {
+		changedGoods := &fakeGoodsClient{list: &goodsV1.SkuListResponse{
+			List: []*goodsV1.SkuInfo{{Id: 11, Price: 90, OnSale: true}},
+		}}
+		uc := newTestOrderUsecase(&fakeOrderRepo{}, cart, changedGoods, user)
+		_, err := uc.CreateOrder(ctx, &domain.CreateOrder{
+			UserId:    1,
+			AddressId: 1,
+			CartItem:  domain.CartItemList{{CartId: 1, SkuId: 11, SkuNum: 1}},
+		})
+		if reason := reasonOf(t, err); reason != "PRICE_CHANGED" {
+			t.Fatalf("reason = %q, want PRICE_CHANGED", reason)
+		}
+	})
 }
 
 func TestCreateOrderSuccess(t *testing.T) {
 	ctx := context.Background()
 	repo := &fakeOrderRepo{}
 	cart := &fakeCartClient{list: &cartV1.CartListReply{
-		Results: []*cartV1.CartInfoReply{{Id: 1, SkuId: 11}},
+		Results: []*cartV1.CartInfoReply{{Id: 1, SkuId: 11, GoodsPrice: 90}},
 	}}
 	goods := &fakeGoodsClient{list: &goodsV1.SkuListResponse{
 		List: []*goodsV1.SkuInfo{{Id: 11, SkuName: "手机", Price: 100, PromotionPrice: 90, OnSale: true}},
@@ -247,12 +262,12 @@ func TestCreateOrderSuccess(t *testing.T) {
 	order, err := uc.CreateOrder(ctx, &domain.CreateOrder{
 		UserId:    7,
 		AddressId: 3,
-		CartItem:  domain.CartItemList{{CartId: 1, SkuId: 11, SkuNum: 2}},
+		CartItem:  domain.CartItemList{{CartId: 1, SkuId: 11, SkuPrice: 90, SkuNum: 2}},
 	})
 	if err != nil {
 		t.Fatalf("create order: %v", err)
 	}
-	if order.OrderAmount != 180 || order.GoodsAmount != 180 || order.OrderStatus != 1 {
+	if order.OrderAmount != 180 || order.GoodsAmount != 180 || order.OrderStatus != domain.OrderStatusInventoryPending {
 		t.Fatalf("unexpected order: %+v", order)
 	}
 	if order.Address != "上海市" || order.SignerName != "张三" || order.SingerMobile != "13800138000" {
@@ -267,9 +282,38 @@ func TestCreateOrderSuccess(t *testing.T) {
 	if repo.createdOutbox == nil || repo.createdOutbox.EventType != "order.created" {
 		t.Fatalf("unexpected outbox: %+v", repo.createdOutbox)
 	}
+	var event struct {
+		EventID string `json:"event_id"`
+	}
+	if err := json.Unmarshal(repo.createdOutbox.Payload, &event); err != nil {
+		t.Fatalf("unmarshal outbox payload: %v", err)
+	}
+	if event.EventID != repo.createdOutbox.EventID {
+		t.Fatalf("outbox event id = %q, payload event id = %q", repo.createdOutbox.EventID, event.EventID)
+	}
 	if cart.deleteCalls != 1 {
 		t.Fatalf("delete cart calls = %d, want 1", cart.deleteCalls)
 	}
+}
+
+func TestInventoryStatusTransitions(t *testing.T) {
+	ctx := context.Background()
+
+	t.Run("lock success", func(t *testing.T) {
+		repo := &fakeOrderRepo{updateChanged: true}
+		uc := newTestOrderUsecase(repo, &fakeCartClient{}, &fakeGoodsClient{}, &fakeUserClient{})
+		if err := uc.MarkInventoryLocked(ctx, "SN-001"); err != nil {
+			t.Fatalf("mark inventory locked: %v", err)
+		}
+	})
+
+	t.Run("lock failed", func(t *testing.T) {
+		repo := &fakeOrderRepo{updateChanged: true}
+		uc := newTestOrderUsecase(repo, &fakeCartClient{}, &fakeGoodsClient{}, &fakeUserClient{})
+		if err := uc.MarkInventoryFailed(ctx, "SN-001"); err != nil {
+			t.Fatalf("mark inventory failed: %v", err)
+		}
+	})
 }
 
 func TestCancelOrderIdempotent(t *testing.T) {
